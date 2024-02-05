@@ -1,4 +1,5 @@
 import { syndicate } from '../config'
+import { getAddrByFid } from './farcaster-api'
 import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 
 

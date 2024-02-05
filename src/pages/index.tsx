@@ -1,4 +1,4 @@
-import { SERVER_URL } from '@/utils/utils'
+import { SERVER_URL } from '@/utils/generate-frames'
 import Head from 'next/head'
 
 export default function Home() {
@@ -15,6 +15,7 @@ export default function Home() {
           property="fc:frame:post_url"
           content={`${SERVER_URL}/api/post?data=start`}
         />
+        <div>Coolioo this is superwhale!</div>
       </Head>
     </>
   )

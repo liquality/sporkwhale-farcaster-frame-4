@@ -1,5 +1,5 @@
 
-async function getAddrByFid(fid: number): Promise<string | void> {
+export async function getAddrByFid(fid: number): Promise<string | void> {
     console.log('Extracting address for FID: ', fid)
   
     const options = {

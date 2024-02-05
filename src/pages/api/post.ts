@@ -1,13 +1,9 @@
 import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
 
-import {
-  SERVER_URL,
-  generateFarcasterFrame,
-  mintWithSyndicate,
-  saveTextInput,
-} from '@/utils/utils'
+import { mintWithSyndicate } from '@/utils/utils'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData } from '@/types'
+import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 
 export default async function handler(
   req: NextApiRequest,
@@ -46,7 +42,7 @@ export default async function handler(
         // html = await saveTextInput(ud)
         html = generateFarcasterFrame(`${SERVER_URL}/mint.png`, 'mint')
       } else {
-        html = generateFarcasterFrame(`${SERVER_URL}/question.png`, 'start')
+        html = generateFarcasterFrame(`${SERVER_URL}/johannas_lastname_question1.png`, 'start')
       }
       break
     case 'mint':
@@ -61,7 +57,7 @@ export default async function handler(
       response.redirect(302, locationHeader)
       break
     default:
-      html = generateFarcasterFrame(`${SERVER_URL}/question.png`, 'start')
+      html = generateFarcasterFrame(`${SERVER_URL}/johannas_lastname_question1.png`, 'start')
       break
   }
 
