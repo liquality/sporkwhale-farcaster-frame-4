@@ -6,7 +6,7 @@ import { getAddrByFid } from "./farcaster-api"
 export async function saveQuestionResponse(ud: TUntrustedData) {
     const user = await saveUser(ud)
     const existingQuestionResponse =
-      await sql`SELECT * FROM "question_responses" WHERE Fid = ${user.id}`
+      await sql`SELECT * FROM "question_responses" WHERE user_id = ${1}`
     console.log('existingquestion', existingQuestionResponse)
   
 /*     if (existingQuestionResponse.rowCount > 0) {

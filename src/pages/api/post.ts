@@ -4,7 +4,7 @@ import { mintWithSyndicate } from '@/utils/utils'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
-import { saveTextInput, saveUser } from '@/utils/database-operations'
+import { saveUser } from '@/utils/database-operations'
 
 
 export default async function handler(
@@ -48,7 +48,6 @@ export default async function handler(
   switch (reqId) {
     case 'start':
       if (ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer) {
-        //html = await saveTextInput(ud)
         const user = await saveUser(ud)
         console.log(user, 'USER RETURNRED')
         html = generateFarcasterFrame(`${SERVER_URL}/slightly_happy_whale_5_traits.png`, 'mint')
