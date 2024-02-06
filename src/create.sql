@@ -11,15 +11,25 @@ CREATE TABLE questions (
     question VARCHAR(255)
 );
 
-CREATE TABLE question_responses (
+CREATE TABLE user_question_responses (
     question_response_id SERIAL PRIMARY KEY,
     question_id INTEGER REFERENCES questions(question_id),
     user_id INTEGER REFERENCES users(user_id),
+    correct_response BOOLEAN,
     response VARCHAR(255)
 );
 
-CREATE TABLE trait_responses (
+CREATE TABLE trait_displayed (
     trait_response_id SERIAL PRIMARY KEY,
     trait VARCHAR(255),
-    user_id INTEGER REFERENCES users(user_id)
+    channel VARCHAR(255)
 );
+
+--IF YOU WANT TO DROP:
+DROP TABLE IF EXISTS user_question_responses CASCADE;
+
+DROP TABLE IF EXISTS trait_displayed CASCADE;
+
+DROP TABLE IF EXISTS questions CASCADE;
+
+DROP TABLE IF EXISTS users CASCADE;

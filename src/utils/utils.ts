@@ -21,3 +21,9 @@ export async function mintWithSyndicate(fid: number) {
   return generateFarcasterFrame(`${SERVER_URL}/redirect.png`, 'redirect')
 }
 
+export const IMAGES = {
+  slightly_sad: "slightly_sad_whale_3_traits.png",
+  slightly_happy: "slightly_happy_whale_5_traits.png", 
+  question1: "johannas_lastname_question1"
+}
+

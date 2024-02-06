@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
 
-import { mintWithSyndicate } from '@/utils/utils'
+import { IMAGES, mintWithSyndicate } from '@/utils/utils'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
-import { saveUser } from '@/utils/database-operations'
+import {  saveUser, saveUserQuestionResponse } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
 
 
@@ -55,10 +55,17 @@ export default async function handler(
     case 'start':
       if(channel){
         const user = await saveUser(ud, channel)
-        if (ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer) {
-          html = generateFarcasterFrame(`${SERVER_URL}/slightly_happy_whale_5_traits.png`, 'mint')
-        } else if(ud.inputText && ud.inputText.toLowerCase() !== questionCorrectAnswer) {
-          html = generateFarcasterFrame(`${SERVER_URL}/slightly_sad_whale_3_traits.png`, 'mint')
+        const correctResponse = ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
+        await saveUserQuestionResponse(ud, user.user_id, correctResponse as boolean)
+        console.log(user, 'wats user?')
+        if (correctResponse) {
+          html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.slightly_happy}`, 'mint')
+        } else if(!correctResponse) {
+          html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.slightly_sad}`, 'mint')
+        }else {
+          //If the user doesnt type any input, stay on śtart
+          html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.question1}`, 'start')
+
         }
       }
       break
