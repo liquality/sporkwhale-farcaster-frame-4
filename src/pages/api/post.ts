@@ -51,8 +51,8 @@ export default async function handler(
         const user = await saveUser(ud)
         console.log(user, 'USER RETURNRED')
         html = generateFarcasterFrame(`${SERVER_URL}/slightly_happy_whale_5_traits.png`, 'mint')
-      } else {
-        html = generateFarcasterFrame(`${SERVER_URL}/johannas_lastname_question1.png`, 'start')
+      } else if(ud.inputText && ud.inputText.toLowerCase() !== questionCorrectAnswer) {
+        html = generateFarcasterFrame(`${SERVER_URL}/slightly_sad_whale_3_traits.png`, 'mint')
       }
       break
     case 'mint':

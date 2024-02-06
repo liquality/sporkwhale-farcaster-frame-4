@@ -20,11 +20,11 @@ export async function saveQuestionResponse(ud: TUntrustedData) {
 
   export async function saveUser(ud: TUntrustedData) {
     const existingUser =
-      await sql`SELECT * FROM "users" WHERE fid = ${ud.fid}`
+      await sql`SELECT * FROM users WHERE fid = ${ud.fid}`
     console.log('existingUser:::', existingUser)
     const walletAddress = await getAddrByFid(ud.fid)
-    if(!existingUser && walletAddress){
-      const newUser = await sql`INSERT INTO "users" (fid, wallet_address, channel) VALUES (${ud.fid}, ${walletAddress}, "ETHDenver");`
+    if(!existingUser.rowCount && walletAddress){
+      const newUser = await sql`INSERT INTO users (fid, wallet_address, channel) VALUES (${ud.fid}, ${walletAddress}, ${"ETHDenver"});`
       console.log(newUser, 'what is new user?')
       return newUser
     }
