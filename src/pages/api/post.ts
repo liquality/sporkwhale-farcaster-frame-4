@@ -5,6 +5,7 @@ import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import { saveUser } from '@/utils/database-operations'
+import { getChannelFromCastHash } from '@/utils/neynar-api'
 
 
 export default async function handler(
@@ -45,14 +46,20 @@ export default async function handler(
     console.log('Hi I GOT HERE')
  
   }, 5000)
+
+  //TODO: generate inital frame based on calculation of participation/correctness
+
+  const channel = await getChannelFromCastHash(ud.castId.hash)
+  console.log(channel, 'CHANNEL GOT HERE')
   switch (reqId) {
     case 'start':
-      if (ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer) {
-        const user = await saveUser(ud)
-        console.log(user, 'USER RETURNRED')
-        html = generateFarcasterFrame(`${SERVER_URL}/slightly_happy_whale_5_traits.png`, 'mint')
-      } else if(ud.inputText && ud.inputText.toLowerCase() !== questionCorrectAnswer) {
-        html = generateFarcasterFrame(`${SERVER_URL}/slightly_sad_whale_3_traits.png`, 'mint')
+      if(channel){
+        const user = await saveUser(ud, channel)
+        if (ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer) {
+          html = generateFarcasterFrame(`${SERVER_URL}/slightly_happy_whale_5_traits.png`, 'mint')
+        } else if(ud.inputText && ud.inputText.toLowerCase() !== questionCorrectAnswer) {
+          html = generateFarcasterFrame(`${SERVER_URL}/slightly_sad_whale_3_traits.png`, 'mint')
+        }
       }
       break
     case 'mint':

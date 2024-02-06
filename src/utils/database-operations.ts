@@ -2,12 +2,12 @@ import { sql } from "@vercel/postgres"
 import { generateFarcasterFrame, SERVER_URL } from "./generate-frames"
 import {  TUntrustedData } from '../types'
 import { getAddrByFid } from "./farcaster-api"
+import { channel } from "diagnostics_channel"
 
 export async function saveQuestionResponse(ud: TUntrustedData) {
-    const user = await saveUser(ud)
+    //const user = await saveUser(ud)
     const existingQuestionResponse =
       await sql`SELECT * FROM "question_responses" WHERE user_id = ${1}`
-    console.log('existingquestion', existingQuestionResponse)
   
 /*     if (existingQuestionResponse.rowCount > 0) {
       console.log('Feedback already submitted by fid:', ud.fid)
@@ -18,14 +18,13 @@ export async function saveQuestionResponse(ud: TUntrustedData) {
     } */
   }
 
-  export async function saveUser(ud: TUntrustedData) {
+  export async function saveUser(ud: TUntrustedData, channel: string) {
+    //If the user does not exist in db and this channel, create a new one
     const existingUser =
-      await sql`SELECT * FROM users WHERE fid = ${ud.fid}`
-    console.log('existingUser:::', existingUser)
+      await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel = ${channel} `
     const walletAddress = await getAddrByFid(ud.fid)
     if(!existingUser.rowCount && walletAddress){
-      const newUser = await sql`INSERT INTO users (fid, wallet_address, channel) VALUES (${ud.fid}, ${walletAddress}, ${"ETHDenver"});`
-      console.log(newUser, 'what is new user?')
+      const newUser = await sql`INSERT INTO users (fid, wallet_address, channel) VALUES (${ud.fid}, ${walletAddress}, ${channel});`
       return newUser
     }
     else return existingUser
