@@ -22,13 +22,17 @@ export async function getChannelFromCastHash(castHash: string): Promise<string |
       }
       const data = await resp.json()
 
-      let parentUrl = data.cast.parent_url;    
-      let parts = parentUrl.split('/');
-      // Extract the last part (channel name)
-      let channelName = parts.pop();
-      console.log(channelName, 'chanel name')
+      if(data.cast.parent_url){
+        let parentUrl = data.cast.parent_url;    
+        let parts = parentUrl.split('/');
+        // Extract the last part (channel name)
+        let channelName = parts.pop();
+        return channelName
+      }else return 
+   
+      
   
-      return channelName
+      
     } catch (error) {
       return console.error('Error fetching profile data:', error)
     }

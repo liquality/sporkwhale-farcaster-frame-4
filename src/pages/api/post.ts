@@ -41,32 +41,24 @@ export default async function handler(
 
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
-  let img = ""
-  setTimeout(() => {
-    console.log('Hi I GOT HERE')
- 
-  }, 5000)
+
 
   //TODO: generate inital frame based on calculation of participation/correctness
-
-  const channel = await getChannelFromCastHash(ud.castId.hash)
+  let channel = await getChannelFromCastHash(ud.castId.hash)
+  if(!channel) channel = "no channel"
+  //TODO add check here so that user is indeed in the channel, since its channel-gated poll
   console.log(channel, 'CHANNEL GOT HERE')
   switch (reqId) {
     case 'start':
-      if(channel){
+      if(channel && ud.inputText && ud.inputText.length){
         const user = await saveUser(ud, channel)
         const correctResponse = ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
-        await saveUserQuestionResponse(ud, user.user_id, correctResponse as boolean)
-        console.log(user, 'wats user?')
-        if (correctResponse) {
-          html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.slightly_happy}`, 'mint')
-        } else if(!correctResponse) {
-          html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.slightly_sad}`, 'mint')
-        }else {
-          //If the user doesnt type any input, stay on śtart
-          html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.question1}`, 'start')
-
-        }
+        html = await saveUserQuestionResponse(ud, user.user_id, correctResponse as boolean)
+       
+      }
+      else {
+        console.log('NO SUBMISSION BY USER')
+        html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
       }
       break
     case 'mint':
@@ -81,9 +73,11 @@ export default async function handler(
       response.redirect(302, locationHeader)
       break
     default:
-      html = generateFarcasterFrame(`${SERVER_URL}/johannas_lastname_question1.png`, 'start')
+      html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'whale')
       break
   }
+
+  console.log(html, 'wats html?')
 
   return response.send(html)
 }

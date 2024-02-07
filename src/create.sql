@@ -16,7 +16,8 @@ CREATE TABLE user_question_responses (
     question_id INTEGER REFERENCES questions(question_id),
     user_id INTEGER REFERENCES users(user_id),
     correct_response BOOLEAN,
-    response VARCHAR(255)
+    response VARCHAR(255),
+    channel VARCHAR(255)
 );
 
 CREATE TABLE trait_displayed (
