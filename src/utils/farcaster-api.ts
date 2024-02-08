@@ -1,6 +1,5 @@
 
 export async function getAddrByFid(fid: number): Promise<string | void> {
-    console.log('Extracting address for FID: ', fid)
   
     const options = {
       method: 'GET',
@@ -22,7 +21,6 @@ export async function getAddrByFid(fid: number): Promise<string | void> {
   
       // Extract connected address if available, otherwise use address from body
       const connectedAddress = data[0]?.connectedAddress || data[0]?.body.address
-      console.log('Connected address:', connectedAddress)
   
       return connectedAddress
     } catch (error) {

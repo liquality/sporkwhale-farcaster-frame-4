@@ -25,10 +25,8 @@ export default function Home() {
     }
   }
 
-  console.log('More than one user?')
 
-  let img = moreThanOneUser ? IMAGES.question1_happy : IMAGES.question1_sad
-  console.log(img, 'wats img?')
+  let img = moreThanOneUser ? IMAGES.whale : IMAGES.whale
   //"http://localhost/image.jpg?" + new Date().getTime();
   return (
     <>
@@ -38,8 +36,7 @@ export default function Home() {
         <meta property="fc:frame" content="vNext" />
         
         <meta property="fc:frame:image" content={`${SERVER_URL}/${img}`} />
-        <meta property="fc:frame:input:text" content="Type your answer" />
-        <meta property="fc:frame:button:1" content="Submit ✉️" />
+        <meta property="fc:frame:button:1" content="GO TO QUIZ ✉️" />
         <meta
           property="fc:frame:post_url"
           content={`${SERVER_URL}/api/post?data=start`}
