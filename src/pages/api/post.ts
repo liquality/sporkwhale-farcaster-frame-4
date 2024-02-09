@@ -26,7 +26,6 @@ export default async function handler(
     signedMessage.trustedData?.messageBytes
   )
 
-  console.log('signedMessage: ', signedMessage)
 
   if (!isMessageValid) {
     return res.status(400).json({ error: 'Invalid message' })
@@ -38,36 +37,33 @@ export default async function handler(
   let statusCode: number = 200
   let locationHeader: string = ''
   const questionCorrectAnswer = "fransson"
-
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
-
-
 
   //TODO: generate inital frame based on calculation of participation/correctness
   let channel = await getChannelFromCastHash(ud.castId.hash)
+ 
   if(!channel) channel = "no channel"
   //TODO add check here so that user is indeed in the channel, since its channel-gated poll
-  console.log(channel, 'CHANNEL GOT HERE')
+  console.log(channel, 'CHANNEL GOT HERE', reqId, 'reqId')
   switch (reqId) {
     case 'start':
+      html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.question1}`, 'question');
+    break
+    case "question":
       if(channel && ud.inputText && ud.inputText.length){
         const user = await saveUser(ud, channel)
         const correctResponse = ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
         html = await saveUserQuestionResponse(ud, user.user_id, correctResponse as boolean)
-       
       }
       else {
         console.log('NO SUBMISSION BY USER')
         html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
       }
-      break
-    case 'mint':
-      html = await mintWithSyndicate(ud.fid)
-      break
+    break
     case 'redirect':
       locationHeader = 'https://www.liquality.io'
       response.redirect(302, locationHeader) // or you set Location in response.setHeader()
-      break
+    break
     case 'error':
       locationHeader = 'https://warpcast.com/~/channel/frames'
       response.redirect(302, locationHeader)
