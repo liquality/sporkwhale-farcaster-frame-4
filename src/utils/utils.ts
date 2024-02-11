@@ -28,6 +28,8 @@ export const IMAGES = {
   correct_response: "correct_response.png",
   already_submitted: "already_submitted.png",
   be_a_follower: "be_a_follower.png",
+
+  //Level images
   negative1: "bathingSuit_chain_bracelet_whale.png",
   negative2: "chain_bracelet_whale.png",
   negative3: "bracelet_whale.png",

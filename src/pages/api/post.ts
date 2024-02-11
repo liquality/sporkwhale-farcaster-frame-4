@@ -5,7 +5,7 @@ import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {  saveUser, saveUserQuestionResponse } from '@/utils/database-operations'
-import { getChannelFromCastHash } from '@/utils/neynar-api'
+import { getChannelFromCastHash, getIfUserIsInChannel } from '@/utils/neynar-api'
 
 
 export default async function handler(
@@ -44,6 +44,7 @@ export default async function handler(
  
   if(!channel) channel = "no channel"
   //TODO add check here so that user is indeed in the channel, since its channel-gated poll
+  const userIsInChannel = await getIfUserIsInChannel()
   console.log(channel, 'CHANNEL GOT HERE', reqId, 'reqId')
   switch (reqId) {
     case 'start':
