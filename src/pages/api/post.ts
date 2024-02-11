@@ -40,9 +40,11 @@ export default async function handler(
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
   //TODO: generate inital frame based on calculation of participation/correctness
-  let channel = await getChannelFromCastHash(ud.castId.hash)
+  //let castHash = ud.castId.hash
+  let castHash = "0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471"
+  let channel = await getChannelFromCastHash(castHash)
  
-  if(!channel) channel = "no channel"
+  if(!channel) channel = "cryptostocks"
   //TODO add check here so that user is indeed in the channel, since its channel-gated poll
   const userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
   console.log(channel, 'CHANNEL GOT HERE', reqId, 'reqId')
