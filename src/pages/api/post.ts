@@ -44,7 +44,7 @@ export default async function handler(
  
   if(!channel) channel = "no channel"
   //TODO add check here so that user is indeed in the channel, since its channel-gated poll
-  const userIsInChannel = await getIfUserIsInChannel()
+  const userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
   console.log(channel, 'CHANNEL GOT HERE', reqId, 'reqId')
   switch (reqId) {
     case 'start':
