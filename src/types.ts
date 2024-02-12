@@ -25,7 +25,7 @@ export type TUntrustedData = {
   castId: { fid: number; hash: string }
 }
 
-export type TPostData = 'redirect' | 'mint' | 'start' | 'error'| 'whale' | "question"
+export type TPostData = 'redirect' | 'mint' | 'start' | 'error'| 'reload' | "question"
 
 
 export type TUserProfileNeynar = {
