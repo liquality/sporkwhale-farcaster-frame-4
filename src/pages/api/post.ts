@@ -113,6 +113,6 @@ export default async function handler(
       )
       break
   }
-
+  console.log(html, 'wats html?')
   return response.send(html)
 }

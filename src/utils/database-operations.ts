@@ -11,6 +11,7 @@ export async function saveUserQuestionResponse(
   correctResponse: boolean
 ) {
   //-----  WHEN TESTING COMMENT OUT THE DB SAVE QUESTION RESPONSE FOR NOW ----------------
+
   const existingQuestionResponse =
     await sql`SELECT * FROM "user_question_responses" WHERE user_id = ${userId}`
   console.log(
