@@ -29,7 +29,7 @@ export function generateFarcasterFrame(image: string, postData: TPostData) {
     case 'error':
       metaTags += `
 		<meta property="fc:frame:image" content="${image}" />
-		<meta property="fc:frame:button:1" content="Follow /addresso for the next drop" />
+		<meta property="fc:frame:button:1" content="Follow the channel to participate!" />
 		<meta property="fc:frame:button:1:action" content="post_redirect" />`
       break
   }

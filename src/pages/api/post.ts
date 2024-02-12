@@ -43,11 +43,10 @@ export default async function handler(
 
   //TODO: generate inital frame based on calculation of participation/correctness
   //let castHash = ud.castId.hash
-  //let castHash = "0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471" //cryptostocks cast
-  let castHash = "0x9939f4e2788d8bbcb1fd6801a8e4fc4b3f341d59"
+  let castHash = "0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471" //cryptostocks cast
   let channel = await getChannelFromCastHash(castHash)
  
-  if(!channel) channel = "frames"
+  if(!channel) channel = "cryptostocks"
   //TODO add check here so that user is indeed in the channel, since its channel-gated poll
   
   const timeout = setTimeout(() => {
@@ -57,14 +56,18 @@ export default async function handler(
     //html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.reload}`, 'reload');
 }, 3000);
 
-   userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
+  userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
   clearTimeout(timeout); // Clear the timeout if the function returns before 3 seconds
   console.log('User is in the channel:', userIsInChannel?.fid);
   
   console.log(channel, 'CHANNEL GOT HERE', reqId, 'reqId')
   switch (reqId) {
     case 'start':
-      html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.question1}`, 'question');
+      if(userIsInChannel?.fid){
+        html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.question1}`, 'question');
+      }else {
+        html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.be_a_follower}`, 'error');
+      }
     break
     case "question":
       if(channel && ud.inputText && ud.inputText.length){
@@ -82,7 +85,7 @@ export default async function handler(
       response.redirect(302, locationHeader) // or you set Location in response.setHeader()
     break
     case 'error':
-      locationHeader = 'https://warpcast.com/~/channel/frames'
+      locationHeader = `https://warpcast.com/~/channel/${channel}`
       response.redirect(302, locationHeader)
       break
     default:
