@@ -1,12 +1,14 @@
 import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
 
-import { IMAGES, mintWithSyndicate } from '@/utils/utils'
+import { IMAGES } from '@/utils/image-paths'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
-import {  saveUser, saveUserQuestionResponse } from '@/utils/database-operations'
-import { getChannelFromCastHash, getIfUserIsInChannel } from '@/utils/neynar-api'
-
+import { saveUser, saveUserQuestionResponse } from '@/utils/database-operations'
+import {
+  getChannelFromCastHash,
+  getIfUserIsInChannel,
+} from '@/utils/neynar-api'
 
 export default async function handler(
   req: NextApiRequest,
@@ -26,7 +28,6 @@ export default async function handler(
     signedMessage.trustedData?.messageBytes
   )
 
-
   if (!isMessageValid) {
     return res.status(400).json({ error: 'Invalid message' })
   }
@@ -37,62 +38,81 @@ export default async function handler(
   let statusCode: number = 200
   let locationHeader: string = ''
   let userIsInChannel: TUserProfileNeynar | null | undefined = null
-  const questionCorrectAnswer = "fransson"
-  
+  const questionCorrectAnswer = 'fransson'
+
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
   //TODO: generate inital frame based on calculation of participation/correctness
   //let castHash = ud.castId.hash
-  let castHash = "0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471" //cryptostocks cast
+  //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
+  let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25'
   let channel = await getChannelFromCastHash(castHash)
- 
-  if(!channel) channel = "cryptostocks"
-  //TODO add check here so that user is indeed in the channel, since its channel-gated poll
-  
+  if (!channel) channel = 'skininthegame'
+
+  //if network response takes more than 3 seconds, force generate reload btn
   const timeout = setTimeout(() => {
-    console.log('Response too long');
-    //TODO if the API response of userIsInChannel is too long, we should
-    //force generate a 'reload' btn here
-    //html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.reload}`, 'reload');
-}, 3000);
+    console.log('Response took too long!')
+    //html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.reload}`, 'reload')
+    //return response.send(html)
+  }, 3000)
 
   userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
-  clearTimeout(timeout); // Clear the timeout if the function returns before 3 seconds
-  console.log('User is in the channel:', userIsInChannel?.fid);
-  
-  console.log(channel, 'CHANNEL GOT HERE', reqId, 'reqId')
+  clearTimeout(timeout) // Clear the timeout if the function returns before 3 seconds
+
   switch (reqId) {
     case 'start':
-      if(userIsInChannel?.fid){
-        html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.question1}`, 'question');
-      }else {
-        html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.be_a_follower}`, 'error');
+      if (userIsInChannel?.fid) {
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${IMAGES.question1}`,
+          'question'
+        )
+      } else {
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${IMAGES.be_a_follower}`,
+          'error'
+        )
       }
-    break
-    case "question":
-      if(channel && ud.inputText && ud.inputText.length){
+      break
+    case 'question':
+      if (
+        channel &&
+        userIsInChannel?.fid &&
+        ud.inputText &&
+        ud.inputText.length
+      ) {
         const user = await saveUser(ud, channel)
-        const correctResponse = ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
-        html = await saveUserQuestionResponse(ud, user.user_id, correctResponse as boolean)
-      }
-      else {
+        console.log(user.id, 'wats user id after saveduser')
+        const correctResponse =
+          ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
+        html = await saveUserQuestionResponse(
+          ud,
+          user.id,
+          correctResponse as boolean
+        )
+      } else {
         console.log('NO SUBMISSION BY USER')
         html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
       }
-    break
+      break
     case 'redirect':
       locationHeader = 'https://www.liquality.io'
       response.redirect(302, locationHeader) // or you set Location in response.setHeader()
-    break
+      break
     case 'error':
       locationHeader = `https://warpcast.com/~/channel/${channel}`
       response.redirect(302, locationHeader)
       break
+    case 'reload':
+      html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
+
+      break
     default:
-      html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'whale')
+      html = generateFarcasterFrame(
+        `${SERVER_URL}/${IMAGES.question1}`,
+        'question'
+      )
       break
   }
-
-
+  console.log(html, 'wats html?')
   return response.send(html)
 }

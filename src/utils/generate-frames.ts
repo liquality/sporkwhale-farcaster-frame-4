@@ -1,13 +1,12 @@
 export const SERVER_URL = process.env.NGROK_OR_HOSTED_SERVER_URL
 import { TPostData, TUntrustedData } from '../types'
+import { IMAGES } from './image-paths'
 
 // generate an html page with the relevant opengraph tags
 export function generateFarcasterFrame(image: string, postData: TPostData) {
   let metaTags = ''
 
-
   switch (postData) {
-
     case 'mint':
       metaTags += `
 		  <meta property="fc:frame:image" content="${image}" />
@@ -19,13 +18,19 @@ export function generateFarcasterFrame(image: string, postData: TPostData) {
 		  <meta property="fc:frame:button:1" content="Go see leaderboard!" />
 		  <meta property="fc:frame:button:1:action" content="post_redirect" />`
       break
-	  case 'question':
-		metaTags += `
+    case 'question':
+      metaTags += `
 			<meta property="fc:frame:image" content="${image}" />
 			<meta property="fc:frame:input:text" content="Type your answer" />
 			<meta property="fc:frame:button:1" content="Submit ✉️" />
 			`
-		break
+      break
+    case 'reload':
+      metaTags += `
+			<meta property="fc:frame:image" content="${image}" />
+			<meta property="fc:frame:button:1" content="Reload" />
+			`
+      break
     case 'error':
       metaTags += `
 		<meta property="fc:frame:image" content="${image}" />
@@ -48,4 +53,18 @@ export function generateFarcasterFrame(image: string, postData: TPostData) {
 	  </body>
 	  </html>
 	`
+}
+
+export const handleTooLongNetworkResponse = (timeout: NodeJS.Timeout) => {
+  timeout = setTimeout(() => {
+    console.log('Response took too long')
+    //TODO if the API response of userIsInChannel is too long, we should
+    //force generate a 'reload' btn here
+    const html = generateFarcasterFrame(
+      `${SERVER_URL}/${IMAGES.reload}`,
+      'reload'
+    )
+    return html
+  }, 1000)
+  return null
 }

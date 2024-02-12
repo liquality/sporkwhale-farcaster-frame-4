@@ -1,5 +1,5 @@
 import { SERVER_URL } from '@/utils/generate-frames'
-import { IMAGES } from '@/utils/utils';
+import { IMAGES } from '@/utils/image-paths';
 import Head from 'next/head'
 import { useEffect, useState } from 'react';
 
