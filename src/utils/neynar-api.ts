@@ -1,3 +1,5 @@
+import { TUserProfileNeynar } from "@/types";
+
 export async function fetchFromNeynarApiHere(fid: number): Promise<string | void> {}
 
 export async function getChannelFromCastHash(castHash: string): Promise<string | void> {
@@ -38,7 +40,7 @@ export async function getChannelFromCastHash(castHash: string): Promise<string |
 
 
 //TODO if this response takes more than > 5 seconds, we need to return a frame with 'refresh' btn
- export async function getIfUserIsInChannel(channel: string, fid: number): Promise<string | void> {
+export async function getIfUserIsInChannel(channel: string, fid: number): Promise<TUserProfileNeynar | null | undefined> {
   const options = {
     method: 'GET',
     headers: {
@@ -46,8 +48,6 @@ export async function getChannelFromCastHash(castHash: string): Promise<string |
       api_key: 'NEYNAR_API_DOCS'
     },
   }
-
-  let allUsers: any[] = []; // Array to store all users
 
   try {
     let cursor = ''; // Initial cursor value
@@ -59,13 +59,20 @@ export async function getChannelFromCastHash(castHash: string): Promise<string |
         `https://api.neynar.com/v2/farcaster/channel/followers?id=${channel}&limit=1000&cursor=${cursor}`,
         options
       );
+
       if (!resp.ok) {
         throw new Error('Network response was not ok');
       }
+
       const data = await resp.json();
+
       if (data.users) {
-        // concatenate fetched users with existing users
-        allUsers = allUsers.concat(data.users);
+        // Find the user in the fetched page
+        const userInChannel = data.users.find((user: any) => user.fid === fid);
+        if (userInChannel) {
+          console.log(userInChannel, 'user in channel');
+          return userInChannel; // Return the user if found
+        }
       }
 
       // Check if there is another page
@@ -75,13 +82,9 @@ export async function getChannelFromCastHash(castHash: string): Promise<string |
         hasNextPage = false;
       }
     }
-    console.log(allUsers.length, 'all users length?')
 
-    // find the user in the combined list of users
-    const userInChannel = allUsers.find((user: any) => user.fid === fid);
-
-    console.log(userInChannel, 'user in channel');
-    return userInChannel;
+    console.log('User not found in the channel.');
+    return null; // User not found
   } catch (error) {
     console.error('Error fetching profile data:', error);
   }

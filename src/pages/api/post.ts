@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
 
 import { IMAGES, mintWithSyndicate } from '@/utils/utils'
 import { validateMessage } from '@/validate'
-import { TSignedMessage, TUntrustedData } from '@/types'
+import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {  saveUser, saveUserQuestionResponse } from '@/utils/database-operations'
 import { getChannelFromCastHash, getIfUserIsInChannel } from '@/utils/neynar-api'
@@ -36,17 +36,31 @@ export default async function handler(
   let html: string = ''
   let statusCode: number = 200
   let locationHeader: string = ''
+  let userIsInChannel: TUserProfileNeynar | null | undefined = null
   const questionCorrectAnswer = "fransson"
+  
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
   //TODO: generate inital frame based on calculation of participation/correctness
   //let castHash = ud.castId.hash
-  let castHash = "0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471"
+  //let castHash = "0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471" //cryptostocks cast
+  let castHash = "0x9939f4e2788d8bbcb1fd6801a8e4fc4b3f341d59"
   let channel = await getChannelFromCastHash(castHash)
  
-  if(!channel) channel = "cryptostocks"
+  if(!channel) channel = "frames"
   //TODO add check here so that user is indeed in the channel, since its channel-gated poll
-  const userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
+  
+  const timeout = setTimeout(() => {
+    console.log('Response too long');
+    //TODO if the API response of userIsInChannel is too long, we should
+    //force generate a 'reload' btn here
+    //html =  generateFarcasterFrame(`${SERVER_URL}/${IMAGES.reload}`, 'reload');
+}, 3000);
+
+   userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
+  clearTimeout(timeout); // Clear the timeout if the function returns before 3 seconds
+  console.log('User is in the channel:', userIsInChannel?.fid);
+  
   console.log(channel, 'CHANNEL GOT HERE', reqId, 'reqId')
   switch (reqId) {
     case 'start':
@@ -76,7 +90,6 @@ export default async function handler(
       break
   }
 
-  console.log(html, 'wats html?')
 
   return response.send(html)
 }
