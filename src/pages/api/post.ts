@@ -1,13 +1,9 @@
 import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
 
-import { IMAGES, mintWithSyndicate } from '@/utils/utils'
+import { IMAGES } from '@/utils/image-paths'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
-import {
-  generateFarcasterFrame,
-  handleTooLongNetworkResponse,
-  SERVER_URL,
-} from '@/utils/generate-frames'
+import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import { saveUser, saveUserQuestionResponse } from '@/utils/database-operations'
 import {
   getChannelFromCastHash,
@@ -85,11 +81,12 @@ export default async function handler(
         ud.inputText.length
       ) {
         const user = await saveUser(ud, channel)
+        console.log(user.id, 'wats user id after saveduser')
         const correctResponse =
           ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
         html = await saveUserQuestionResponse(
           ud,
-          user.user_id,
+          user.id,
           correctResponse as boolean
         )
       } else {

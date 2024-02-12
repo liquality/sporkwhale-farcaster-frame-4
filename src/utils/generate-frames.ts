@@ -1,6 +1,6 @@
 export const SERVER_URL = process.env.NGROK_OR_HOSTED_SERVER_URL
 import { TPostData, TUntrustedData } from '../types'
-import { IMAGES } from './utils'
+import { IMAGES } from './image-paths'
 
 // generate an html page with the relevant opengraph tags
 export function generateFarcasterFrame(image: string, postData: TPostData) {

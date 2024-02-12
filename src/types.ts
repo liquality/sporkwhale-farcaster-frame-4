@@ -25,23 +25,32 @@ export type TUntrustedData = {
   castId: { fid: number; hash: string }
 }
 
-export type TPostData = 'redirect' | 'mint' | 'start' | 'error'| 'reload' | "question"
-
+export type TPostData =
+  | 'redirect'
+  | 'mint'
+  | 'start'
+  | 'error'
+  | 'reload'
+  | 'question'
 
 export type TUserProfileNeynar = {
-  object: 'user';
-  fid: number;
-  custody_address: string;
-  username: string;
-  display_name: string;
-  pfp_url: string;
+  object: 'user'
+  fid: number
+  custody_address: string
+  username: string
+  display_name: string
+  pfp_url: string
   profile: {
     bio: {
-      text: string;
-    };
-  };
-  follower_count: number;
-  following_count: number;
-  verifications: string[];
-  active_status: 'active' | 'inactive';
-};
+      text: string
+    }
+  }
+  follower_count: number
+  following_count: number
+  verifications: string[]
+  active_status: 'active' | 'inactive'
+}
+
+export interface LevelImages {
+  [key: string]: string
+}
