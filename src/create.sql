@@ -9,7 +9,7 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     wallet_address VARCHAR(255),
     channel_id INTEGER REFERENCES channel(id) ON DELETE CASCADE,
-    fid VARCHAR(255)
+    fid INTEGER
 );
 
 CREATE TABLE questions (
