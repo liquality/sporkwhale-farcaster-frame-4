@@ -8,7 +8,6 @@ CREATE TABLE channel (
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     wallet_address VARCHAR(255),
-    channel_id INTEGER REFERENCES channel(id) ON DELETE CASCADE,
     fid INTEGER
 );
 
@@ -40,6 +39,8 @@ DROP TABLE IF EXISTS trait_displayed CASCADE;
 DROP TABLE IF EXISTS questions CASCADE;
 
 DROP TABLE IF EXISTS users CASCADE;
+
+DROP TABLE IF EXISTS channel CASCADE;
 
 --Tester data
 INSERT INTO

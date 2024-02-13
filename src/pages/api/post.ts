@@ -72,7 +72,7 @@ export default async function handler(
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
         html = generateFarcasterFrame(
-          `${SERVER_URL}/${IMAGES.question1}`,
+          `${SERVER_URL}/${traitStatusImage}`,
           'question'
         )
       } else {
