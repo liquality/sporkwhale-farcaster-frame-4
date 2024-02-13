@@ -56,11 +56,11 @@ export default async function handler(
     //return response.send(html)
   }, 3000)
 
-  userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
   clearTimeout(timeout) // Clear the timeout if the function returns before 3 seconds
 
   switch (reqId) {
     case 'start':
+      userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
       if (userIsInChannel?.fid) {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.question1}`,
@@ -74,12 +74,7 @@ export default async function handler(
       }
       break
     case 'question':
-      if (
-        channel &&
-        userIsInChannel?.fid &&
-        ud.inputText &&
-        ud.inputText.length
-      ) {
+      if (channel && ud.inputText && ud.inputText.length) {
         const user = await saveUser(ud, channel)
         console.log(user.id, 'wats user id after saveduser')
         const correctResponse =
