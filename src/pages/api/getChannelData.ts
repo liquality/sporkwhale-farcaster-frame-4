@@ -6,9 +6,9 @@ export default async function handler(
   response: NextApiResponse
 ) {
   try {
-    const users= await sql`SELECT * FROM users`;
+    const users = await sql`SELECT * FROM users`
     const userCount = users.rowCount
-    const moreThanOneUser = userCount > 1;
+    const moreThanOneUser = userCount > 1
 
     return response.status(200).json({ moreThanOneUser: moreThanOneUser })
   } catch (error) {
