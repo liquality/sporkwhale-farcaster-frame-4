@@ -57,13 +57,24 @@ export async function saveUser(ud: TUntrustedData, channel: string) {
   } else return existingUser.rows[0]
 }
 
+export async function getChannel(channel: string) {
+  const existingChannel =
+    await sql`SELECT * FROM channel WHERE name = ${channel}`
+  return existingChannel.rows[0]
+}
+
 //TODO change this to 'over 30% of the channel (get total user length from neynar in a particular channel)
-export async function calculateImageBasedOnChannelResponses(channel: string) {
+export async function calculateImageBasedOnChannelResponses(
+  channelName: string
+) {
   try {
+    const channel = await getChannel(channelName)
+    const channelFollowerCount = channel.followers
+
     let newTrait = ''
     // Fetch current level of the channel from the database
     const currentLevelQuery =
-      await sql`SELECT trait FROM trait_displayed WHERE channel = ${channel}`
+      await sql`SELECT trait FROM trait_displayed WHERE channel_id = ${channel.id}`
     const currentTrait = currentLevelQuery.rows[0].trait
 
     // Determine the current level index based on the image path
@@ -71,24 +82,19 @@ export async function calculateImageBasedOnChannelResponses(channel: string) {
 
     // Fetch total count of users in the specific channel
     const totalUsersQuery =
-      await sql`SELECT COUNT(*) AS total_users FROM users WHERE channel = ${channel}`
+      await sql`SELECT COUNT(*) AS total_users FROM users WHERE channel_id = ${channel.id}`
     const totalUsersCount = totalUsersQuery.rows[0].total_users
-
-    // Fetch count of users who responded in the specific channel
-    const respondingUsersQuery =
-      await sql`SELECT COUNT(DISTINCT user_id) AS responding_users FROM user_question_responses WHERE channel = ${channel}`
-    const respondingUsersCount = respondingUsersQuery.rows[0].responding_users
 
     // Fetch count of correct responses in the specific channel
     const correctResponsesQuery =
-      await sql`SELECT COUNT(*) AS correct_responses FROM user_question_responses WHERE channel = ${channel} AND correct_response = TRUE`
+      await sql`SELECT COUNT(*) AS correct_responses FROM user_question_responses WHERE channel_id = ${channel.id} AND correct_response = TRUE`
     const correctResponsesCount =
       correctResponsesQuery.rows[0].correct_responses
 
     // Calculate response percentages
-    const respondingPercentage = (respondingUsersCount / totalUsersCount) * 100
+    const respondingPercentage = (channelFollowerCount / totalUsersCount) * 100
     const correctPercentage =
-      (correctResponsesCount / respondingUsersCount) * 100
+      (correctResponsesCount / channelFollowerCount) * 100
 
     // Determine SporkWhale's status based on the conditions and update the trait displayed
     if (respondingPercentage > 30 && correctPercentage > 50) {
@@ -98,12 +104,12 @@ export async function calculateImageBasedOnChannelResponses(channel: string) {
         Object.keys(levelImages).length - 1
       )
       newTrait = levelImages[nextLevel]
-      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel = ${channel}`
+      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel_id = ${channel.id}`
     } else {
       // Move down a level
       const nextLevel = Math.max(currentLevel - 1, 0)
       newTrait = levelImages[nextLevel]
-      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel = ${channel}`
+      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel_id = ${channel.id}`
     }
 
     // Return new trait img

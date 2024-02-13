@@ -1,7 +1,7 @@
 -- Create sql db
 CREATE TABLE channel (
     id SERIAL PRIMARY KEY,
-    channel VARCHAR(255),
+    name VARCHAR(255),
     followers INTEGER
 );
 
@@ -23,13 +23,13 @@ CREATE TABLE user_question_responses (
     user_id INTEGER REFERENCES users(id),
     correct_response BOOLEAN,
     response VARCHAR(255),
-    channel_id INTEGER REFERENCES channel(id),
+    channel_id INTEGER REFERENCES channel(id)
 );
 
 CREATE TABLE trait_displayed (
     id SERIAL PRIMARY KEY,
     trait VARCHAR(255),
-    channel_id INTEGER REFERENCES channel(id),
+    channel_id INTEGER REFERENCES channel(id)
 );
 
 --IF YOU WANT TO DROP:
@@ -48,9 +48,14 @@ VALUES
     ('What is Johanna''s last name?');
 
 INSERT INTO
-    trait_displayed (trait, channel)
+    channel (name, followers)
+VALUES
+    ('skininthegame', 3100);
+
+INSERT INTO
+    trait_displayed (trait, channel_id)
 VALUES
     (
         'glasses_bracelet_chain_bathingSuit_whale.png',
-        'skininthegame'
+        1
     );
