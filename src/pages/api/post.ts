@@ -48,10 +48,10 @@ export default async function handler(
 
   //TODO: generate inital frame based on calculation of participation/correctness
   //let castHash = ud.castId.hash
-  //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
-  let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25'
+  let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
+  //let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
   let channel = await getChannelFromCastHash(castHash)
-  if (!channel) channel = 'skininthegame'
+  if (!channel) channel = 'cryptostocks'
 
   //if network response takes more than 3 seconds, force generate reload btn
   const timeout = setTimeout(() => {
@@ -64,8 +64,13 @@ export default async function handler(
 
   switch (reqId) {
     case 'start':
-      userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
-      if (userIsInChannel?.fid) {
+      //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
+      const traitStatusImage = await calculateImageBasedOnChannelResponses(
+        channel
+      )
+      console.log(traitStatusImage, 'traitstatus img?')
+      if (1 === 1) {
+        //if (userIsInChannel?.fid) {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.question1}`,
           'question'
@@ -79,10 +84,6 @@ export default async function handler(
       break
     case 'question':
       if (channel && ud.inputText && ud.inputText.length) {
-        const traitStatusImage = await calculateImageBasedOnChannelResponses(
-          channel
-        )
-        console.log(traitStatusImage, 'traitstatus img?')
         const user = await saveUser(ud, channel)
         console.log(user.id, 'wats user id after saveduser')
         const correctResponse =

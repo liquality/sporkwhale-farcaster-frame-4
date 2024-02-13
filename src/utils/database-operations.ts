@@ -3,7 +3,7 @@ import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { getAddrByFid } from './farcaster-api'
 import { IMAGES, levelImages } from './image-paths'
-export const QUESTION_ID = 1
+export const QUESTION_ID = 3
 
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,
@@ -29,6 +29,7 @@ export async function saveUserQuestionResponse(
     await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${ud.inputText});`
     if (correctResponse) {
       console.log('Got into correctresponse!')
+
       return generateFarcasterFrame(
         `${SERVER_URL}/${IMAGES.correct_response}`,
         'redirect'
@@ -44,15 +45,16 @@ export async function saveUserQuestionResponse(
   }
 }
 
-export async function saveUser(ud: TUntrustedData, channel: string) {
+export async function saveUser(ud: TUntrustedData, channelName: string) {
+  const channel = await getChannel(channelName)
   //If the user does not exist in db and this channel, create a new one
   const existingUser =
-    await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel = ${channel} `
+    await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel_id = ${channel.id}`
   const walletAddress = await getAddrByFid(ud.fid)
   if (!existingUser.rowCount && walletAddress) {
-    await sql`INSERT INTO users (fid, wallet_address, channel) VALUES (${ud.fid}, ${walletAddress}, ${channel});`
+    await sql`INSERT INTO users (fid, wallet_address, channel_id) VALUES (${ud.fid}, ${walletAddress}, ${channel.id});`
     const selectedNewUser =
-      await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel = ${channel} `
+      await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel_id = ${channel.id} `
     return selectedNewUser.rows[0]
   } else return existingUser.rows[0]
 }
@@ -91,10 +93,18 @@ export async function calculateImageBasedOnChannelResponses(
     const correctResponsesCount =
       correctResponsesQuery.rows[0].correct_responses
 
+    console.log(correctResponsesCount, 'correct responses count')
+    console.log(
+      channelFollowerCount,
+      'channelfollowercount and totaluserscount:',
+      totalUsersCount
+    )
     // Calculate response percentages
-    const respondingPercentage = (channelFollowerCount / totalUsersCount) * 100
-    const correctPercentage =
-      (correctResponsesCount / channelFollowerCount) * 100
+    const respondingPercentage = (totalUsersCount / channelFollowerCount) * 100
+    const correctPercentage = (correctResponsesCount / totalUsersCount) * 100
+
+    console.log(respondingPercentage, 'responding percentage!!!!!!!!!!')
+    console.log(correctPercentage, 'correct percentage!!!!!!!!!!!!')
 
     // Determine SporkWhale's status based on the conditions and update the trait displayed
     if (respondingPercentage > 30 && correctPercentage > 50) {
