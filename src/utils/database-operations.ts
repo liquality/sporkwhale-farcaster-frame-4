@@ -59,7 +59,7 @@ export async function saveUser(ud: TUntrustedData, channelName: string) {
 
 export async function getChannel(channel: string) {
   const existingChannel =
-    await sql`SELECT * FROM channel WHERE name = ${channel}`
+    await sql`SELECT * FROM channels WHERE name = ${channel}`
   return existingChannel.rows[0]
 }
 
