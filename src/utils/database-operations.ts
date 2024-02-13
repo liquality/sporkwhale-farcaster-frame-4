@@ -3,7 +3,7 @@ import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { getAddrByFid } from './farcaster-api'
 import { IMAGES, levelImages } from './image-paths'
-export const QUESTION_ID = 1
+export const QUESTION_ID = 3
 
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,
@@ -29,6 +29,7 @@ export async function saveUserQuestionResponse(
     await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${ud.inputText});`
     if (correctResponse) {
       console.log('Got into correctresponse!')
+
       return generateFarcasterFrame(
         `${SERVER_URL}/${IMAGES.correct_response}`,
         'redirect'
@@ -44,28 +45,38 @@ export async function saveUserQuestionResponse(
   }
 }
 
-export async function saveUser(ud: TUntrustedData, channel: string) {
+export async function saveUser(ud: TUntrustedData, channelName: string) {
+  const channel = await getChannel(channelName)
   //If the user does not exist in db and this channel, create a new one
   const existingUser =
-    await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel = ${channel} `
+    await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel_id = ${channel.id}`
   const walletAddress = await getAddrByFid(ud.fid)
   if (!existingUser.rowCount && walletAddress) {
-    await sql`INSERT INTO users (fid, wallet_address, channel) VALUES (${ud.fid}, ${walletAddress}, ${channel});`
+    await sql`INSERT INTO users (fid, wallet_address, channel_id) VALUES (${ud.fid}, ${walletAddress}, ${channel.id});`
     const selectedNewUser =
-      await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel = ${channel} `
+      await sql`SELECT * FROM users WHERE fid = ${ud.fid} AND channel_id = ${channel.id} `
     return selectedNewUser.rows[0]
   } else return existingUser.rows[0]
 }
 
+export async function getChannel(channel: string) {
+  const existingChannel =
+    await sql`SELECT * FROM channel WHERE name = ${channel}`
+  return existingChannel.rows[0]
+}
+
+//TODO change this to 'over 30% of the channel (get total user length from neynar in a particular channel)
 export async function calculateImageBasedOnChannelResponses(
-  ud: TUntrustedData,
-  channel: string
+  channelName: string
 ) {
   try {
+    const channel = await getChannel(channelName)
+    const channelFollowerCount = channel.followers
+
     let newTrait = ''
     // Fetch current level of the channel from the database
     const currentLevelQuery =
-      await sql`SELECT trait FROM trait_displayed WHERE channel = ${channel}`
+      await sql`SELECT trait FROM trait_displayed WHERE channel_id = ${channel.id}`
     const currentTrait = currentLevelQuery.rows[0].trait
 
     // Determine the current level index based on the image path
@@ -73,24 +84,27 @@ export async function calculateImageBasedOnChannelResponses(
 
     // Fetch total count of users in the specific channel
     const totalUsersQuery =
-      await sql`SELECT COUNT(*) AS total_users FROM users WHERE channel = ${channel}`
+      await sql`SELECT COUNT(*) AS total_users FROM users WHERE channel_id = ${channel.id}`
     const totalUsersCount = totalUsersQuery.rows[0].total_users
-
-    // Fetch count of users who responded in the specific channel
-    const respondingUsersQuery =
-      await sql`SELECT COUNT(DISTINCT user_id) AS responding_users FROM user_question_responses WHERE channel = ${channel}`
-    const respondingUsersCount = respondingUsersQuery.rows[0].responding_users
 
     // Fetch count of correct responses in the specific channel
     const correctResponsesQuery =
-      await sql`SELECT COUNT(*) AS correct_responses FROM user_question_responses WHERE channel = ${channel} AND correct_response = TRUE`
+      await sql`SELECT COUNT(*) AS correct_responses FROM user_question_responses WHERE channel_id = ${channel.id} AND correct_response = TRUE`
     const correctResponsesCount =
       correctResponsesQuery.rows[0].correct_responses
 
+    console.log(correctResponsesCount, 'correct responses count')
+    console.log(
+      channelFollowerCount,
+      'channelfollowercount and totaluserscount:',
+      totalUsersCount
+    )
     // Calculate response percentages
-    const respondingPercentage = (respondingUsersCount / totalUsersCount) * 100
-    const correctPercentage =
-      (correctResponsesCount / respondingUsersCount) * 100
+    const respondingPercentage = (totalUsersCount / channelFollowerCount) * 100
+    const correctPercentage = (correctResponsesCount / totalUsersCount) * 100
+
+    console.log(respondingPercentage, 'responding percentage!!!!!!!!!!')
+    console.log(correctPercentage, 'correct percentage!!!!!!!!!!!!')
 
     // Determine SporkWhale's status based on the conditions and update the trait displayed
     if (respondingPercentage > 30 && correctPercentage > 50) {
@@ -100,12 +114,12 @@ export async function calculateImageBasedOnChannelResponses(
         Object.keys(levelImages).length - 1
       )
       newTrait = levelImages[nextLevel]
-      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel = ${channel}`
+      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel_id = ${channel.id}`
     } else {
       // Move down a level
       const nextLevel = Math.max(currentLevel - 1, 0)
       newTrait = levelImages[nextLevel]
-      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel = ${channel}`
+      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel_id = ${channel.id}`
     }
 
     // Return new trait img

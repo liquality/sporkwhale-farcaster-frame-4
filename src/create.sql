@@ -1,9 +1,15 @@
 -- Create sql db
+CREATE TABLE channel (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    followers INTEGER
+);
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     wallet_address VARCHAR(255),
-    channel VARCHAR(255),
-    fid VARCHAR(255)
+    channel_id INTEGER REFERENCES channel(id) ON DELETE CASCADE,
+    fid INTEGER
 );
 
 CREATE TABLE questions (
@@ -13,17 +19,17 @@ CREATE TABLE questions (
 
 CREATE TABLE user_question_responses (
     id SERIAL PRIMARY KEY,
-    question_id INTEGER REFERENCES questions(id),
-    user_id INTEGER REFERENCES users(id),
+    question_id INTEGER REFERENCES questions(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     correct_response BOOLEAN,
     response VARCHAR(255),
-    channel VARCHAR(255)
+    channel_id INTEGER REFERENCES channel(id) ON DELETE CASCADE
 );
 
 CREATE TABLE trait_displayed (
     id SERIAL PRIMARY KEY,
     trait VARCHAR(255),
-    channel VARCHAR(255)
+    channel_id INTEGER REFERENCES channel(id) ON DELETE CASCADE
 );
 
 --IF YOU WANT TO DROP:
@@ -40,3 +46,16 @@ INSERT INTO
     questions (question)
 VALUES
     ('What is Johanna''s last name?');
+
+INSERT INTO
+    channel (name, followers)
+VALUES
+    ('cryptostocks', 230);
+
+INSERT INTO
+    trait_displayed (trait, channel_id)
+VALUES
+    (
+        'glasses_bracelet_chain_bathingSuit_whale.png',
+        2
+    );
