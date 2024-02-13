@@ -57,10 +57,8 @@ export async function saveUser(ud: TUntrustedData, channel: string) {
   } else return existingUser.rows[0]
 }
 
-export async function calculateImageBasedOnChannelResponses(
-  ud: TUntrustedData,
-  channel: string
-) {
+//TODO change this to 'over 30% of the channel (get total user length from neynar in a particular channel)
+export async function calculateImageBasedOnChannelResponses(channel: string) {
   try {
     let newTrait = ''
     // Fetch current level of the channel from the database

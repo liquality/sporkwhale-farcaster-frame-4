@@ -4,7 +4,11 @@ import { IMAGES } from '@/utils/image-paths'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
-import { saveUser, saveUserQuestionResponse } from '@/utils/database-operations'
+import {
+  calculateImageBasedOnChannelResponses,
+  saveUser,
+  saveUserQuestionResponse,
+} from '@/utils/database-operations'
 import {
   getChannelFromCastHash,
   getIfUserIsInChannel,
@@ -75,6 +79,10 @@ export default async function handler(
       break
     case 'question':
       if (channel && ud.inputText && ud.inputText.length) {
+        const traitStatusImage = await calculateImageBasedOnChannelResponses(
+          channel
+        )
+        console.log(traitStatusImage, 'traitstatus img?')
         const user = await saveUser(ud, channel)
         console.log(user.id, 'wats user id after saveduser')
         const correctResponse =
