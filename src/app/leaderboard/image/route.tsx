@@ -1,5 +1,6 @@
 import { ImageResponse } from 'next/og'
-import Leaderboard from '../../components/leaderboard'
+import data from '../../components/leaderboard-data.json';
+import LeaderboardTempalte from '../../components/leaderboard-template'
 
 export async function GET({
   params,
@@ -8,8 +9,9 @@ export async function GET({
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
+  const data: any[] = [];
   return new ImageResponse(
-    <Leaderboard />,
+    <LeaderboardTempalte data={data} />,
     // ImageResponse options
     {
     

@@ -1,13 +1,6 @@
+import LeaderboardTemplate from '../../components/leaderboard-template'
+import data from '../../components/leaderboard-data.json';
 
-import Leaderboard from '../../components/leaderboard'
-
-export default async function LeaderboardContent({
-  params,
-  searchParams,
-}: {
-  params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}) {
-  return <Leaderboard />;
-  
+export default async function Page() {
+  return <LeaderboardTemplate data={data}/>
 }
