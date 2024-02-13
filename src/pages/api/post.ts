@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
 
-import { IMAGES } from '@/utils/image-paths'
+import { IMAGES, levelImages } from '@/utils/image-paths'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
@@ -65,14 +65,14 @@ export default async function handler(
   switch (reqId) {
     case 'start':
       //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
-      const traitStatusImage = await calculateImageBasedOnChannelResponses(
-        channel
-      )
-      console.log(traitStatusImage, 'traitstatus img?')
+
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
+        const traitStatusImage = await calculateImageBasedOnChannelResponses(
+          channel
+        )
         html = generateFarcasterFrame(
-          `${SERVER_URL}/${IMAGES.question1}`,
+          `${SERVER_URL}/${traitStatusImage}`,
           'question'
         )
       } else {
@@ -85,7 +85,6 @@ export default async function handler(
     case 'question':
       if (channel && ud.inputText && ud.inputText.length) {
         const user = await saveUser(ud, channel)
-        console.log(user.id, 'wats user id after saveduser')
         const correctResponse =
           ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
         html = await saveUserQuestionResponse(
@@ -117,6 +116,5 @@ export default async function handler(
       )
       break
   }
-  console.log(html, 'wats html?')
   return response.send(html)
 }

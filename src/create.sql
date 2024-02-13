@@ -1,5 +1,5 @@
 -- Create sql db
-CREATE TABLE channel (
+CREATE TABLE channels (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     followers INTEGER
@@ -8,7 +8,6 @@ CREATE TABLE channel (
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     wallet_address VARCHAR(255),
-    channel_id INTEGER REFERENCES channel(id) ON DELETE CASCADE,
     fid INTEGER
 );
 
@@ -23,13 +22,13 @@ CREATE TABLE user_question_responses (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     correct_response BOOLEAN,
     response VARCHAR(255),
-    channel_id INTEGER REFERENCES channel(id) ON DELETE CASCADE
+    channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
 );
 
 CREATE TABLE trait_displayed (
     id SERIAL PRIMARY KEY,
     trait VARCHAR(255),
-    channel_id INTEGER REFERENCES channel(id) ON DELETE CASCADE
+    channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
 );
 
 --IF YOU WANT TO DROP:
@@ -40,6 +39,8 @@ DROP TABLE IF EXISTS trait_displayed CASCADE;
 DROP TABLE IF EXISTS questions CASCADE;
 
 DROP TABLE IF EXISTS users CASCADE;
+
+DROP TABLE IF EXISTS channel CASCADE;
 
 --Tester data
 INSERT INTO

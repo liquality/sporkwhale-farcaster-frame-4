@@ -12,13 +12,13 @@ export const IMAGES = {
 }
 
 export const levelImages: LevelImages = {
-  negative1: 'bathingSuit_chain_bracelet_whale.png',
-  negative2: 'chain_bracelet_whale.png',
-  negative3: 'bracelet_whale.png',
-  negative4: 'naked_whale.png',
-  0: 'glasses_bracelet_chain_bathingSuit_whale.png',
-  1: 'glasses_bracelet_chain_bathingSuit_laserEyes_whale.png',
-  2: 'glasses_bracelet_chain_bathingSuit_laserEyes_headSet_whale.png',
-  3: 'glasses_bracelet_chain_bathingSuit_laserEyes_headSet_diamondHands_whale.png',
-  4: 'glasses_bracelet_chain_bathingSuit_laserEyes_headSet_diamondHands_crown_whale.png',
+  negative1: '-1_bathingSuit_chain_bracelet_whale.png',
+  negative2: '-2_chain_bracelet_whale.png',
+  negative3: '-3_bracelet_whale.png',
+  negative4: '-4_naked_whale.png',
+  0: '0_glasses_bracelet_chain_bathingSuit_whale.png',
+  1: '1_glasses_bracelet_chain_bathingSuit_laserEyes_whale.png',
+  2: '2_glasses_bracelet_chain_bathingSuit_laserEyes_headSet_whale.png',
+  3: '3_glasses_bracelet_chain_bathingSuit_laserEyes_headSet_diamondHands_whale.png',
+  4: '4_glasses_bracelet_chain_bathingSuit_laserEyes_headSet_diamondHands_crown_whale.png',
 }
