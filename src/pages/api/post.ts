@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
 
-import { IMAGES } from '@/utils/image-paths'
+import { IMAGES, levelImages } from '@/utils/image-paths'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
@@ -65,12 +65,15 @@ export default async function handler(
   switch (reqId) {
     case 'start':
       //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
-      const traitStatusImage = await calculateImageBasedOnChannelResponses(
-        channel
-      )
-      console.log(traitStatusImage, 'traitstatus img?')
+
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
+        console.time('calculateImageBasedOnChannelResponses')
+        const traitStatusImage = await calculateImageBasedOnChannelResponses(
+          channel
+        )
+        console.timeEnd('calculateImageBasedOnChannelResponses')
+        console.log(traitStatusImage, 'traitstatus img?')
         html = generateFarcasterFrame(
           `${SERVER_URL}/${traitStatusImage}`,
           'question'
