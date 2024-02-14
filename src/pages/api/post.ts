@@ -5,11 +5,16 @@ import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
   calculateImageBasedOnChannelResponses,
+  getTraitForChannel,
   saveUser,
   saveUserQuestionResponse,
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
-import { QUESTION } from '@/utils/question'
+import {
+  BUTTON_INDEX_MAPPING,
+  HANDLE_QUESTION,
+  QUESTION,
+} from '@/utils/question'
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,7 +44,6 @@ export default async function handler(
   let statusCode: number = 200
   let locationHeader: string = ''
   let userIsInChannel: TUserProfileNeynar | null | undefined = null
-  const questionCorrectAnswer = QUESTION.correct_response
 
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
@@ -65,9 +69,8 @@ export default async function handler(
 
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
-        const traitStatusImage = await calculateImageBasedOnChannelResponses(
-          channel
-        )
+
+        const traitStatusImage = await getTraitForChannel(channel)
         //TODO send in question here
         console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
         html = generateFarcasterFrame(
@@ -84,18 +87,8 @@ export default async function handler(
     //TODO this function needs to be differnt depending on code base
     //and depending if we do button click instead
     case 'question':
-      if (channel && ud.inputText && ud.inputText.length) {
-        const user = await saveUser(ud, channel)
-        const correctResponse =
-          ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
-        html = await saveUserQuestionResponse(
-          ud,
-          user.id,
-          correctResponse as boolean
-        )
-      } else {
-        //If no submission by user
-        html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
+      if (channel) {
+        html = await HANDLE_QUESTION(channel, ud)
       }
       break
     case 'redirect':
