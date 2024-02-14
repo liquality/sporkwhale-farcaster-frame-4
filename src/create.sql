@@ -1,12 +1,12 @@
 -- Create sql db
 CREATE TABLE channels (
     id SERIAL PRIMARY KEY,
+    followers INTEGER,
     name VARCHAR(255) UNIQUE NOT NULL,
     c_address VARCHAR(255),
     c_wallet VARCHAR(255),
     c_pool VARCHAR(255),
     salt VARCHAR(255)
-    followers INTEGER
 );
 
 CREATE TABLE users (
@@ -69,27 +69,10 @@ VALUES
 /*
  INDEXES
  */
-CREATE INDEX idx_users_wallet_address ON users
-(
-    wallet_address
-);
+CREATE INDEX idx_users_wallet_address ON users (wallet_address);
 
-CREATE INDEX idx_user_question_responses_question_user_channel ON user_question_responses
-(
-    user_id,
-    question_id,
-    channel_id
-);
+CREATE INDEX idx_user_question_responses_question_user_channel ON user_question_responses (user_id, question_id, channel_id);
 
-CREATE INDEX idx_channels_name ON channels
-(
-    name
-);
+CREATE INDEX idx_channels_name ON channels (name);
 
-CREATE INDEX idx_trait_displayed_traits_channels ON trait_displayed
-(
-    trait,
-    channel_id
-);
-
-
+CREATE INDEX idx_trait_displayed_traits_channels ON trait_displayed (trait, channel_id);

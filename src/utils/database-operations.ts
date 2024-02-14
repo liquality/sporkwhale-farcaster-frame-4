@@ -3,12 +3,13 @@ import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { getAddrByFid } from './farcaster-api'
 import { IMAGES, levelImages } from './image-paths'
-export const QUESTION_ID = 3
+import { QUESTION } from './question'
 
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,
   userId: number,
-  correctResponse: boolean
+  correctResponse: boolean,
+  response: string
 ) {
   //-----  WHEN TESTING COMMENT OUT THE DB SAVE QUESTION RESPONSE FOR NOW ----------------
 
@@ -19,10 +20,11 @@ export async function saveUserQuestionResponse(
     console.log('Feedback already submitted by fid:', ud.fid)
     return generateFarcasterFrame(
       `${SERVER_URL}/${IMAGES.already_submitted}`,
-      'error'
+      'error',
+      'Go to leaderboard'
     )
   } else {
-    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${ud.inputText});`
+    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION.id}, ${userId}, ${correctResponse}, ${response});`
     if (correctResponse) {
       console.log('Got into correctresponse!')
 
@@ -59,7 +61,18 @@ export async function getChannel(channel: string) {
   return existingChannel.rows[0]
 }
 
-//TODO change this to 'over 30% of the channel (get total user length from neynar in a particular channel)
+export async function getTraitForChannel(channelName: string) {
+  const channel = await getChannel(channelName)
+  const currentTraitStatus =
+    await sql`SELECT * FROM trait_displayed WHERE channel_id = ${channel.id}`
+  return currentTraitStatus.rows[0].trait
+}
+
+export async function getQuestionFromId(questionId: number) {
+  const question = await sql`SELECT * FROM questions WHERE id = ${questionId}`
+  return question.rows[0]
+}
+
 export async function calculateImageBasedOnChannelResponses(
   channelName: string
 ) {

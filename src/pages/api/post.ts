@@ -1,18 +1,21 @@
 import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
-
-import { IMAGES, levelImages } from '@/utils/image-paths'
+import { IMAGES } from '@/utils/image-paths'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
   calculateImageBasedOnChannelResponses,
+  getQuestionFromId,
+  getTraitForChannel,
   saveUser,
   saveUserQuestionResponse,
 } from '@/utils/database-operations'
+import { getChannelFromCastHash } from '@/utils/neynar-api'
 import {
-  getChannelFromCastHash,
-  getIfUserIsInChannel,
-} from '@/utils/neynar-api'
+  BUTTON_INDEX_MAPPING,
+  HANDLE_QUESTION,
+  QUESTION,
+} from '@/utils/question'
 
 export default async function handler(
   req: NextApiRequest,
@@ -42,7 +45,6 @@ export default async function handler(
   let statusCode: number = 200
   let locationHeader: string = ''
   let userIsInChannel: TUserProfileNeynar | null | undefined = null
-  const questionCorrectAnswer = 'fransson'
 
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
@@ -61,16 +63,16 @@ export default async function handler(
   }, 3000)
 
   clearTimeout(timeout) // Clear the timeout if the function returns before 3 seconds
-
   switch (reqId) {
     case 'start':
       //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
 
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
-        const traitStatusImage = await calculateImageBasedOnChannelResponses(
-          channel
-        )
+
+        const traitStatusImage = await getTraitForChannel(channel)
+        //TODO send in question here
+        console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
         html = generateFarcasterFrame(
           `${SERVER_URL}/${traitStatusImage}`,
           'question'
@@ -78,31 +80,32 @@ export default async function handler(
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.be_a_follower}`,
-          'error'
+          'error',
+          'Follow the channel to participate'
         )
       }
       break
     case 'question':
-      if (channel && ud.inputText && ud.inputText.length) {
-        const user = await saveUser(ud, channel)
-        const correctResponse =
-          ud.inputText && ud.inputText.toLowerCase() === questionCorrectAnswer
-        html = await saveUserQuestionResponse(
-          ud,
-          user.id,
-          correctResponse as boolean
-        )
+      //TODO @Bradley create scheduler to expire the question
+      //TODO @bradley add the question inside the image (on the bottom with html)
+      const question = await getQuestionFromId(QUESTION.id)
+      if (channel && !question.expired) {
+        html = await HANDLE_QUESTION(channel, ud)
       } else {
-        console.log('NO SUBMISSION BY USER')
-        html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${IMAGES.expired}`,
+          'error',
+          'See leaderboard'
+        )
       }
       break
     case 'redirect':
       locationHeader = 'https://www.liquality.io'
-      response.redirect(302, locationHeader) // or you set Location in response.setHeader()
+      response.redirect(302, locationHeader)
       break
     case 'error':
-      locationHeader = `https://warpcast.com/~/channel/${channel}`
+      //locationHeader = `https://warpcast.com/~/channel/${channel}`
+      locationHeader = 'http://localhost:3000/'
       response.redirect(302, locationHeader)
       break
     case 'reload':

@@ -9,6 +9,7 @@ export const IMAGES = {
   already_submitted: 'already_submitted.png',
   be_a_follower: 'be_a_follower.png',
   reload: 'reload.png',
+  expired: 'expired.png',
 }
 
 export const levelImages: LevelImages = {

@@ -55,9 +55,14 @@ export interface LevelImages {
   [key: string]: string
 }
 
+export type Leaderboard = {
+  channel: string
+  image: string
+  level: number
+}
 
 export type CMetadata = {
-  address: string;
-  wallet: string;
-  salt: number;
+  address: string
+  wallet: string
+  salt: number
 }
