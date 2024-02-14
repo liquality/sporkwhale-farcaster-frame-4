@@ -2,6 +2,10 @@
 CREATE TABLE channels (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
+    c_address VARCHAR(255),
+    c_wallet VARCHAR(255),
+    c_pool VARCHAR(255),
+    salt VARCHAR(255)
     followers INTEGER
 );
 

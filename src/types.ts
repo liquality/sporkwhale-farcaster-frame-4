@@ -54,3 +54,10 @@ export type TUserProfileNeynar = {
 export interface LevelImages {
   [key: string]: string
 }
+
+
+export type CMetadata = {
+  address: string;
+  wallet: string;
+  salt: number;
+}

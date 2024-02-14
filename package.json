@@ -12,8 +12,10 @@
   "dependencies": {
     "@farcaster/hub-nodejs": "^0.10.21",
     "@kentico/kontent-webhook-helper": "1.2.0",
+    "@liquality/my-collectives-sdk": "^2.1.23",
     "@syndicateio/syndicate-node": "0.0.449",
     "@vercel/postgres": "0.7.2",
+    "ethers5": "npm:ethers@^5.7.2",
     "micro": "10.0.1",
     "next": "14.1.0",
     "react": "^18",
