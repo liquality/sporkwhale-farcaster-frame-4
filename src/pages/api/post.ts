@@ -62,7 +62,6 @@ export default async function handler(
   }, 3000)
 
   clearTimeout(timeout) // Clear the timeout if the function returns before 3 seconds
-  console.log(ud, 'wats UD?')
   switch (reqId) {
     case 'start':
       //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
@@ -84,8 +83,6 @@ export default async function handler(
         )
       }
       break
-    //TODO this function needs to be differnt depending on code base
-    //and depending if we do button click instead
     case 'question':
       if (channel) {
         html = await HANDLE_QUESTION(channel, ud)
@@ -93,7 +90,7 @@ export default async function handler(
       break
     case 'redirect':
       locationHeader = 'https://www.liquality.io'
-      response.redirect(302, locationHeader) // or you set Location in response.setHeader()
+      response.redirect(302, locationHeader)
       break
     case 'error':
       locationHeader = `https://warpcast.com/~/channel/${channel}`
