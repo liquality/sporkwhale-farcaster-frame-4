@@ -80,19 +80,22 @@ export default async function handler(
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.be_a_follower}`,
-          'error'
+          'error',
+          'Follow the channel to participate'
         )
       }
       break
     case 'question':
       //TODO @Bradley create scheduler to expire the question
+      //TODO @bradley add the question inside the image (on the bottom with html)
       const question = await getQuestionFromId(QUESTION.id)
       if (channel && !question.expired) {
         html = await HANDLE_QUESTION(channel, ud)
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.expired}`,
-          'error'
+          'error',
+          'See leaderboard'
         )
       }
       break
@@ -101,7 +104,8 @@ export default async function handler(
       response.redirect(302, locationHeader)
       break
     case 'error':
-      locationHeader = `https://warpcast.com/~/channel/${channel}`
+      //locationHeader = `https://warpcast.com/~/channel/${channel}`
+      locationHeader = 'http://localhost:3000/'
       response.redirect(302, locationHeader)
       break
     case 'reload':

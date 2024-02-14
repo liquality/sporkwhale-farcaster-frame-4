@@ -20,7 +20,8 @@ export async function saveUserQuestionResponse(
     console.log('Feedback already submitted by fid:', ud.fid)
     return generateFarcasterFrame(
       `${SERVER_URL}/${IMAGES.already_submitted}`,
-      'error'
+      'error',
+      'Go to leaderboard'
     )
   } else {
     await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION.id}, ${userId}, ${correctResponse}, ${response});`
@@ -69,7 +70,7 @@ export async function getTraitForChannel(channelName: string) {
 
 export async function getQuestionFromId(questionId: number) {
   const question = await sql`SELECT * FROM questions WHERE id = ${questionId}`
-  return question.rows[0].trait
+  return question.rows[0]
 }
 
 export async function calculateImageBasedOnChannelResponses(

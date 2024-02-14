@@ -54,3 +54,9 @@ export type TUserProfileNeynar = {
 export interface LevelImages {
   [key: string]: string
 }
+
+export type Leaderboard = {
+  channel: string
+  image: string
+  level: number
+}
