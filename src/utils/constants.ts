@@ -1,8 +1,8 @@
 // Configurations for the app
 
-export const SUPPORTED_CHANNELS = [
-  "Base",
-  "Founders"
+export const SUPPORTED_CHANNELS: Array<{name:string, followers: number}> = [
+  {name: "Base", followers: 100},
+  {name: "Founders", followers: 70}
 ]
 
 export const COLLECTIVE_ABI = [
