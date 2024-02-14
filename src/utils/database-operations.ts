@@ -101,7 +101,7 @@ export async function calculateImageBasedOnChannelResponses(
     console.log(correctPercentage, 'correct percentage!!!!!!!!!!!!')
 
     // Determine SporkWhale's status based on the conditions and update the trait displayed
-    if (respondingPercentage > 30 && correctPercentage > 50) {
+    if (respondingPercentage > 10 && correctPercentage > 50) {
       // Move up a level
       const nextLevel = Math.min(
         currentLevel + 1,

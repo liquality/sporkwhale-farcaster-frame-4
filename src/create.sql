@@ -13,7 +13,8 @@ CREATE TABLE users (
 
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
-    question VARCHAR(255)
+    question VARCHAR(255),
+    expired BOOLEAN DEFAULT false
 );
 
 CREATE TABLE user_question_responses (
