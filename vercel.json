@@ -1,0 +1,6 @@
+{
+    "crons": [{
+      "path": "/jobs/update-trait-status",
+      "schedule": "0 10 * * *"
+    }]
+  }
