@@ -60,3 +60,9 @@ export type Leaderboard = {
   image: string
   level: number
 }
+
+export type CMetadata = {
+  address: string
+  wallet: string
+  salt: number
+}

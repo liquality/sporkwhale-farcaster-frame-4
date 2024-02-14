@@ -136,3 +136,22 @@ export async function calculateImageBasedOnChannelResponses(
     throw error
   }
 }
+
+export async function createChannel(
+  name: string,
+  followers: number,
+  cAddress: string,
+  cWallet: string,
+  cPool: string,
+  salt: number
+) {
+  try {
+      await sql`INSERT INTO channels (name, followers, c_address, c_wallet, c_pool, salt) 
+      VALUES (${name}, ${followers}, ${cAddress}, ${cWallet}, ${cPool}, ${salt})
+      ON CONFLICT (name)
+      DO NOTHING;;`
+  } catch (error) {
+    console.error('Error creating collective:', error)
+    throw error
+  }
+}
