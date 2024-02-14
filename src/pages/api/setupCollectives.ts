@@ -10,15 +10,13 @@ export default async function handler(
  if(request.method == 'GET') {
     try {
 
-    for (const channel in SUPPORTED_CHANNELS) {
+    for (const channel of SUPPORTED_CHANNELS) {
 
         // Deploy a new collective and pool for each channel
         const cMetadata = await createCollective()
         const cPool = await createPool(cMetadata.address)
-        console.log('Collective created:', cMetadata.address)
-        console.log('Pool created:', cPool)
 
-        database.createChannel(channel, 1, cMetadata.address, cMetadata.wallet, cPool, cMetadata.salt)
+        database.createChannel(channel.name, channel.followers, cMetadata.address, cMetadata.wallet, cPool, cMetadata.salt)
     }
 
     return response.status(200).json({status: 'Ok', message: 'Collectives created successfully'})

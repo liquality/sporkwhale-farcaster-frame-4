@@ -19,19 +19,14 @@ export async function createCollective(): Promise<CMetadata> {
         const cFactory = await getCFactory(signer);
         const salt = generateSalt();
         
-        console.log("Creating collective with salt: ", salt)
         const cAddress = await cFactory.getCollective(signer.address, signer.address, salt)
-        console.log("Collective address: ", cAddress)
         const cWallet = await cFactory.getCWallet(cAddress, signer.address, salt)
-        console.log("Collective wallet: ", cWallet)
 
         const tx1 = await cFactory.createCollective(signer.address, signer.address, salt)
         await provider.waitForTransaction(tx1.hash, 3)
-        console.log("Collective created > ", tx1)
         
         const tx2 = await cFactory.createWallet(signer.address, signer.address, salt)
         await provider.waitForTransaction(tx2.hash, 3)
-        console.log("Wallet created > ", tx2)
 
 
         return {address: cAddress, wallet: cWallet, salt};
