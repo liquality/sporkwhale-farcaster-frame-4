@@ -3,7 +3,7 @@ import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { getAddrByFid } from './farcaster-api'
 import { IMAGES, levelImages } from './image-paths'
-export const QUESTION_ID = 3
+import { QUESTION } from './question'
 
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,
@@ -22,7 +22,7 @@ export async function saveUserQuestionResponse(
       'error'
     )
   } else {
-    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${ud.inputText});`
+    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION.id}, ${userId}, ${correctResponse}, ${ud.inputText});`
     if (correctResponse) {
       console.log('Got into correctresponse!')
 

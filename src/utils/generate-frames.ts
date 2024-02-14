@@ -1,6 +1,7 @@
 export const SERVER_URL = process.env.NGROK_OR_HOSTED_SERVER_URL
 import { TPostData, TUntrustedData } from '../types'
 import { IMAGES } from './image-paths'
+import { QUESTION_METATAGS } from './question'
 
 // generate an html page with the relevant opengraph tags
 export function generateFarcasterFrame(image: string, postData: TPostData) {
@@ -21,8 +22,7 @@ export function generateFarcasterFrame(image: string, postData: TPostData) {
     case 'question':
       metaTags += `
 			<meta property="fc:frame:image" content="${image}" />
-			<meta property="fc:frame:input:text" content="Type your answer" />
-			<meta property="fc:frame:button:1" content="Submit ✉️" />
+		  "${QUESTION_METATAGS}"
 			`
       break
     case 'reload':

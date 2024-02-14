@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
-
-import { IMAGES, levelImages } from '@/utils/image-paths'
+import { IMAGES } from '@/utils/image-paths'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
@@ -9,10 +8,8 @@ import {
   saveUser,
   saveUserQuestionResponse,
 } from '@/utils/database-operations'
-import {
-  getChannelFromCastHash,
-  getIfUserIsInChannel,
-} from '@/utils/neynar-api'
+import { getChannelFromCastHash } from '@/utils/neynar-api'
+import { QUESTION } from '@/utils/question'
 
 export default async function handler(
   req: NextApiRequest,
@@ -42,7 +39,7 @@ export default async function handler(
   let statusCode: number = 200
   let locationHeader: string = ''
   let userIsInChannel: TUserProfileNeynar | null | undefined = null
-  const questionCorrectAnswer = 'fransson'
+  const questionCorrectAnswer = QUESTION.correct_response
 
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
@@ -61,7 +58,7 @@ export default async function handler(
   }, 3000)
 
   clearTimeout(timeout) // Clear the timeout if the function returns before 3 seconds
-
+  console.log(ud, 'wats UD?')
   switch (reqId) {
     case 'start':
       //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
@@ -71,6 +68,8 @@ export default async function handler(
         const traitStatusImage = await calculateImageBasedOnChannelResponses(
           channel
         )
+        //TODO send in question here
+        console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
         html = generateFarcasterFrame(
           `${SERVER_URL}/${traitStatusImage}`,
           'question'
@@ -82,6 +81,8 @@ export default async function handler(
         )
       }
       break
+    //TODO this function needs to be differnt depending on code base
+    //and depending if we do button click instead
     case 'question':
       if (channel && ud.inputText && ud.inputText.length) {
         const user = await saveUser(ud, channel)
@@ -93,7 +94,7 @@ export default async function handler(
           correctResponse as boolean
         )
       } else {
-        console.log('NO SUBMISSION BY USER')
+        //If no submission by user
         html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
       }
       break
