@@ -67,6 +67,11 @@ export async function getTraitForChannel(channelName: string) {
   return currentTraitStatus.rows[0].trait
 }
 
+export async function getQuestionFromId(questionId: number) {
+  const question = await sql`SELECT * FROM questions WHERE id = ${questionId}`
+  return question.rows[0].trait
+}
+
 export async function calculateImageBasedOnChannelResponses(
   channelName: string
 ) {

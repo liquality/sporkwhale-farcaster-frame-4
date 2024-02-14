@@ -21,6 +21,8 @@ export const BUTTON_INDEX_MAPPING: { [key: string]: string } = {
   '2': 'mehrain',
 }
 
+//TODO ask @Bradley use QUESTION.question variable to pass in question
+//to the bottom of the image here
 export const HANDLE_QUESTION = async (channel: string, ud: TUntrustedData) => {
   const user = await saveUser(ud, channel)
   if (ud.inputText && ud.inputText.length) {

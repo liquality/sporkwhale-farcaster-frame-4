@@ -5,6 +5,7 @@ import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
   calculateImageBasedOnChannelResponses,
+  getQuestionFromId,
   getTraitForChannel,
   saveUser,
   saveUserQuestionResponse,
@@ -84,8 +85,15 @@ export default async function handler(
       }
       break
     case 'question':
-      if (channel) {
+      //TODO @Bradley create scheduler to expire the question
+      const question = await getQuestionFromId(QUESTION.id)
+      if (channel && !question.expired) {
         html = await HANDLE_QUESTION(channel, ud)
+      } else {
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${IMAGES.expired}`,
+          'error'
+        )
       }
       break
     case 'redirect':
