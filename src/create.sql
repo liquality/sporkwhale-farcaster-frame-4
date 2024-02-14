@@ -1,7 +1,7 @@
 -- Create sql db
 CREATE TABLE channels (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255),
+    name VARCHAR(255) UNIQUE NOT NULL,
     c_address VARCHAR(255),
     c_wallet VARCHAR(255),
     c_pool VARCHAR(255),

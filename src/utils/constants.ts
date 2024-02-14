@@ -2,32 +2,7 @@
 
 export const SUPPORTED_CHANNELS = [
   "Base",
-  "Founders",
-  "Frames",
-  "Memes",
-  "Skininthegame",
-  "Zora",
-  "Nouns",
-  "Opepen",
-  "Purple",
-  "Fitness",
-  "ZK",
-  "Perl",
-  "SeedClub",
-  "Daylight",
-  "Orange",
-  "Art",
-  "DegenDAO",
-  "Degen",
-  "OP Stack",
-  "ENS",
-  "Solana",
-  "Los Angeles",
-  "new-york",
-  "Sound?",
-  "Farcaster Devs",
-  "farcastHER",
-  "Frontend vs Backend"
+  "Founders"
 ]
 
 export const COLLECTIVE_ABI = [
@@ -48,6 +23,38 @@ export const COLLECTIVE_ABI = [
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "pool",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "tokenContract",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "honeyPot",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "initiator",
+          "type": "address"
+        }
+      ],
+      "name": "PoolAdded",
+      "type": "event"
     },
     {
       "inputs": [
@@ -879,6 +886,6 @@ export const POOL_ABI = [
 ]
 
 
-export const COLLECTIVE_FACTORY = '0x6f8892FBeAc884Bd3674Eeeafc7A059B70A75430'
-export const HONEYPOT = '0x00F58322E0c66BFFb613DbC2D38b5275A0Fc7d2f'
+export const COLLECTIVE_FACTORY = '0x1Ec642AAF33bCc0232CD8DB1920767e2C11Ef022'
+export const HONEYPOT = '0xd56672EF513dcfCEc7eE0e4CA342bd344e03a3c3'
 export const ENTRYPOINT = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'

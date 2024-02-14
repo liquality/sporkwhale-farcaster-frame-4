@@ -124,34 +124,21 @@ export async function calculateImageBasedOnChannelResponses(
   }
 }
 
-export async function createCollective(
-  channel: string,
+export async function createChannel(
+  name: string,
+  followers: number,
   cAddress: string,
   cWallet: string,
   cPool: string,
   salt: number
 ) {
   try {
-      await sql`INSERT INTO collectives (channel, c_address, c_wallet, c_pool, salt) VALUES (${channel}, ${cAddress}, ${cWallet}, ${cPool}, ${salt});`
+      await sql`INSERT INTO channels (name, followers, c_address, c_wallet, c_pool, salt) 
+      VALUES (${name}, ${followers}, ${cAddress}, ${cWallet}, ${cPool}, ${salt})
+      ON CONFLICT (name)
+      DO NOTHING;;`
   } catch (error) {
     console.error('Error creating collective:', error)
     throw error
   }
 }
-
-
-export async function dbConnect() {
-  const { Client } = require('pg')
-  const client = new Client({
-    user: process.env.POSTGRES_USER,
-    host: process.env.POSTGRES_HOST,
-    database: process.env.POSTGRES_DATABASE,
-    password: process.env.POSTGRES_PASSWORD,
-    port: process.env.POSTGRES_PORT,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  })
-  await client.connect()
-  return client
-} 
