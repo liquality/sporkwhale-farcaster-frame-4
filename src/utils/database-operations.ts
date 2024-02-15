@@ -155,3 +155,42 @@ export async function createChannel(
     throw error
   }
 }
+
+// getParticipations fromt the user_question_responses table, group by channel_id, and count the number of responses per user per question
+export async function getParticipations() {
+  const participations = await sql`
+  SELECT 
+    channels.c_address As cAddress, 
+    channels.c_wallet As cWallet, 
+    channels.c_pool As poolAddress, 
+    user_question_responses.question_id as questionId, 
+    users.wallet_address AS user,
+    users.id AS userId,
+    channels.id AS channelId
+  FROM 
+    user_question_responses
+  LEFT JOIN 
+    users ON user_question_responses.user_id = users.id
+  LEFT JOIN 
+    channels ON user_question_responses.channel_id = channels.id
+  WHERE 
+    user_question_responses.is_onchain = false
+  GROUP BY 
+    channels.c_address, channels.c_wallet, channels.c_pool, user_question_responses.question_id, users.wallet_address, users.id, channels.id;
+  `
+  return participations
+}
+
+
+// Update the user_question_responses table to mark the participations as onchain
+export async function updateParticipation(participation: any) {
+  try {
+    await sql`UPDATE user_question_responses SET is_onchain = true WHERE 
+    user_id = ${participation.userid} AND question_id = ${participation.questionid} AND 
+    channel_id = ${participation.channelid};`
+    return true
+  } catch (error) {
+    console.error(`Error updating participation: ${JSON.stringify(participation)}; Error: ${JSON.stringify(error)}`)
+    return false
+  }
+}
