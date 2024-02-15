@@ -2,7 +2,7 @@ import { LevelImages } from '@/types'
 
 export const IMAGES = {
   question1: 'johannas_lastname_question1.png',
-  whale: 'start_whale_neutral_4_traits.png',
+  welcome: 'welcome.png',
 
   wrong_response: 'wrong_response.png',
   correct_response: 'correct_response.png',

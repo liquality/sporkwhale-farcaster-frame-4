@@ -51,5 +51,6 @@ export const HANDLE_QUESTION = async (channel: string, ud: TUntrustedData) => {
       BUTTON_INDEX_MAPPING[ud.buttonIndex]
     )
     return html
-  } else return generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
+  } else
+    return generateFarcasterFrame(`${SERVER_URL}/${IMAGES.welcome}`, 'start')
 }

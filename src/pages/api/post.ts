@@ -23,14 +23,16 @@ export default async function handler(
 
   const reqId = req.query.data
   console.log('request query: ', reqId)
+  console.log(signedMessage, 'signed msg?')
 
   const isMessageValid = await validateMessage(
     signedMessage.trustedData?.messageBytes
   )
+  console.log(isMessageValid, 'is message valid')
 
-  if (!isMessageValid) {
+  /*  if (!isMessageValid) {
     return res.status(400).json({ error: 'Invalid message' })
-  }
+  } */
 
   const ud: TUntrustedData = signedMessage.untrustedData
 
