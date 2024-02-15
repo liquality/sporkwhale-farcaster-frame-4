@@ -62,7 +62,17 @@ export type Leaderboard = {
 }
 
 export type CMetadata = {
-  address: string
-  wallet: string
-  salt: number
+  address: string;
+  wallet: string;
+  salt: number;
+}
+
+export type PoolParticipation = {
+  user: string;
+  questionId: number;
+  engagement: number;
+}
+
+export interface PoolParticipationMap {
+  [key: string]: PoolParticipation[];
 }

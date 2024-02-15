@@ -26,6 +26,7 @@ CREATE TABLE user_question_responses (
     question_id INTEGER REFERENCES questions(id) ON DELETE CASCADE,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     correct_response BOOLEAN,
+    is_onchain BOOLEAN DEFAULT false,
     response VARCHAR(255),
     channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
 );
