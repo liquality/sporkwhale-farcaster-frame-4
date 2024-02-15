@@ -20,7 +20,7 @@ export async function saveUserQuestionResponse(
     console.log('Feedback already submitted by fid:', ud.fid)
     return generateFarcasterFrame(
       `${SERVER_URL}/${IMAGES.already_submitted}`,
-      'error',
+      'error-see-leaderboard',
       'Go to leaderboard'
     )
   } else {
@@ -30,14 +30,14 @@ export async function saveUserQuestionResponse(
 
       return generateFarcasterFrame(
         `${SERVER_URL}/${IMAGES.correct_response}`,
-        'redirect'
+        'error-see-leaderboard'
       )
     } else {
       console.log('Got into wrong response!')
 
       return generateFarcasterFrame(
         `${SERVER_URL}/${IMAGES.wrong_response}`,
-        'redirect'
+        'error-see-leaderboard'
       )
     }
   }
@@ -146,7 +146,7 @@ export async function createChannel(
   salt: number
 ) {
   try {
-      await sql`INSERT INTO channels (name, followers, c_address, c_wallet, c_pool, salt) 
+    await sql`INSERT INTO channels (name, followers, c_address, c_wallet, c_pool, salt) 
       VALUES (${name}, ${followers}, ${cAddress}, ${cWallet}, ${cPool}, ${salt})
       ON CONFLICT (name)
       DO NOTHING;;`
@@ -181,7 +181,6 @@ export async function getParticipations() {
   return participations
 }
 
-
 // Update the user_question_responses table to mark the participations as onchain
 export async function updateParticipation(participation: any) {
   try {
@@ -190,7 +189,11 @@ export async function updateParticipation(participation: any) {
     channel_id = ${participation.channelid};`
     return true
   } catch (error) {
-    console.error(`Error updating participation: ${JSON.stringify(participation)}; Error: ${JSON.stringify(error)}`)
+    console.error(
+      `Error updating participation: ${JSON.stringify(
+        participation
+      )}; Error: ${JSON.stringify(error)}`
+    )
     return false
   }
 }

@@ -1,21 +1,14 @@
-import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { IMAGES } from '@/utils/image-paths'
 import { validateMessage } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
-  calculateImageBasedOnChannelResponses,
   getQuestionFromId,
   getTraitForChannel,
-  saveUser,
-  saveUserQuestionResponse,
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
-import {
-  BUTTON_INDEX_MAPPING,
-  HANDLE_QUESTION,
-  QUESTION,
-} from '@/utils/question'
+import { HANDLE_QUESTION, QUESTION } from '@/utils/question'
 
 export default async function handler(
   req: NextApiRequest,
@@ -80,8 +73,7 @@ export default async function handler(
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.be_a_follower}`,
-          'error',
-          'Follow the channel to participate'
+          'error-be-a-follower'
         )
       }
       break
@@ -94,23 +86,17 @@ export default async function handler(
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.expired}`,
-          'error',
-          'See leaderboard'
+          'error-see-leaderboard'
         )
       }
       break
-    case 'redirect':
-      locationHeader = 'https://www.liquality.io'
+    case 'error-be-a-follower':
+      locationHeader = `https://warpcast.com/~/channel/${channel}`
       response.redirect(302, locationHeader)
       break
-    case 'error':
-      //locationHeader = `https://warpcast.com/~/channel/${channel}`
+    case 'error-see-leaderboard':
       locationHeader = 'http://localhost:3000/'
       response.redirect(302, locationHeader)
-      break
-    case 'reload':
-      html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
-
       break
     default:
       html = generateFarcasterFrame(

@@ -12,35 +12,25 @@ export function generateFarcasterFrame(
   let metaTags = ''
 
   switch (postData) {
-    case 'mint':
-      metaTags += `
-		  <meta property="fc:frame:image" content="${image}" />
-		  <meta property="fc:frame:button:1" content="Mint ✨ ${image}" />`
-      break
-    case 'redirect':
-      metaTags += `
-		  <meta property="fc:frame:image" content="${image}" />
-		  <meta property="fc:frame:button:1" content="Go see leaderboard!" />
-		  <meta property="fc:frame:button:1:action" content="post_redirect" />`
-      break
     case 'question':
       metaTags += `
 			<meta property="fc:frame:image" content="${image}" />
 		  "${QUESTION_METATAGS}"
 			`
       break
-    case 'reload':
-      metaTags += `
-			<meta property="fc:frame:image" content="${image}" />
-			<meta property="fc:frame:button:1" content="Reload" />
-			`
-      break
-    case 'error':
+
+    case 'error-see-leaderboard':
       metaTags += `
 		<meta property="fc:frame:image" content="${image}" />
-		<meta property="fc:frame:button:1" content="${text}" />
+		<meta property="fc:frame:button:1" content="Go to leaderboard" />
     <meta property="fc:frame:button:2" content="See leaderboard in frame" />
 		<meta property="fc:frame:button:1:action" content="post_redirect" />`
+      break
+    case 'error-be-a-follower':
+      metaTags += `
+      <meta property="fc:frame:image" content="${image}" />
+      <meta property="fc:frame:button:1" content="Go follow channel!" />
+      <meta property="fc:frame:button:1:action" content="post_redirect" />`
       break
   }
 
@@ -58,18 +48,4 @@ export function generateFarcasterFrame(
 	  </body>
 	  </html>
 	`
-}
-
-export const handleTooLongNetworkResponse = (timeout: NodeJS.Timeout) => {
-  timeout = setTimeout(() => {
-    console.log('Response took too long')
-    //TODO if the API response of userIsInChannel is too long, we should
-    //force generate a 'reload' btn here
-    const html = generateFarcasterFrame(
-      `${SERVER_URL}/${IMAGES.reload}`,
-      'reload'
-    )
-    return html
-  }, 1000)
-  return null
 }
