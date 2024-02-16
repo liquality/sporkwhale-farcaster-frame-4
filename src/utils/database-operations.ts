@@ -63,8 +63,10 @@ export async function getChannel(channel: string) {
 
 export async function getTraitForChannel(channelName: string) {
   const channel = await getChannel(channelName)
+
   const currentTraitStatus =
     await sql`SELECT * FROM trait_displayed WHERE channel_id = ${channel.id}`
+  console.log(currentTraitStatus, 'curren trait status', channelName)
   return currentTraitStatus.rows[0].trait
 }
 
