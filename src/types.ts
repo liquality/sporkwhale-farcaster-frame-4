@@ -26,12 +26,10 @@ export type TUntrustedData = {
 }
 
 export type TPostData =
-  | 'redirect'
-  | 'mint'
   | 'start'
-  | 'error'
-  | 'reload'
   | 'question'
+  | 'error-see-leaderboard'
+  | 'error-be-a-follower'
 
 export type TUserProfileNeynar = {
   object: 'user'
@@ -62,17 +60,17 @@ export type Leaderboard = {
 }
 
 export type CMetadata = {
-  address: string;
-  wallet: string;
-  salt: number;
+  address: string
+  wallet: string
+  salt: number
 }
 
 export type PoolParticipation = {
-  user: string;
-  questionId: number;
-  engagement: number;
+  user: string
+  questionId: number
+  engagement: number
 }
 
 export interface PoolParticipationMap {
-  [key: string]: PoolParticipation[];
+  [key: string]: PoolParticipation[]
 }

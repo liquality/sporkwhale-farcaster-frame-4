@@ -23,7 +23,8 @@ export default function Home() {
     }
   }, [leaderboard])
 
-  let img = leaderboard ? IMAGES.whale : IMAGES.whale
+  let img = leaderboard ? IMAGES.welcome : IMAGES.welcome
+  console.log(leaderboard, 'leaderborard aaa wats l')
 
   return (
     <>
