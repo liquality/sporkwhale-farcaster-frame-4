@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { IMAGES } from '@/utils/image-paths'
-import { validateMessage } from '@/validate'
+import { validateMessage, validateMsgWithNeynar } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
@@ -25,14 +25,14 @@ export default async function handler(
   console.log('request query: ', reqId)
   console.log(signedMessage, 'signed msg?')
 
-  const isMessageValid = await validateMessage(
+  const isMessageValid = await validateMsgWithNeynar(
     signedMessage.trustedData?.messageBytes
   )
   console.log(isMessageValid, 'is message valid')
 
-  /*  if (!isMessageValid) {
+  if (!isMessageValid) {
     return res.status(400).json({ error: 'Invalid message' })
-  } */
+  }
 
   const ud: TUntrustedData = signedMessage.untrustedData
 
@@ -82,15 +82,21 @@ export default async function handler(
     case 'question':
       //TODO @Bradley create scheduler to expire the question
       //TODO @bradley add the question inside the image (on the bottom with html)
-      const question = await getQuestionFromId(QUESTION.id)
-      if (channel && !question.expired) {
-        html = await HANDLE_QUESTION(channel, ud)
-      } else {
-        html = generateFarcasterFrame(
-          `${SERVER_URL}/${IMAGES.expired}`,
-          'error-see-leaderboard'
-        )
+      try {
+        const question = await getQuestionFromId(QUESTION.id)
+        console.log(question, 'question from db')
+        if (channel && !question.expired) {
+          html = await HANDLE_QUESTION(channel, ud)
+        } else {
+          html = generateFarcasterFrame(
+            `${SERVER_URL}/${IMAGES.expired}`,
+            'error-see-leaderboard'
+          )
+        }
+      } catch (error) {
+        console.log(error, 'wats erro?')
       }
+
       break
     case 'error-be-a-follower':
       locationHeader = `https://warpcast.com/~/channel/${channel}`
@@ -107,6 +113,5 @@ export default async function handler(
       )
       break
   }
-  console.log(html, 'html??')
   return response.send(html)
 }
