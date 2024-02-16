@@ -69,8 +69,21 @@ export async function getTraitForChannel(channelName: string) {
 }
 
 export async function getQuestionFromId(questionId: number) {
-  const question = await sql`SELECT * FROM questions WHERE id = ${questionId}`
-  return question.rows[0]
+  const question = await sql`
+  SELECT * FROM questions
+  WHERE id = ${questionId}
+  AND expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';
+  `
+  return question.rows.length > 0 ? question.rows[0] : null
+}
+
+export async function getQuestions(excludeExpired: boolean = true) {
+  let query = 'SELECT * FROM questions'
+  if (excludeExpired) {
+    query = `${query} WHERE expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';`
+  }
+  const questions = await sql`${query}`
+  return questions.rows
 }
 
 export async function calculateImageBasedOnChannelResponses(
@@ -146,7 +159,7 @@ export async function createChannel(
   salt: number
 ) {
   try {
-      await sql`INSERT INTO channels (name, followers, c_address, c_wallet, c_pool, salt) 
+    await sql`INSERT INTO channels (name, followers, c_address, c_wallet, c_pool, salt) 
       VALUES (${name}, ${followers}, ${cAddress}, ${cWallet}, ${cPool}, ${salt})
       ON CONFLICT (name)
       DO NOTHING;;`

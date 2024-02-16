@@ -89,7 +89,7 @@ export default async function handler(
       //TODO @Bradley create scheduler to expire the question
       //TODO @bradley add the question inside the image (on the bottom with html)
       const question = await getQuestionFromId(QUESTION.id)
-      if (channel && !question.expired) {
+      if (channel && !question) {
         html = await HANDLE_QUESTION(channel, ud)
       } else {
         html = generateFarcasterFrame(

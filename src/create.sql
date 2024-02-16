@@ -18,7 +18,7 @@ CREATE TABLE users (
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
     question VARCHAR(255),
-    expired BOOLEAN DEFAULT false
+    expire_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE user_question_responses (
