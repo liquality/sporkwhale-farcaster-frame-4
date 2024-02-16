@@ -107,5 +107,6 @@ export default async function handler(
       )
       break
   }
+  console.log(html, 'html??')
   return response.send(html)
 }
