@@ -1,13 +1,9 @@
 import { TUntrustedData } from '@/types'
-import { saveUser, saveUserQuestionResponse } from './database-operations'
+import { getQuestionFromId, saveUser, saveUserQuestionResponse } from './database-operations'
 import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { IMAGES } from './image-paths'
 
-export const QUESTION = {
-  id: 1,
-  question: 'What is Johannas last name?',
-  correct_response: 'fransson',
-}
+export const QUESTION_ID = 1;
 
 export const QUESTION_METATAGS = `<meta property="fc:frame:input:text" content="Type your answer" />
  <meta property="fc:frame:button:1" content="Submit ✉️" />`
@@ -16,18 +12,14 @@ export const QUESTION_METATAGS = `<meta property="fc:frame:input:text" content="
  <meta property="fc:frame:button:1" content="NYC" />
  <meta property="fc:frame:button:2" content="Berlin" />`
  */
-export const BUTTON_INDEX_MAPPING: { [key: string]: string } = {
-  '1': 'fransson',
-  '2': 'mehrain',
-}
 
-//TODO ask @Bradley use QUESTION.question variable to pass in question
 //to the bottom of the image here
 export const HANDLE_QUESTION = async (channel: string, ud: TUntrustedData) => {
+  const question = await getQuestionFromId(QUESTION_ID);
   const user = await saveUser(ud, channel)
   if (ud.inputText && ud.inputText.length) {
     const correctResponse =
-      ud.inputText && ud.inputText.toLowerCase() === QUESTION.correct_response
+      ud.inputText && ud.inputText.toLowerCase() === question?.correct_response?.toLowerCase()
     const html = await saveUserQuestionResponse(
       ud,
       user.id,
@@ -35,12 +27,12 @@ export const HANDLE_QUESTION = async (channel: string, ud: TUntrustedData) => {
       ud.inputText
     )
     return html
-  } else if (BUTTON_INDEX_MAPPING[ud.buttonIndex]) {
+  } else if (question?.options[ud.buttonIndex]) {
     const correctResponse =
-      BUTTON_INDEX_MAPPING[ud.buttonIndex].toLocaleLowerCase() ===
-      QUESTION.correct_response.toLocaleLowerCase()
+    question?.options[ud.buttonIndex].toLocaleLowerCase() ===
+    question?.corrent_response.toLocaleLowerCase()
     console.log(
-      BUTTON_INDEX_MAPPING[ud.buttonIndex],
+      question?.options[ud.buttonIndex],
       'is correct?',
       correctResponse
     )
@@ -48,8 +40,9 @@ export const HANDLE_QUESTION = async (channel: string, ud: TUntrustedData) => {
       ud,
       user.id,
       correctResponse as boolean,
-      BUTTON_INDEX_MAPPING[ud.buttonIndex]
+      question?.options[ud.buttonIndex]
     )
     return html
-  } else return generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
+  } else
+    return generateFarcasterFrame(`${SERVER_URL}/${IMAGES.welcome}`, 'start')
 }

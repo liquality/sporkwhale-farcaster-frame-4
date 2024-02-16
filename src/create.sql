@@ -18,7 +18,7 @@ CREATE TABLE users (
 CREATE TABLE questions (
     id SERIAL PRIMARY KEY,
     question VARCHAR(255),
-    expire_at TIMESTAMP NOT NULL
+    expired BOOLEAN DEFAULT false
 );
 
 CREATE TABLE user_question_responses (
@@ -26,6 +26,7 @@ CREATE TABLE user_question_responses (
     question_id INTEGER REFERENCES questions(id) ON DELETE CASCADE,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     correct_response BOOLEAN,
+    is_onchain BOOLEAN DEFAULT false,
     response VARCHAR(255),
     channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
 );
@@ -45,7 +46,7 @@ DROP TABLE IF EXISTS questions CASCADE;
 
 DROP TABLE IF EXISTS users CASCADE;
 
-DROP TABLE IF EXISTS channel CASCADE;
+DROP TABLE IF EXISTS channels CASCADE;
 
 --Tester data
 INSERT INTO
@@ -76,3 +77,14 @@ CREATE INDEX idx_user_question_responses_question_user_channel ON user_question_
 CREATE INDEX idx_channels_name ON channels (name);
 
 CREATE INDEX idx_trait_displayed_traits_channels ON trait_displayed (trait, channel_id);
+
+
+/*
+ QUESTIONS 
+ */
+alter table questions drop column expired;
+alter table questions add column expires_at timestamp null;
+alter table questions add column correct_response VARCHAR(255);
+alter table questions add column options json NOT null default '[]'::json;
+
+create index idx_questions_id_expires ON questions (id, expires_at);

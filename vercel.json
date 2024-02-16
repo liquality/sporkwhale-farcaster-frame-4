@@ -1,6 +1,13 @@
 {
-    "crons": [{
+    "crons": [
+      {
       "path": "/jobs/update-trait-status",
       "schedule": "0 10 * * *"
-    }]
-  }
+    }, 
+    {
+      "path": "/api/recordParticipation",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+    
+}

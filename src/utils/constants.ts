@@ -79,6 +79,39 @@ export const COLLECTIVE_ABI = [
       ],
       "stateMutability": "view",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_pool",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_participant",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_tokenID",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_quantity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_amountPaid",
+          "type": "uint256"
+        }
+      ],
+      "name": "recordPoolMint",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
 ]
 
@@ -885,7 +918,55 @@ export const POOL_ABI = [
     }
 ]
 
+export const C_WALLET_ABI = [
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "dest",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "func",
+        "type": "bytes"
+      }
+    ],
+    "name": "execute",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "dest",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "value",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "func",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "executeBatch",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+]
 
-export const COLLECTIVE_FACTORY = '0x1Ec642AAF33bCc0232CD8DB1920767e2C11Ef022'
+export const COLLECTIVE_FACTORY = '0x288fFC62c3f4142C618B7D109E0Cf0405766F25E'
 export const HONEYPOT = '0xd56672EF513dcfCEc7eE0e4CA342bd344e03a3c3'
 export const ENTRYPOINT = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'

@@ -1,21 +1,14 @@
-import type { NextApiRequest, NextApiResponse, Metadata } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { IMAGES } from '@/utils/image-paths'
-import { validateMessage } from '@/validate'
+import { validateMessage, validateMsgWithNeynar } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
-  calculateImageBasedOnChannelResponses,
   getQuestionFromId,
   getTraitForChannel,
-  saveUser,
-  saveUserQuestionResponse,
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
-import {
-  BUTTON_INDEX_MAPPING,
-  HANDLE_QUESTION,
-  QUESTION,
-} from '@/utils/question'
+import { HANDLE_QUESTION, QUESTION_ID } from '@/utils/question'
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,10 +23,12 @@ export default async function handler(
 
   const reqId = req.query.data
   console.log('request query: ', reqId)
+  console.log(signedMessage, 'signed msg?')
 
-  const isMessageValid = await validateMessage(
+  const isMessageValid = await validateMsgWithNeynar(
     signedMessage.trustedData?.messageBytes
   )
+  console.log(isMessageValid, 'is message valid')
 
   if (!isMessageValid) {
     return res.status(400).json({ error: 'Invalid message' })
@@ -72,45 +67,45 @@ export default async function handler(
 
         const traitStatusImage = await getTraitForChannel(channel)
         //TODO send in question here
+        const question = await getQuestionFromId(QUESTION_ID)
         console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
         html = generateFarcasterFrame(
-          `${SERVER_URL}/${traitStatusImage}`,
-          'question'
+          traitStatusImage,
+          'question',
+          question?.question
         )
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.be_a_follower}`,
-          'error',
-          'Follow the channel to participate'
+          'error-be-a-follower'
         )
       }
       break
     case 'question':
       //TODO @Bradley create scheduler to expire the question
       //TODO @bradley add the question inside the image (on the bottom with html)
-      const question = await getQuestionFromId(QUESTION.id)
-      if (channel && !question) {
-        html = await HANDLE_QUESTION(channel, ud)
-      } else {
-        html = generateFarcasterFrame(
-          `${SERVER_URL}/${IMAGES.expired}`,
-          'error',
-          'See leaderboard'
-        )
+      try {
+        const question = await getQuestionFromId(QUESTION_ID)
+        if (channel && question) {
+          html = await HANDLE_QUESTION(channel, ud)
+        } else {
+          html = generateFarcasterFrame(
+            `${SERVER_URL}/${IMAGES.expired}`,
+            'error-see-leaderboard'
+          )
+        }
+      } catch (error) {
+        console.log(error, 'wats erro?')
       }
+
       break
-    case 'redirect':
-      locationHeader = 'https://www.liquality.io'
+    case 'error-be-a-follower':
+      locationHeader = `https://warpcast.com/~/channel/${channel}`
       response.redirect(302, locationHeader)
       break
-    case 'error':
-      //locationHeader = `https://warpcast.com/~/channel/${channel}`
+    case 'error-see-leaderboard':
       locationHeader = 'http://localhost:3000/'
       response.redirect(302, locationHeader)
-      break
-    case 'reload':
-      html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.whale}`, 'start')
-
       break
     default:
       html = generateFarcasterFrame(
