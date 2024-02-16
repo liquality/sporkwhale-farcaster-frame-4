@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { sql } from '@vercel/postgres'
 import { calculateImageBasedOnChannelResponses } from '@/utils/database-operations'
 
-//TODO @Bradley run/update this every day 10am MST using a scheduler
-
-//Example call: http://localhost:3000/api/updateTraitStatus?channel=cryptostocks
+//Example call: http://localhost:3000/api/updateTraitStatus
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization')
