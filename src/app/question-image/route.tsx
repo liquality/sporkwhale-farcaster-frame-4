@@ -14,36 +14,39 @@ export async function GET({ url }: Request) {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: '1rem'
+          padding: '1rem',
+          backgroundColor: '#ffffff'
         }}
       >
-       
         <div
           style={{
-            width: '100%',
+            display: 'flex',
+          justifyContent: 'center',
+            width: 800,
             height: '15px',
-            textAlign: 'center',
-            padding: '0 0rem',
+            textAlign: 'center'
           }}
         >
-          {question}
+          {question + '👋'} 
         </div>
         <img
         style={{
-          height: '100px',
+          height: '300px',
 
           textAlign: 'center',
-          marginTop: '15px',
+          marginTop: '20px',
         }}
           alt={question}
           src={`${SERVER_URL}/${image}`}
+      
         />
+         
       </div>
     ),
     // ImageResponse options
     {
-      width: 400,
-      height: 200,
+      width: 800,
+      height: 418,
     }
   )
 }
