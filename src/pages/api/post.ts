@@ -84,7 +84,6 @@ export default async function handler(
       //TODO @bradley add the question inside the image (on the bottom with html)
       try {
         const question = await getQuestionFromId(QUESTION.id)
-        console.log(question, 'question from db')
         if (channel && !question.expired) {
           html = await HANDLE_QUESTION(channel, ud)
         } else {
