@@ -95,7 +95,7 @@ export default async function handler(
       response.redirect(302, locationHeader)
       break
     case 'error-see-leaderboard':
-      locationHeader = 'http://localhost:3000/'
+      locationHeader = `${process.env.NGROK_OR_HOSTED_SERVER_URL}`
       response.redirect(302, locationHeader)
       break
     default:

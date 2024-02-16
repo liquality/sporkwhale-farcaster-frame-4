@@ -2,7 +2,7 @@ export const SERVER_URL = process.env.NGROK_OR_HOSTED_SERVER_URL
 import { TPostData, TUntrustedData } from '../types'
 import { IMAGES } from './image-paths'
 import { QUESTION_METATAGS } from './question'
-import querystring from 'querystring';
+import querystring from 'querystring'
 // generate an html page with the relevant opengraph tags
 export function generateFarcasterFrame(
   image: string,
@@ -10,7 +10,12 @@ export function generateFarcasterFrame(
   text?: string
 ) {
   let metaTags = ''
-  console.log(postData, `${SERVER_URL}/question-image?question=${querystring.escape(text || '')}&image=${image}`)
+  console.log(
+    postData,
+    `${SERVER_URL}/question-image?question=${querystring.escape(
+      text || ''
+    )}&image=${image}`
+  )
   switch (postData) {
     case 'question':
       metaTags += `
@@ -23,7 +28,7 @@ export function generateFarcasterFrame(
       metaTags += `
 		<meta property="fc:frame:image" content="${image}" />
 		<meta property="fc:frame:button:1" content="Go to leaderboard" />
-    <meta property="fc:frame:button:2" content="See leaderboard in frame" />
+    <meta property="fc:frame:button:2" content="Leaderboard in frame (NOT WORKING YET)" />
 		<meta property="fc:frame:button:1:action" content="post_redirect" />`
       break
     case 'error-be-a-follower':
