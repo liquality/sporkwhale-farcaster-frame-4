@@ -11,37 +11,42 @@ export async function GET({ url }: Request) {
       <div
         style={{
           display: 'flex',
-          position: 'relative',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '100%',
-          height: '100%',
+          padding: '1rem',
+          backgroundColor: '#ffffff'
         }}
       >
-        <img
-          style={{
-          height: '80%',
-          }}
-          alt={question}
-          src={`${SERVER_URL}/${image}`}
-        />
         <div
           style={{
-            width: '100%',
-            height: '5rem',
-            textAlign: 'center',
-            padding: '0 0rem',
+            display: 'flex',
+          justifyContent: 'center',
+            width: 800,
+            height: '15px',
+            textAlign: 'center'
           }}
         >
-          {question}
+          {question + '👋'} 
         </div>
+        <img
+        style={{
+          height: '300px',
+
+          textAlign: 'center',
+          marginTop: '20px',
+        }}
+          alt={question}
+          src={`${SERVER_URL}/${image}`}
+      
+        />
+         
       </div>
     ),
     // ImageResponse options
     {
-      width: 700,
-      height: 500,
+      width: 800,
+      height: 418,
     }
   )
 }

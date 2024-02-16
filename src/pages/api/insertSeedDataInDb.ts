@@ -8,12 +8,11 @@ export default async function handler(
 ) {
   try {
     //Insert the questions
-    //Insert the questions
-    await sql`INSERT INTO questions (id, question)
-    VALUES
-        (1, 'What is Johanna''s last name?'),
-        (2, 'What is Thessy''s favorite city?'),
-        (3, 'What is Denver called? CLUE: ''the ___ ___ city');`
+    await sql`INSERT INTO questions (id, question, expires_at, correct_response, options) 
+    select 1, 'What is Johanna''s last name?', '2024-02-29 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Fransson', '["Fransson", "Mehrain"]'::json union all
+    select 2, 'What is Thessy''s favorite city?', '2024-03-01 10:00:00-00'::timestamp AT TIME ZONE 'MST', '', '["NYC", "Berlin"]'::json union all
+    select 3, 'What is Denver called? CLUE: ''the ___ ___ city', '2024-03-02 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Mile-High City', '["Mile-High City", "Big Apple"]'::json union all
+    select 4, 'Question 4 ?', '2024-03-03 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Option 1', '["Option 1", "Option 2"]'::json;`
 
     //Insert the channels and their follower count
     //TODO when moving away from testing, get the follower count from Neynar API

@@ -3,7 +3,7 @@ import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { getAddrByFid } from './farcaster-api'
 import { IMAGES, levelImages } from './image-paths'
-import { QUESTION } from './question'
+import { QUESTION_ID } from './question'
 
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,
@@ -24,7 +24,7 @@ export async function saveUserQuestionResponse(
       'Go to leaderboard'
     )
   } else {
-    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION.id}, ${userId}, ${correctResponse}, ${response});`
+    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${response});`
     if (correctResponse) {
       console.log('Got into correctresponse!')
 
@@ -47,6 +47,7 @@ export async function saveUser(ud: TUntrustedData, channelName: string) {
   const channel = await getChannel(channelName)
   //If the user does not exist in db and this channel, create a new one
   const existingUser = await sql`SELECT * FROM users WHERE fid = ${ud.fid}`
+  console.log(ud.fid, 'wats fid?')
   const walletAddress = await getAddrByFid(ud.fid)
   if (!existingUser.rowCount && walletAddress) {
     await sql`INSERT INTO users (fid, wallet_address) VALUES (${ud.fid}, ${walletAddress});`
@@ -70,8 +71,21 @@ export async function getTraitForChannel(channelName: string) {
 }
 
 export async function getQuestionFromId(questionId: number) {
-  const question = await sql`SELECT * FROM questions WHERE id = ${questionId}`
-  return question.rows[0]
+  const question = await sql`
+  SELECT * FROM questions
+  WHERE id = ${questionId}
+  AND expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';
+  `
+  return question.rows.length > 0 ? question.rows[0] : null
+}
+
+export async function getQuestions(excludeExpired: boolean = true) {
+  let query = 'SELECT * FROM questions'
+  if (excludeExpired) {
+    query = `${query} WHERE expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';`
+  }
+  const questions = await sql`${query}`
+  return questions.rows
 }
 
 export async function calculateImageBasedOnChannelResponses(

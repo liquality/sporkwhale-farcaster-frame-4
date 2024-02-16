@@ -8,7 +8,7 @@ import {
   getTraitForChannel,
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
-import { HANDLE_QUESTION, QUESTION } from '@/utils/question'
+import { HANDLE_QUESTION, QUESTION_ID } from '@/utils/question'
 
 export default async function handler(
   req: NextApiRequest,
@@ -67,10 +67,12 @@ export default async function handler(
 
         const traitStatusImage = await getTraitForChannel(channel)
         //TODO send in question here
+        const question = await getQuestionFromId(QUESTION_ID)
         console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
         html = generateFarcasterFrame(
-          `${SERVER_URL}/${traitStatusImage}`,
-          'question'
+          traitStatusImage,
+          'question',
+          question?.question
         )
       } else {
         html = generateFarcasterFrame(
@@ -83,8 +85,8 @@ export default async function handler(
       //TODO @Bradley create scheduler to expire the question
       //TODO @bradley add the question inside the image (on the bottom with html)
       try {
-        const question = await getQuestionFromId(QUESTION.id)
-        if (channel && !question.expired) {
+        const question = await getQuestionFromId(QUESTION_ID)
+        if (channel && question) {
           html = await HANDLE_QUESTION(channel, ud)
         } else {
           html = generateFarcasterFrame(
