@@ -3,6 +3,7 @@ import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { getAddrByFid } from './farcaster-api'
 import { IMAGES, levelImages } from './image-paths'
+import { QUESTION_ID } from './question'
 
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,
@@ -23,7 +24,7 @@ export async function saveUserQuestionResponse(
       'Go to leaderboard'
     )
   } else {
-    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION.id}, ${userId}, ${correctResponse}, ${response});`
+    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${response});`
     if (correctResponse) {
       console.log('Got into correctresponse!')
 
@@ -46,6 +47,7 @@ export async function saveUser(ud: TUntrustedData, channelName: string) {
   const channel = await getChannel(channelName)
   //If the user does not exist in db and this channel, create a new one
   const existingUser = await sql`SELECT * FROM users WHERE fid = ${ud.fid}`
+  console.log(ud.fid, 'wats fid?')
   const walletAddress = await getAddrByFid(ud.fid)
   if (!existingUser.rowCount && walletAddress) {
     await sql`INSERT INTO users (fid, wallet_address) VALUES (${ud.fid}, ${walletAddress});`
