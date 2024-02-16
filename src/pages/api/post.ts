@@ -23,12 +23,10 @@ export default async function handler(
 
   const reqId = req.query.data
   console.log('request query: ', reqId)
-  console.log(signedMessage, 'signed msg?')
 
   const isMessageValid = await validateMsgWithNeynar(
     signedMessage.trustedData?.messageBytes
   )
-  console.log(isMessageValid, 'is message valid')
 
   if (!isMessageValid) {
     return res.status(400).json({ error: 'Invalid message' })
@@ -82,22 +80,15 @@ export default async function handler(
       }
       break
     case 'question':
-      //TODO @Bradley create scheduler to expire the question
-      //TODO @bradley add the question inside the image (on the bottom with html)
-      try {
-        const question = await getQuestionFromId(QUESTION_ID)
-        if (channel && question) {
-          html = await HANDLE_QUESTION(channel, ud)
-        } else {
-          html = generateFarcasterFrame(
-            `${SERVER_URL}/${IMAGES.expired}`,
-            'error-see-leaderboard'
-          )
-        }
-      } catch (error) {
-        console.log(error, 'wats erro?')
+      const question = await getQuestionFromId(QUESTION_ID)
+      if (channel && question) {
+        html = await HANDLE_QUESTION(channel, ud)
+      } else {
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${IMAGES.expired}`,
+          'error-see-leaderboard'
+        )
       }
-
       break
     case 'error-be-a-follower':
       locationHeader = `https://warpcast.com/~/channel/${channel}`

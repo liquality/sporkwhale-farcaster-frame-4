@@ -115,12 +115,6 @@ export async function calculateImageBasedOnChannelResponses(
     const correctResponsesCount =
       correctResponsesQuery.rows[0].correct_responses
 
-    console.log(correctResponsesCount, 'correct responses count')
-    console.log(
-      channelFollowerCount,
-      'channelfollowercount and totaluserscount:',
-      totalUsersCount
-    )
     // Calculate response percentages
     const respondingPercentage = (totalUsersCount / channelFollowerCount) * 100
     const correctPercentage = (correctResponsesCount / totalUsersCount) * 100

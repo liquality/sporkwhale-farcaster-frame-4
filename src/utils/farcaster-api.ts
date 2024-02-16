@@ -16,7 +16,6 @@ export async function getAddrByFid(fid: number): Promise<string | void> {
       throw new Error('Network response was not ok')
     }
     const data = await resp.json()
-    console.log(data, 'wats data farcaster searc')
 
     // Extract connected address if available, otherwise use address from body
     const connectedAddress = data[0]?.connectedAddress || data[0]?.body.address

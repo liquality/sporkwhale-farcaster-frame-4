@@ -8,7 +8,6 @@ export async function validateMessage(messageBytes: string | undefined) {
   const hubMessage = Message.decode(Buffer.from(messageBytes, 'hex'))
   const res = await client.validateMessage(hubMessage)
 
-  console.log(res, 'wats res in hub?')
   if (res.isOk() && res.value.valid) {
     return true
   } else {
