@@ -8,7 +8,6 @@ export default async function handler(
   response: NextApiResponse
 ) {
   try {
-    console.log('wats in here?')
     const channelsQuery = await sql`SELECT * FROM channels;`
     const channels = channelsQuery.rows
     const responseArray = []
@@ -27,7 +26,6 @@ export default async function handler(
 
     return response.status(200).json(responseArray)
   } catch (error) {
-    console.log(error, 'wats er')
     return response.status(500).json({ error })
   }
 }
