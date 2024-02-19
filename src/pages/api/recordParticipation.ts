@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as database from '@/utils/database-operations'
 import {PoolParticipationMap } from '@/types'
+import { recordParticipation } from '@/utils/contract-operations';
 
 export default async function handler(
   request: NextApiRequest,
@@ -21,13 +22,11 @@ export default async function handler(
 
     const participationsByCollectives: PoolParticipationMap = groupedParticipationsByCollectives(participationsByUser) 
     
-    console.log('participations:', participationsByCollectives)
-
     // batch record participation by collectives onchain
-    // for (const [key, participations] of Object.entries(participationsByCollectives)) {
-    //     const [cAddress, cWalletAddress, poolAddress] = key.split('-')
-    //     await recordParticipation(cAddress, cWalletAddress, poolAddress, participations)
-    // }
+    for (const [key, participations] of Object.entries(participationsByCollectives)) {
+        const [cAddress, cWalletAddress, poolAddress] = key.split('-')
+        await recordParticipation(cAddress, cWalletAddress, poolAddress, participations)
+    }
 
     // Update the user_question_responses table to mark the participations as onchain
     await updateParticipations(participations)

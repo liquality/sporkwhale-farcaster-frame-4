@@ -1,7 +1,8 @@
 import * as collectiveSDK from '@liquality/my-collectives-sdk';
 import * as ethers5 from 'ethers5';
 import {CMetadata, PoolParticipation} from '../types';
-import {HONEYPOT, COLLECTIVE_FACTORY, COLLECTIVE_ABI, COLLECTIVE_FACTORY_ABI, POOL_ABI, C_WALLET_ABI} from './constants';
+import {HONEYPOT, HONEYPOT_ABI, COLLECTIVE_FACTORY, COLLECTIVE_ABI, COLLECTIVE_FACTORY_ABI, POOL_ABI, C_WALLET_ABI} from './constants';
+import { QueryResultRow } from '@vercel/postgres';
 
 
 export async function createCollective(): Promise<CMetadata> {
@@ -23,10 +24,10 @@ export async function createCollective(): Promise<CMetadata> {
         const cWallet = await cFactory.getCWallet(cAddress, signer.address, salt)
 
         const tx1 = await cFactory.createCollective(signer.address, signer.address, salt)
-        await provider.waitForTransaction(tx1.hash, 3, 2000)
+        await provider.waitForTransaction(tx1.hash, 1, 500)
         
         const tx2 = await cFactory.createWallet(signer.address, signer.address, salt)
-        await provider.waitForTransaction(tx2.hash, 3, 2000)
+        await provider.waitForTransaction(tx2.hash, 1, 500)
 
         console.log("Collective created successfully! ", tx1, tx2);
 
@@ -88,6 +89,104 @@ export async function recordParticipation(cAddress: string, cWalletAddress: stri
 
 }
 
+export async function setTopCollective(topContributor: string) : Promise<string> {
+    try {
+        const provider = getProvider();
+        const signer = getSigner(provider);
+        const honeyPot = getHonneyPot(signer);
+
+        // console.log("topContributor: ", await honeyPot.getTopContributor());
+        const tx = await honeyPot.setTopContributor(topContributor)
+        await provider.waitForTransaction(tx.hash)
+        console.log("Top contributor set successfully! ", tx.hash);
+
+        return tx.hash
+    } catch (error) {
+        throw new Error("Error setting top collective: " + error);
+    }
+}
+
+
+// send honeyPot rewards to top contributor
+export async function sendRewardToTopCollective() : Promise<string> {
+    try {
+        const provider = getProvider();
+        const signer = getSigner(provider);
+        const honeyPot = getHonneyPot(signer);
+
+        const tx = await honeyPot.sendReward()
+        await provider.waitForTransaction(tx.hash)
+        console.log("Rewards sent successfully! ", tx.hash);
+
+        return tx.hash
+    } catch (error) {
+        throw new Error("Error sending rewards to top collective: " + error);
+    }
+}
+
+// Distribute rewards in pool
+export async function distributeRewards(poolAddress: string) : Promise<string> {
+    try {
+        
+        const provider = getProvider();
+        const signer = getSigner(provider);
+        const pool = await getPool(signer, poolAddress);
+
+        const tx = await pool.distributeReward()
+        await provider.waitForTransaction(tx.hash)
+        console.log("Rewards distributed successfully! ", tx.hash);
+
+        return tx.hash
+    } catch (error) {
+        throw new Error("Error distributing rewards: " + error);
+    }
+}
+
+// withdraw rewards
+export async function batchWithdrawRewards(cWalletAddress: string, poolAddress: string, participants: QueryResultRow[]) : Promise<string> {
+    try {
+        const provider = getProvider();
+        const signer = getSigner(provider);
+
+        const cWallet = getCWallet(signer, cWalletAddress);
+        let data: string[] = []
+        let value: number[] = []
+        let dest: string[] = []
+
+        for (const participant of participants) {
+            const callData = getPoolWithdrawCallData(participant.address)
+            data.push(callData)
+            value.push(0)
+            dest.push(poolAddress)
+        }
+
+        const tx = await cWallet.executeBatch(dest, value, data, {gasLimit: 400000})
+        await provider.waitForTransaction(tx.hash)
+        console.log("withdrawal successfully!", tx.hash);
+
+        return tx.hash
+    } catch (error) {
+        throw new Error("Error batch withdrawing rewards: " + error);
+    }
+}
+
+// withdraw rewards
+export async function withdrawRewards(poolAddress: string, participant: string) : Promise<string> {
+    try {
+        const provider = getProvider();
+        const signer = getSigner(provider);
+        const pool = await getPool(signer, poolAddress);
+
+        const tx = await pool.withdrawReward(participant)
+        await provider.waitForTransaction(tx.hash)
+        console.log("Rewards withdrawn successfully! ", tx.hash);
+
+        return tx.hash
+    } catch (error) {
+        throw new Error("Error withdrawing rewards: " + error);
+    }
+}
+
 async function getPool(signer: ethers5.ethers.Wallet, poolAddress: string) {
     const pool = new ethers5.Contract(poolAddress, POOL_ABI, signer)
     return pool;
@@ -106,6 +205,11 @@ function getCFactory(signer: ethers5.ethers.Wallet) {
 function getCWallet(signer: ethers5.ethers.Wallet, cWalletAddress: string) {
     const cWallet = new ethers5.Contract(cWalletAddress, C_WALLET_ABI, signer)
     return cWallet;
+}
+
+function getHonneyPot(signer: ethers5.ethers.Wallet) {
+    const honeyPot = new ethers5.Contract(HONEYPOT, HONEYPOT_ABI, signer)
+    return honeyPot;
 }
 
 function getSigner(provider: ethers5.providers.JsonRpcProvider) {
@@ -135,4 +239,9 @@ export function generateSalt(length: number = 16): number {
 
     // Assuming you want to convert the string salt to a BigNumberish
     return Number(salt)
+}
+
+function getPoolWithdrawCallData(participant: string) {
+    const callData = new ethers5.utils.Interface(POOL_ABI).encodeFunctionData("withdrawReward", [participant]);
+    return callData;
 }

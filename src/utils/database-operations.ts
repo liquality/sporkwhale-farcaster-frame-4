@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres'
+import { QueryResultRow, sql } from '@vercel/postgres'
 import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { getAddrByFid } from './farcaster-api'
@@ -88,6 +88,42 @@ export async function getQuestions(excludeExpired: boolean = true) {
   return questions.rows
 }
 
+
+export async function getChannelStats(
+  channel: QueryResultRow
+) {
+  try {
+    // Fetch total count of users in the specific channel
+    const channelFollowerCount = channel.followers
+
+    // Fetch total count of users in the specific channel
+    const totalUsersQuery =
+      await sql`SELECT COUNT(*) AS total_users FROM user_question_responses WHERE channel_id = ${channel.id}`
+    const totalUsersCount = totalUsersQuery.rows[0].total_users
+    console.log(totalUsersCount, 'total users count')
+
+    // Fetch count of correct responses in the specific channel
+    const correctResponsesQuery =
+      await sql`SELECT COUNT(*) AS correct_responses FROM user_question_responses WHERE channel_id = ${channel.id} AND correct_response = TRUE`
+    const correctResponsesCount =
+      correctResponsesQuery.rows[0].correct_responses
+    
+      console.log(correctResponsesCount, 'correct responses count')
+
+    // Calculate response percentages
+    const respondingPercentage = (totalUsersCount / channelFollowerCount) * 100
+    const correctPercentage = (correctResponsesCount / totalUsersCount) * 100
+
+    console.log(correctPercentage, 'responding percentage')
+    console.log(respondingPercentage, 'correct percentage')
+
+    return {respondingPercentage, correctPercentage}
+  } catch (error) {
+    console.error("Error getting channel stats:", error)
+    throw error
+  }
+}
+
 export async function calculateImageBasedOnChannelResponses(
   channelName: string
 ) {
@@ -158,7 +194,7 @@ export async function createChannel(
     await sql`INSERT INTO channels (name, followers, c_address, c_wallet, c_pool, salt) 
       VALUES (${name}, ${followers}, ${cAddress}, ${cWallet}, ${cPool}, ${salt})
       ON CONFLICT (name)
-      DO NOTHING;;`
+      DO NOTHING;`
   } catch (error) {
     console.error('Error creating collective:', error)
     throw error
@@ -167,27 +203,31 @@ export async function createChannel(
 
 // getParticipations fromt the user_question_responses table, group by channel_id, and count the number of responses per user per question
 export async function getParticipations() {
-  const participations = await sql`
-  SELECT 
-    channels.c_address As cAddress, 
-    channels.c_wallet As cWallet, 
-    channels.c_pool As poolAddress, 
-    user_question_responses.question_id as questionId, 
-    users.wallet_address AS user,
-    users.id AS userId,
-    channels.id AS channelId
-  FROM 
-    user_question_responses
-  LEFT JOIN 
-    users ON user_question_responses.user_id = users.id
-  LEFT JOIN 
-    channels ON user_question_responses.channel_id = channels.id
-  WHERE 
-    user_question_responses.is_onchain = false
-  GROUP BY 
-    channels.c_address, channels.c_wallet, channels.c_pool, user_question_responses.question_id, users.wallet_address, users.id, channels.id;
-  `
-  return participations
+  try {
+    const participations = await sql`
+    SELECT 
+      channels.c_address As cAddress, 
+      channels.c_wallet As cWallet, 
+      channels.c_pool As poolAddress, 
+      user_question_responses.question_id as questionId, 
+      users.wallet_address AS user,
+      users.id AS userId,
+      channels.id AS channelId
+    FROM 
+      user_question_responses
+    LEFT JOIN 
+      users ON user_question_responses.user_id = users.id
+    LEFT JOIN 
+      channels ON user_question_responses.channel_id = channels.id
+    WHERE 
+      user_question_responses.is_onchain = false
+    GROUP BY 
+      channels.c_address, channels.c_wallet, channels.c_pool, user_question_responses.question_id, users.wallet_address, users.id, channels.id;
+    `
+    return participations
+  } catch (error) {
+    throw error
+  }
 }
 
 // Update the user_question_responses table to mark the participations as onchain
@@ -204,5 +244,36 @@ export async function updateParticipation(participation: any) {
       )}; Error: ${JSON.stringify(error)}`
     )
     return false
+  }
+}
+
+export async function fetchChannels() {
+  try {
+    const channels =
+    await sql`SELECT id, c_address As caddress, c_wallet As cwallet, c_pool As pooladdress, followers
+     FROM channels`
+    return channels.rows
+  } catch (error) {
+    throw error
+  }
+}
+
+export async function getParticipantsByChannel(channelId: string) {
+  try {
+    
+    const participants =
+    await sql`
+    SELECT 
+      users.wallet_address AS address
+    FROM 
+      user_question_responses
+    LEFT JOIN 
+      users ON user_question_responses.user_id = users.id
+    WHERE 
+      user_question_responses.channel_id = ${channelId};
+    `
+    return participants.rows
+  } catch (error) {
+    throw error
   }
 }
