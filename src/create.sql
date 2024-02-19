@@ -78,13 +78,25 @@ CREATE INDEX idx_channels_name ON channels (name);
 
 CREATE INDEX idx_trait_displayed_traits_channels ON trait_displayed (trait, channel_id);
 
-
 /*
  QUESTIONS 
  */
-alter table questions drop column expired;
-alter table questions add column expires_at timestamp null;
-alter table questions add column correct_response VARCHAR(255);
-alter table questions add column options json NOT null default '[]'::json;
+alter table
+    questions drop column expired;
+
+alter table
+    questions
+add
+    column expires_at timestamp null;
+
+alter table
+    questions
+add
+    column correct_response VARCHAR(255);
+
+alter table
+    questions
+add
+    column options json NOT null default '[]' :: json;
 
 create index idx_questions_id_expires ON questions (id, expires_at);
