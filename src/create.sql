@@ -33,12 +33,6 @@ CREATE TABLE user_question_responses (
     channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
 );
 
-CREATE TABLE trait_displayed (
-    id SERIAL PRIMARY KEY,
-    trait VARCHAR(255),
-    channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
-);
-
 CREATE TABLE clashes (
     id INT PRIMARY KEY,
     question_id INT,
@@ -86,19 +80,6 @@ create index idx_clashes_question_channels ON clashes (question_id, channel1_id,
 -- VALUES
 --     ('What is Johanna''s last name?');
 
--- INSERT INTO
---     channel (name, followers)
--- VALUES
---     ('cryptostocks', 230);
-
--- INSERT INTO
---     trait_displayed (trait, channel_id)
--- VALUES
---     (
---         'glasses_bracelet_chain_bathingSuit_whale.png',
---         2
---     );
-
 /*
  INDEXES
  */
@@ -107,8 +88,6 @@ CREATE INDEX idx_users_wallet_address ON users (wallet_address);
 CREATE INDEX idx_user_question_responses_question_user_channel ON user_question_responses (user_id, question_id, channel_id);
 
 CREATE INDEX idx_channels_name ON channels (name);
-
-CREATE INDEX idx_trait_displayed_traits_channels ON trait_displayed (trait, channel_id);
 
 /*
  QUESTIONS 
