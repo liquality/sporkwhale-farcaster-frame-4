@@ -51,8 +51,6 @@ CREATE TABLE clashes (
 --IF YOU WANT TO DROP:
 DROP TABLE IF EXISTS user_question_responses CASCADE;
 
-DROP TABLE IF EXISTS trait_displayed CASCADE;
-
 DROP TABLE IF EXISTS questions CASCADE;
 
 DROP TABLE IF EXISTS users CASCADE;
@@ -67,8 +65,6 @@ CREATE INDEX idx_users_wallet_address ON users (wallet_address);
 CREATE INDEX idx_user_question_responses_question_user_channel ON user_question_responses (user_id, question_id, channel_id);
 
 CREATE INDEX idx_channels_name ON channels (name);
-
-CREATE INDEX idx_trait_displayed_traits_channels ON trait_displayed (trait, channel_id);
 
 /*
  QUESTIONS 
