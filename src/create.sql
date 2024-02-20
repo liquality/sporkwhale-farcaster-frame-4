@@ -6,7 +6,7 @@ CREATE TABLE channels (
     c_address VARCHAR(255),
     c_wallet VARCHAR(255),
     c_pool VARCHAR(255),
-    salt VARCHAR(255)
+    salt VARCHAR(255) --Todo add question_id here which references which question this channel current question
 );
 
 CREATE TABLE users (
@@ -42,15 +42,16 @@ CREATE TABLE clashes (
     question_id INT,
     channel1_id INT,
     channel2_id INT,
-    winner_id INT,
-    loser_id INT,
+    channel_winner_id INT,
     FOREIGN KEY (question_id) REFERENCES questions(id),
     FOREIGN KEY (channel1_id) REFERENCES channels(id),
     FOREIGN KEY (channel2_id) REFERENCES channels(id),
     FOREIGN KEY (winner_id) REFERENCES channels(id),
-    FOREIGN KEY (loser_id) REFERENCES channels(id)
 );
 
+--TODO cron job for setting winners and insert new clashes
+--TODO frontend group by question_id and display in tree strucutre
+-- TODO in frame: In frame show correct response rate for the channel 
 --IF YOU WANT TO DROP:
 DROP TABLE IF EXISTS user_question_responses CASCADE;
 

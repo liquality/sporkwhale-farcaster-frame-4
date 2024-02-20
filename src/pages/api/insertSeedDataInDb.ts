@@ -55,6 +55,8 @@ export default async function handler(
         (2, 2, true, 'fransson', 4),
         (2, 2, true, 'FransSon', 4);`
 
+    //TODO insert clashes table
+
     return response.status(200).json({ success: 'ok' })
   } catch (error) {
     console.log(error, 'Error seeding data!')
