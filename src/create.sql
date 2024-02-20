@@ -6,7 +6,7 @@ CREATE TABLE channels (
     c_address VARCHAR(255),
     c_wallet VARCHAR(255),
     c_pool VARCHAR(255),
-    salt VARCHAR(255)
+    salt VARCHAR(255) --Todo add question_id here which references which question this channel current question
 );
 
 CREATE TABLE users (
@@ -37,6 +37,21 @@ CREATE TABLE trait_displayed (
     channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
 );
 
+CREATE TABLE clashes (
+    id INT PRIMARY KEY,
+    question_id INT,
+    channel1_id INT,
+    channel2_id INT,
+    channel_winner_id INT,
+    FOREIGN KEY (question_id) REFERENCES questions(id),
+    FOREIGN KEY (channel1_id) REFERENCES channels(id),
+    FOREIGN KEY (channel2_id) REFERENCES channels(id),
+    FOREIGN KEY (winner_id) REFERENCES channels(id),
+);
+
+--TODO cron job for setting winners and insert new clashes
+--TODO frontend group by question_id and display in tree strucutre
+-- TODO in frame: In frame show correct response rate for the channel 
 --IF YOU WANT TO DROP:
 DROP TABLE IF EXISTS user_question_responses CASCADE;
 
@@ -78,13 +93,25 @@ CREATE INDEX idx_channels_name ON channels (name);
 
 CREATE INDEX idx_trait_displayed_traits_channels ON trait_displayed (trait, channel_id);
 
-
 /*
  QUESTIONS 
  */
-alter table questions drop column expired;
-alter table questions add column expires_at timestamp null;
-alter table questions add column correct_response VARCHAR(255);
-alter table questions add column options json NOT null default '[]'::json;
+alter table
+    questions drop column expired;
+
+alter table
+    questions
+add
+    column expires_at timestamp null;
+
+alter table
+    questions
+add
+    column correct_response VARCHAR(255);
+
+alter table
+    questions
+add
+    column options json NOT null default '[]' :: json;
 
 create index idx_questions_id_expires ON questions (id, expires_at);
