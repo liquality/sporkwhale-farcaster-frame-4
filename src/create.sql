@@ -20,7 +20,7 @@ CREATE TABLE channels (
     c_pool VARCHAR(255),
     salt VARCHAR(255),
     question_id INT,
-    FOREIGN KEY (question_id) REFERENCES questions(id),
+    FOREIGN KEY (question_id) REFERENCES questions(id)
 );
 
 CREATE TABLE user_question_responses (
@@ -38,24 +38,47 @@ CREATE TABLE clashes (
     question_id INT,
     channel1_id INT,
     channel2_id INT,
-    channel_winner_id INT,
+    channel_winner_id INT NULL,
     FOREIGN KEY (question_id) REFERENCES questions(id),
     FOREIGN KEY (channel1_id) REFERENCES channels(id),
     FOREIGN KEY (channel2_id) REFERENCES channels(id),
-    FOREIGN KEY (winner_id) REFERENCES channels(id),
+    FOREIGN KEY (channel_winner_id) REFERENCES channels(id)
 );
+create index idx_clashes_question_channels ON clashes (question_id, channel1_id, channel2_id);
+-- -- Inserting clashes
+-- INSERT INTO
+--     clashes (
+--         id,
+--         question_id,
+--         channel1_id,
+--         channel2_id,
+--         channel_winner_id
+--     )
+-- VALUES
+--     (1, 0, 6, 7, NULL),
+--     -- Clash of the stack: backend vs. frontend
+--     (2, 0, 8, 9, NULL),
+--     -- Gender clash: farcastHER vs. farcastHIM
+--     -- Add more clashes here
+--     --TODO cron job for setting winners and insert new clashes
+--     --TODO frontend group by question_id and display in tree strucutre
+--     -- TODO in frame: In frame show correct response rate for the channel 
+--     --IF YOU WANT TO DROP:
+--     DROP TABLE IF EXISTS user_question_responses CASCADE;
 
---TODO cron job for setting winners and insert new clashes
---TODO frontend group by question_id and display in tree strucutre
--- TODO in frame: In frame show correct response rate for the channel 
---IF YOU WANT TO DROP:
-DROP TABLE IF EXISTS user_question_responses CASCADE;
+-- DROP TABLE IF EXISTS trait_displayed CASCADE;
 
-DROP TABLE IF EXISTS questions CASCADE;
+-- DROP TABLE IF EXISTS questions CASCADE;
 
-DROP TABLE IF EXISTS users CASCADE;
+-- DROP TABLE IF EXISTS users CASCADE;
 
-DROP TABLE IF EXISTS channels CASCADE;
+-- DROP TABLE IF EXISTS channels CASCADE;
+
+-- --Tester data
+-- INSERT INTO
+--     questions (question)
+-- VALUES
+--     ('What is Johanna''s last name?');
 
 /*
  INDEXES
