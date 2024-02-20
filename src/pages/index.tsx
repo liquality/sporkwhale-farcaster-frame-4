@@ -14,6 +14,7 @@ export default function Home() {
         try {
           const response = await fetch('/api/getLeaderboardData')
           const data = await response.json()
+          console.log({ data })
           setLeaderboard(data)
         } catch (error) {
           console.error('Error fetching data:', error)
@@ -50,13 +51,13 @@ export default function Home() {
           </tr>
         </thead>
         <tbody>
-          {leaderboard?.map((item, index) => (
+          {/* {leaderboard?.map((item, index) => (
             <tr key={index}>
               <td>{item.channel}</td>
               <td>{item.image}</td>
               <td>{item.level}</td>
             </tr>
-          ))}
+          ))} */}
         </tbody>
       </table>
     </>
