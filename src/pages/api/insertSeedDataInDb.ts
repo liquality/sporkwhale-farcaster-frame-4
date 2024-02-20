@@ -72,15 +72,6 @@ export default async function handler(
         (16, 0, 31, 32, NULL); -- Gender clash: farcastHER vs. farcastHIM
     `
 
-    //Insert the trait_displayed starting point for all channels
-    await sql`INSERT INTO trait_displayed (trait, channel_id)
-    VALUES
-        ('0_glasses_bracelet_chain_bathingSuit_whale.png', 1),
-        ('0_glasses_bracelet_chain_bathingSuit_whale.png', 2),
-        ('0_glasses_bracelet_chain_bathingSuit_whale.png', 3),
-        ('0_glasses_bracelet_chain_bathingSuit_whale.png', 4),
-        ('0_glasses_bracelet_chain_bathingSuit_whale.png', 5);`
-
     //Insert some seeded users + question responses to simulate the db calculation
     await sql`INSERT INTO users (id, wallet_address, fid)
     VALUES

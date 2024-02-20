@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { sql } from '@vercel/postgres'
-import { getTraitForChannel } from '@/utils/database-operations'
 import { levelImages } from '@/utils/image-paths'
 
 export default async function handler(
@@ -13,13 +12,9 @@ export default async function handler(
     const responseArray = []
 
     for (const channel of channels) {
-      const trait = await getTraitForChannel(channel.name)
-      const currentLevel = Object.values(levelImages).indexOf(trait)
-
       responseArray.push({
         channel: channel.name,
-        image: trait,
-        level: currentLevel,
+        level: channel.question_id,
       })
     }
     responseArray.sort((a, b) => b.level - a.level)

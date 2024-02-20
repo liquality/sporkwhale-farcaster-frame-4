@@ -33,12 +33,6 @@ CREATE TABLE user_question_responses (
     channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
 );
 
-CREATE TABLE trait_displayed (
-    id SERIAL PRIMARY KEY,
-    trait VARCHAR(255),
-    channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
-);
-
 CREATE TABLE clashes (
     id INT PRIMARY KEY,
     question_id INT,
@@ -51,26 +45,11 @@ CREATE TABLE clashes (
     FOREIGN KEY (winner_id) REFERENCES channels(id),
 );
 
--- Inserting clashes
-INSERT INTO
-    clashes (
-        id,
-        question_id,
-        channel1_id,
-        channel2_id,
-        channel_winner_id
-    )
-VALUES
-    (1, 0, 6, 7, NULL),
-    -- Clash of the stack: backend vs. frontend
-    (2, 0, 8, 9, NULL),
-    -- Gender clash: farcastHER vs. farcastHIM
-    -- Add more clashes here
-    --TODO cron job for setting winners and insert new clashes
-    --TODO frontend group by question_id and display in tree strucutre
-    -- TODO in frame: In frame show correct response rate for the channel 
-    --IF YOU WANT TO DROP:
-    DROP TABLE IF EXISTS user_question_responses CASCADE;
+--TODO cron job for setting winners and insert new clashes
+--TODO frontend group by question_id and display in tree strucutre
+-- TODO in frame: In frame show correct response rate for the channel 
+--IF YOU WANT TO DROP:
+DROP TABLE IF EXISTS user_question_responses CASCADE;
 
 DROP TABLE IF EXISTS trait_displayed CASCADE;
 
@@ -79,25 +58,6 @@ DROP TABLE IF EXISTS questions CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
 DROP TABLE IF EXISTS channels CASCADE;
-
---Tester data
-INSERT INTO
-    questions (question)
-VALUES
-    ('What is Johanna''s last name?');
-
-INSERT INTO
-    channel (name, followers)
-VALUES
-    ('cryptostocks', 230);
-
-INSERT INTO
-    trait_displayed (trait, channel_id)
-VALUES
-    (
-        'glasses_bracelet_chain_bathingSuit_whale.png',
-        2
-    );
 
 /*
  INDEXES
