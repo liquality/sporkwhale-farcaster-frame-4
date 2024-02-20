@@ -1,4 +1,3 @@
-import { NextRequest } from 'next/server'
 import Leaderboard from '../../components/leaderboard'
 import { getLeaderboardData } from '@/utils/getLeaderboardData'
 
