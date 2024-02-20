@@ -16,13 +16,60 @@ export default async function handler(
 
     //Insert the channels and their follower count
     //TODO when moving away from testing, get the follower count from Neynar API
-    await sql`INSERT INTO channels (id, name, followers, c_address, c_wallet, c_pool, salt)
+    await sql`INSERT INTO channels (id, question_id, name, followers, c_address, c_wallet, c_pool, salt) 
     VALUES 
-      (5, 'base', 10, '0xB6AcfD2De7A54284FcE7805f5C52E710A2048b77', '0x9A61Db86533a9a5e9Ad38AbFFeB08e3A3b63DF5b', '0x98f4109848d96B1bed010DD13c1519F74F7fC36f', '1211321320221011'),
-      (4, 'founders', 15, '0xa9887ff461A5920a807bC23D3096C409F43eCe96', '0x3d3C87229389Ce66d1Fc6Ea416d37df17ECF97B1', '0x1D9D328d8C2068d09e4e116AFb7Af84846736ceA', '2211320212332233'),
-      (1, 'cryptostocks', 7, '0xB6AcfD2De7A54284FcE7805f5C52E710A2048b77', '0x9A61Db86533a9a5e9Ad38AbFFeB08e3A3b63DF5b', '0x98f4109848d96B1bed010DD13c1519F74F7fC36f', '1211321320221011'),
-      (2, 'skininthegame', 5, '0xB6AcfD2De7A54284FcE7805f5C52E710A2048b77', '0x9A61Db86533a9a5e9Ad38AbFFeB08e3A3b63DF5b', '0x98f4109848d96B1bed010DD13c1519F74F7fC36f', '1211321320221011'),
-      (3, 'ethdenver', 4, '0xa9887ff461A5920a807bC23D3096C409F43eCe96', '0x3d3C87229389Ce66d1Fc6Ea416d37df17ECF97B1', '0x1D9D328d8C2068d09e4e116AFb7Af84846736ce', '1211321320221011');
+        (1, 0, 'nyc', 0, '', '', '', ''),
+        (2, 0, 'la', 0, '', '', '', ''),
+        (3, 0, 'nouns', 0, '', '', '', ''),
+        (4, 0, 'mfers', 0, '', '', '', ''),
+        (5, 0, 'base', 0, '', '', '', ''),
+        (6, 0, 'zora', 0, '', '', '', ''),
+        (7, 0, 'op-stack', 0, '', '', '', ''),
+        (8, 0, 'solana', 0, '', '', '', ''),
+        (9, 0, 'perl', 0, '', '', '', ''),
+        (10, 0, 'farcats', 0, '', '', '', ''),
+        (11, 0, 'founders', 0, '', '', '', ''),
+        (12, 0, 'farcaster-devs', 0, '', '', '', ''),
+        (13, 0, 'seedclub', 0, '', '', '', ''),
+        (14, 0, 'skininthegame', 0, '', '', '', ''),
+        (15, 0, 'degen', 0, '', '', '', ''),
+        (16, 0, 'memes', 0, '', '', '', ''),
+        (17, 0, 'teddit', 0, '', '', '', ''),
+        (18, 0, 'cameron', 0, '', '', '', ''),
+        (19, 0, 'avc', 0, '', '', '', ''),
+        (20, 0, 'orange', 0, '', '', '', ''),
+        (21, 0, 'purple', 0, '', '', '', ''),
+        (22, 0, 'yellow', 0, '', '', '', ''),
+        (23, 0, 'layer3', 0, '', '', '', ''),
+        (24, 0, 'daylight', 0, '', '', '', ''),
+        (25, 0, 'fitness', 0, '', '', '', ''),
+        (26, 0, '10k', 0, '', '', '', ''),
+        (27, 0, 'base-god', 0, '', '', '', ''),
+        (28, 0, 'dog', 0, '', '', '', ''),
+        (29, 0, 'backend', 0, '', '', '', ''),
+        (30, 0, 'frontend', 0, '', '', '', ''),
+        (31, 0, 'farcasther', 0, '', '', '', ''),
+        (32, 0, 'farcasthim', 0, '', '', '', '');    
+    `
+
+    await sql`INSERT INTO clashes (id, question_id, channel1_id, channel2_id, channel_winner_id) 
+    VALUES 
+        (1, 0, 1, 2, NULL), -- Clash of the coasts: NYC vs LA
+        (2, 0, 3, 4, NULL), -- Clash of the PFPs: Nouns vs. mfers
+        (3, 0, 5, 6, NULL), -- Clash of the rollups: Base vs. Zora
+        (4, 0, 7, 8, NULL), -- Clash of chains: OP Stack vs. Solana
+        (5, 0, 9, 10, NULL), -- FC Meta Clash: Perl vs. Farcats
+        (6, 0, 11, 12, NULL), -- Clash of brains: Founders vs. Farcaster Devs
+        (7, 0, 13, 14, NULL), -- Consumer crypto clash: SeedClub vs. Skininthegame
+        (8, 0, 15, 16, NULL), -- Memetic clash: Degen vs. Memes
+        (9, 0, 17, 18, NULL), -- Clash of personalities: Teddit vs. Cameron
+        (10, 0, 19, 20, NULL), -- Clash of VCs: AVC vs. Orange
+        (11, 0, 21, 22, NULL), -- Nounish Colors Clash: Purple vs. Yellow Collective
+        (12, 0, 23, 24, NULL), -- Clash of Quests: layer3 vs. Daylight
+        (13, 0, 25, 26, NULL), -- Fit clash: fitness vs. 10k steps
+        (14, 0, 27, 28, NULL), -- Clash of believers: Base God vs. $DOG
+        (15, 0, 29, 30, NULL), -- Clash of the stack: backend vs. frontend
+        (16, 0, 31, 32, NULL); -- Gender clash: farcastHER vs. farcastHIM
     `
 
     //Insert the trait_displayed starting point for all channels
