@@ -1,18 +1,20 @@
 import { ImageResponse } from 'next/og'
-import data from '../../components/leaderboard-data.json';
-import LeaderboardTempalte from '../../components/leaderboard-template'
+import LeaderboardTempalte from '../../components/leaderboard'
+import { getLeaderboardData } from '@/utils/getLeaderboardData';
 
-export async function GET() {
-  const data: any[] = [];
+export async function GET({url}: Request) {
+  const { searchParams } = new URL(url)
+  const mode = searchParams.get('mode') || 'table'
+  const data = await getLeaderboardData()
   return new ImageResponse(
-    <LeaderboardTempalte data={data} />,
+    <LeaderboardTempalte data={data} mode={mode as any} />,
     // ImageResponse options
     {
     
       // For convenience, we can re-use the exported opengraph-image
       // size config to also set the ImageResponse's width and height.
-      width: 700,
-      height: 500,
+      width: 800,
+      height: 300,
     }
   )
 }

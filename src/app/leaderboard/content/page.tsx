@@ -1,9 +1,13 @@
-import LeaderboardTemplate from '../../components/leaderboard-template'
-import data from '../../components/leaderboard-data.json';
-import { getQuestionFromId } from '@/utils/database-operations';
+import { NextRequest } from 'next/server'
+import Leaderboard from '../../components/leaderboard'
+import { getLeaderboardData } from '@/utils/getLeaderboardData'
 
-export default async function Page() {
-  const question = await getQuestionFromId(1);
-  console.log({question})
-  return <LeaderboardTemplate data={data}/>
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { mode?: string }
+}) {
+  const mode = searchParams.mode || 'table'
+  const data = await getLeaderboardData()
+  return <Leaderboard data={data} mode={mode as any} />
 }
