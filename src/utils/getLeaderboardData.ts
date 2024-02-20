@@ -1,5 +1,3 @@
-import { getTraitForChannel } from '@/utils/database-operations'
-import { levelImages } from '@/utils/image-paths'
 import { sql } from '@vercel/postgres'
 
 export const getLeaderboardData = async () => {
