@@ -62,12 +62,8 @@ export async function getChannel(channel: string) {
   return existingChannel.rows[0]
 }
 
-export async function getTraitForChannel(channelName: string) {
-  const channel = await getChannel(channelName)
-
-  const currentTraitStatus =
-    await sql`SELECT * FROM trait_displayed WHERE channel_id = ${channel.id}`
-  return currentTraitStatus.rows[0].trait
+export function getImageFromQuestionId(questionId: number) {
+  return levelImages[0]
 }
 
 export async function getQuestionFromId(questionId: number) {
@@ -88,10 +84,7 @@ export async function getQuestions(excludeExpired: boolean = true) {
   return questions.rows
 }
 
-
-export async function getChannelStats(
-  channel: QueryResultRow
-) {
+export async function getChannelStats(channel: QueryResultRow) {
   try {
     // Fetch total count of users in the specific channel
     const channelFollowerCount = channel.followers
@@ -107,8 +100,8 @@ export async function getChannelStats(
       await sql`SELECT COUNT(*) AS correct_responses FROM user_question_responses WHERE channel_id = ${channel.id} AND correct_response = TRUE`
     const correctResponsesCount =
       correctResponsesQuery.rows[0].correct_responses
-    
-      console.log(correctResponsesCount, 'correct responses count')
+
+    console.log(correctResponsesCount, 'correct responses count')
 
     // Calculate response percentages
     const respondingPercentage = (totalUsersCount / channelFollowerCount) * 100
@@ -117,9 +110,9 @@ export async function getChannelStats(
     console.log(correctPercentage, 'responding percentage')
     console.log(respondingPercentage, 'correct percentage')
 
-    return {respondingPercentage, correctPercentage}
+    return { respondingPercentage, correctPercentage }
   } catch (error) {
-    console.error("Error getting channel stats:", error)
+    console.error('Error getting channel stats:', error)
     throw error
   }
 }
@@ -133,12 +126,10 @@ export async function calculateImageBasedOnChannelResponses(
 
     let newTrait = ''
     // Fetch current level of the channel from the database
-    const currentLevelQuery =
-      await sql`SELECT trait FROM trait_displayed WHERE channel_id = ${channel.id}`
-    const currentTrait = currentLevelQuery.rows[0].trait
 
-    // Determine the current level index based on the image path
-    const currentLevel = Object.values(levelImages).indexOf(currentTrait)
+    const currentLevelQuery =
+      await sql`SELECT question_id FROM channel WHERE channel_id = ${channel.id}`
+    const currentLevel = currentLevelQuery.rows[0].question_id
 
     // Fetch total count of users in the specific channel
     const totalUsersQuery =
@@ -161,18 +152,11 @@ export async function calculateImageBasedOnChannelResponses(
     // Determine SporkWhale's status based on the conditions and update the trait displayed
     if (respondingPercentage > 10 && correctPercentage > 50) {
       // Move up a level
-      const nextLevel = Math.min(
-        currentLevel + 1,
-        Object.keys(levelImages).length - 1
-      )
-      newTrait = levelImages[nextLevel]
-      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel_id = ${channel.id}`
-    } else {
-      // Move down a level
-      const nextLevel = Math.max(currentLevel - 1, 0)
-      newTrait = levelImages[nextLevel]
-      await sql`UPDATE trait_displayed SET trait = ${newTrait} WHERE channel_id = ${channel.id}`
+      const nextLevel = currentLevel + 1
+
+      await sql`UPDATE channels SET question_id = ${nextLevel} WHERE channel_id = ${channel.id}`
     }
+    //Else do nothing, since you cant go back a level or move down
 
     // Return new trait img
     return newTrait
@@ -250,7 +234,7 @@ export async function updateParticipation(participation: any) {
 export async function fetchChannels() {
   try {
     const channels =
-    await sql`SELECT id, c_address As caddress, c_wallet As cwallet, c_pool As pooladdress, followers
+      await sql`SELECT id, c_address As caddress, c_wallet As cwallet, c_pool As pooladdress, followers
      FROM channels`
     return channels.rows
   } catch (error) {
@@ -260,9 +244,7 @@ export async function fetchChannels() {
 
 export async function getParticipantsByChannel(channelId: string) {
   try {
-    
-    const participants =
-    await sql`
+    const participants = await sql`
     SELECT 
       users.wallet_address AS address
     FROM 

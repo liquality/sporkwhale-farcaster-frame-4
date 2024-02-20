@@ -4,8 +4,8 @@ import { validateMessage, validateMsgWithNeynar } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
+  getImageFromQuestionId,
   getQuestionFromId,
-  getTraitForChannel,
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
 import { HANDLE_QUESTION, QUESTION_ID } from '@/utils/question'
@@ -63,7 +63,8 @@ export default async function handler(
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
 
-        const traitStatusImage = await getTraitForChannel(channel)
+        const traitStatusImage = getImageFromQuestionId(QUESTION_ID)
+
         //TODO send in question here
         const question = await getQuestionFromId(QUESTION_ID)
         console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
