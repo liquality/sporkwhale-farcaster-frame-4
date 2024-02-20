@@ -37,6 +37,20 @@ CREATE TABLE trait_displayed (
     channel_id INTEGER REFERENCES channels(id) ON DELETE CASCADE
 );
 
+CREATE TABLE clashes (
+    id INT PRIMARY KEY,
+    question_id INT,
+    channel1_id INT,
+    channel2_id INT,
+    winner_id INT,
+    loser_id INT,
+    FOREIGN KEY (question_id) REFERENCES questions(id),
+    FOREIGN KEY (channel1_id) REFERENCES channels(id),
+    FOREIGN KEY (channel2_id) REFERENCES channels(id),
+    FOREIGN KEY (winner_id) REFERENCES channels(id),
+    FOREIGN KEY (loser_id) REFERENCES channels(id)
+);
+
 --IF YOU WANT TO DROP:
 DROP TABLE IF EXISTS user_question_responses CASCADE;
 
