@@ -3,11 +3,19 @@ import { useEffect, useState } from 'react'
 import ExpandedDay from './expanded-day'
 import ChevronDown from './icons'
 import './leaderboard.css'
+import { headers } from 'next/headers'
+import { getSelectorsByUserAgent } from 'react-device-detect'
+import { isMobile } from 'react-device-detect'
 
 export default function LeaderboardMobile() {
   const [leaderboard, setLeaderboard] = useState<null | ClashDataMap[]>(null)
   const [loading, setLoading] = useState(false)
   const [expandedDay, setExpandedDay] = useState<number | null>(null)
+  const [isMobileState, setIsMobileState] = useState(false)
+
+  useEffect(() => {
+    setIsMobileState(isMobile)
+  }, [isMobile])
 
   useEffect(() => {
     if (!leaderboard) {
@@ -43,19 +51,30 @@ export default function LeaderboardMobile() {
   }
 
   return (
-    <div className="mobile-container">
-      <h3>Competing Channels</h3>
-      {leaderboard && (
-        <>
-          {renderDay(1, 'Day 1: February 28th', '#FFE2E2')}
-          {renderDay(2, 'Day 2: February 29th', '#FCFCCB')}
-          {renderDay(3, 'Day 3: March 1st', '#D1FFD2')}
-          {renderDay(4, 'Day 4: March 2nd', '#B8B2FF')}
-        </>
+    <div suppressHydrationWarning={true}>
+      {' '}
+      {isMobileState ? (
+        <div className="mobile-container">
+          <h3>Competing Channels</h3>
+
+          {leaderboard && (
+            <>
+              {renderDay(1, 'Day 1: February 28th', '#FFE2E2')}
+              {renderDay(2, 'Day 2: February 29th', '#FCFCCB')}
+              {renderDay(3, 'Day 3: March 1st', '#D1FFD2')}
+              {renderDay(4, 'Day 4: March 2nd', '#B8B2FF')}
+            </>
+          )}
+          <div className="winner-box">
+            <br></br>SporkWhale Mania Winner: <br></br>NOT ANNOUNCED YET
+          </div>
+        </div>
+      ) : (
+        <div>
+          {' '}
+          <h3>Competing Channels desktp</h3>
+        </div>
       )}
-      <div className="winner-box">
-        <br></br>SporkWhale Mania Winner: <br></br>NOT ANNOUNCED YET
-      </div>
     </div>
   )
 }

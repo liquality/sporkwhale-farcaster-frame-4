@@ -36,6 +36,8 @@
 
 .justify-between{
     justify-content: space-between;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
 }
 
 .expanded-day{
@@ -51,3 +53,4 @@
     width: 90%;
     font-size: 18px;
 }
+

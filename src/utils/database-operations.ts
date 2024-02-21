@@ -63,7 +63,7 @@ export async function getChannel(channel: string) {
 }
 
 export function getImageFromQuestionId(questionId: number) {
-  return levelImages[0]
+  return levelImages[questionId]
 }
 
 export async function getQuestionFromId(questionId: number) {
