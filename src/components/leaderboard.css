@@ -7,18 +7,25 @@
     justify-content: center;
     font-family: Arial, Helvetica, sans-serif;
     flex-direction: column;
-    
 
 }
 
 .mobile-row-title{
     text-align: center;
-    background-color: aquamarine;
     font-weight: 700;
     padding: 3px;
     width: 90%;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.vs-title{
+    text-align: center;
+    font-weight: 700;
+    padding: 3px;
+    width: 90%;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .flex-direction-row{
@@ -29,4 +36,8 @@
 
 .justify-between{
     justify-content: space-between;
+}
+
+.expanded-day{
+    width: 90%;
 }

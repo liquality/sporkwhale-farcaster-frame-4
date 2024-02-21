@@ -14,9 +14,11 @@ export default function ExpandedDay(props: ExpandedDayProps) {
   const [leaderboard, setLeaderboard] = useState<null | TLeaderboard[]>(null)
 
   return (
-    <div>
+    <div className="expanded-day">
+      <div className="vs-title">VS</div>
+
       {clashDataForDay.map((clash: ClashData, index: number) => (
-        <div className="flex-direction-row justify-between" key={index}>
+        <div className="flex-direction-row justify-between " key={index}>
           <div>{clash.channel_name_1}</div>
           <div>{clash.channel_name_2}</div>
         </div>

@@ -25,10 +25,14 @@ export default function LeaderboardMobile() {
     }
   }, [leaderboard])
 
-  const renderDay = (day: number, title: string) => {
+  const renderDay = (day: number, title: string, color: string) => {
     return (
       <>
-        <div onClick={() => setExpandedDay(day)} className="mobile-row-title">
+        <div
+          onClick={() => setExpandedDay(day === expandedDay ? 0 : day)}
+          className="mobile-row-title"
+          style={{ backgroundColor: color }}
+        >
           {title} <ChevronDown />
         </div>
         {expandedDay === day && leaderboard && (
@@ -40,12 +44,13 @@ export default function LeaderboardMobile() {
 
   return (
     <div className="mobile-container">
+      <h3>Competing Channels</h3>
       {leaderboard && (
         <>
-          {renderDay(1, 'Day 1: February 28th')}
-          {renderDay(2, 'Day 2: February 29th')}
-          {renderDay(3, 'Day 3: March 1st')}
-          {renderDay(4, 'Day 4: March 2nd')}
+          {renderDay(1, 'Day 1: February 28th', '#FFE2E2')}
+          {renderDay(2, 'Day 2: February 29th', '#FCFCCB')}
+          {renderDay(3, 'Day 3: March 1st', '#D1FFD2')}
+          {renderDay(4, 'Day 4: March 2nd', '#B8B2FF')}
         </>
       )}
     </div>
