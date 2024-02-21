@@ -1,7 +1,7 @@
 import { sql } from '@vercel/postgres'
 
 export const getLeaderboardData = async () => {
-  const data = await sql`
+  const clashesQuery = sql`
   select c.id as clash_id,
        c.question_id, 
          q.question as question_text,
@@ -25,13 +25,40 @@ export const getLeaderboardData = async () => {
   on ch2.id = c.channel2_id
   order by c.id;`
 
-const result = data.rows.reduce((prev, curr) => {
-    if(!prev[curr.question_id]) {
-        prev[curr.question_id] = []
-    }
-    prev[curr.question_id].push(curr)
-    return prev
-}, {})
+  const responsesQuery = sql`
+  select question_id, 
+	   channel_id, 
+	   cast(count(question_id) as integer) as total, 
+	   cast(sum(case when correct_response='True' then 1 else 0 end) as integer) as correct,
+       cast(sum(case when correct_response='False' then 1 else 0 end) as integer) as incorrect,
+       cast(sum(case when correct_response='True' then 1 else 0 end) / count(question_id) as integer) * 100 as correct_percentage
+from user_question_responses
+group by question_id, channel_id;`
 
-  return result
+  const [clashesResult, responsesResult] = await Promise.all([
+    clashesQuery,
+    responsesQuery,
+  ])
+  const data = clashesResult.rows.reduce((prev, curr) => {
+    if (!prev[curr.question_id]) {
+      prev[curr.question_id] = []
+    }
+    let responses = {}
+    const channel1Responses = responsesResult.rows.find(
+      (p) =>
+        p.question_id === curr.question_id && p.channel_id === curr.channel1_id
+    )
+    const channel2Responses = responsesResult.rows.find(
+      (p) =>
+        p.question_id === curr.question_id && p.channel_id === curr.channel2_id
+    )
+    responses = {
+      [curr.channel1_id]: channel1Responses,
+      [curr.channel2_id]: channel2Responses,
+    }
+
+    prev[curr.question_id].push({ ...curr, responses })
+    return prev
+  }, {})
+  return data
 }
