@@ -17,8 +17,9 @@ export default function Column(props: ExpandedDayProps) {
 
   const renderDayOneStyle = (channelName1: string, channelName2: string) => {
     return (
-      <div className="">
+      <div className="justify-between-grid">
         <div className="pair">
+          <br></br>
           <br></br>
           <div className="channel-name-box">{channelName1}</div>
           <div className="channel-name-box">{channelName2}</div>
@@ -30,8 +31,18 @@ export default function Column(props: ExpandedDayProps) {
   const renderOtherDaysStyle = (channelName1: string, channelName2: string) => {
     return (
       <div className="">
-        <div className="channel-name-box">{channelName1}</div>
-        <div className="channel-name-box">{channelName2}</div>
+        <div
+          style={{ marginTop: '80px', marginBottom: '80px' }}
+          className="channel-name-box"
+        >
+          {channelName1}
+        </div>
+        <div
+          style={{ marginTop: '80px', marginBottom: '80px' }}
+          className="channel-name-box"
+        >
+          {channelName2}
+        </div>
       </div>
     )
   }
@@ -42,20 +53,29 @@ export default function Column(props: ExpandedDayProps) {
 
   console.log(slicedClashData, 'slised?')
   return (
-    <div className="justify-between-grid">
+    <div className="">
       {slicedClashData?.map((clash: ClashData, index: number) => (
         <>
-          {day === 1
-            ? renderDayOneStyle(clash.channel_name_1, clash.channel_name_2)
-            : renderOtherDaysStyle(clash.channel_name_1, clash.channel_name_2)}
-          {/*   <div className="flex-direction-row justify-between " key={index}>
+          {
+            day === 1 ? (
+              renderDayOneStyle(clash.channel_name_1, clash.channel_name_2)
+            ) : (
+              <div className="">
+                {renderOtherDaysStyle(
+                  clash.channel_name_1,
+                  clash.channel_name_2
+                )}
+              </div>
+            )
+            /*   <div className="flex-direction-row justify-between " key={index}>
             <div className="" style={{ width: '30%', margin: 3 }}>
               {clash.channel_name_1}
             </div>
             <div style={{ width: '30%', margin: 3 }}>
               {clash.channel_name_2}
             </div>
-          </div> */}
+          </div> */
+          }
           {/*    <div
             style={{ width: '100%', height: 1, backgroundColor: 'black' }}
           ></div> */}

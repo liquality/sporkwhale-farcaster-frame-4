@@ -1,7 +1,6 @@
 import { ClashData, ClashDataMap } from '@/types'
-import { useEffect, useState } from 'react'
-
 import Column from './column'
+import { PurpleArrowLeft, PurpleArrowRight } from './icons'
 
 export type LeaderboardProps = {
   leaderboard: ClashDataMap[]
@@ -9,10 +8,7 @@ export type LeaderboardProps = {
 
 export default function LeaderboardDesktop(props: LeaderboardProps) {
   const { leaderboard } = props
-  console.log(leaderboard, 'leaderboard')
 
-  let arr = [1, 2, 3, 4]
-  console.log(arr.slice(2, 4), 'sliced arr')
   const renderDay = (day: number, from: number, to: number, color: string) => {
     return (
       <>
@@ -20,6 +16,7 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
           className="column-day justify-between-grid"
           style={{ backgroundColor: color, margin: 10 }}
         >
+          <p className="day-title">Day {day}</p>
           {leaderboard && leaderboard[day] && (
             <Column
               to={to}
@@ -39,17 +36,25 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
   console.log(leaderboard, 'ledarbord')
 
   return (
-    <div className="flex-direction-row justify-between">
-      {' '}
-      {renderDay(1, 0, 8, '#FFE2E2')}
-      {renderDay(2, 0, 4, '#FCFCCB')}
-      {renderDay(3, 0, 2, '#D1FFD2')}
-      {renderDay(4, 0, 1, '#CBE1FF')}
-      {renderDay(5, 0, 1, '#B8B2FF')}
-      {renderDay(4, 1, 2, '#CBE1FF')}
-      {renderDay(3, 2, 4, '#D1FFD2')}
-      {renderDay(2, 4, 8, '#FCFCCB')}
-      {renderDay(1, 8, 16, '#FFE2E2')}
+    <div className="body-desktop">
+      <div className="flex-direction-row">
+        {' '}
+        <PurpleArrowRight />{' '}
+        <b style={{ marginLeft: 15, marginRight: 15 }}> WINNER </b>
+        <PurpleArrowLeft />
+      </div>
+
+      <div className="flex-direction-row justify-between">
+        {renderDay(1, 0, 8, '#FFE2E2')}
+        {renderDay(2, 0, 4, '#FCFCCB')}
+        {renderDay(3, 0, 2, '#D1FFD2')}
+        {renderDay(4, 0, 1, '#CBE1FF')}
+        {renderDay(5, 0, 1, '#B8B2FF')}
+        {renderDay(4, 1, 2, '#CBE1FF')}
+        {renderDay(3, 2, 4, '#D1FFD2')}
+        {renderDay(2, 4, 8, '#FCFCCB')}
+        {renderDay(1, 8, 16, '#FFE2E2')}
+      </div>
     </div>
   )
 }
