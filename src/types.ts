@@ -53,10 +53,19 @@ export interface LevelImages {
   [key: string]: string
 }
 
-export type Leaderboard = {
-  channel: string
-  image: string
-  level: number
+export type ClashData = {
+  clash_id: number
+  question_id: number
+  question_text: string
+  channel1_id: number
+  channel_name_1: string
+  channel2_id: number
+  channel_name_2: string
+  channel_winner_id: number
+}
+
+export type ClashDataMap = {
+  [key: string]: ClashData[]
 }
 
 export type CMetadata = {
