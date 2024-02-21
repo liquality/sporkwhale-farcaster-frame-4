@@ -41,3 +41,13 @@
 .expanded-day{
     width: 90%;
 }
+
+.winner-box{
+    text-align: center;
+    font-weight: 700;
+    height: 130px;
+    margin-top:20px;
+    background-color: #B8B2FF;
+    width: 90%;
+    font-size: 18px;
+}

@@ -53,6 +53,9 @@ export default function LeaderboardMobile() {
           {renderDay(4, 'Day 4: March 2nd', '#B8B2FF')}
         </>
       )}
+      <div className="winner-box">
+        <br></br>SporkWhale Mania Winner: <br></br>NOT ANNOUNCED YET
+      </div>
     </div>
   )
 }
