@@ -1,11 +1,11 @@
-import { Leaderboard } from '@/types'
+import { TLeaderboard } from '@/types'
 import { SERVER_URL } from '@/utils/generate-frames'
 import { IMAGES } from '@/utils/image-paths'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-
+import LeaderboardMobile from '../components/leaderboard-mobile'
 export default function Home() {
-  const [leaderboard, setLeaderboard] = useState<null | Leaderboard[]>(null)
+  const [leaderboard, setLeaderboard] = useState<null | TLeaderboard[]>(null)
   const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function Home() {
   }, [leaderboard])
 
   let img = leaderboard ? IMAGES.welcome : IMAGES.welcome
-
+  console.log(leaderboard, 'leaderboard')
   return (
     <>
       <Head>
@@ -38,28 +38,9 @@ export default function Home() {
           property="fc:frame:post_url"
           content={`${SERVER_URL}/api/post?data=start`}
         />
-        <title>LEADERBOARD</title>
       </Head>
 
-      <h3>LEADERBOARD</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Channel</th>
-            <th>Image</th>
-            <th>Level</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* {leaderboard?.map((item, index) => (
-            <tr key={index}>
-              <td>{item.channel}</td>
-              <td>{item.image}</td>
-              <td>{item.level}</td>
-            </tr>
-          ))} */}
-        </tbody>
-      </table>
+      <LeaderboardMobile />
     </>
   )
 }
