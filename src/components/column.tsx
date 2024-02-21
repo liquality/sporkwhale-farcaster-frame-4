@@ -51,34 +51,17 @@ export default function Column(props: ExpandedDayProps) {
     return clashDataForDay.slice(from, to)
   }, [clashDataForDay, from, to])
 
-  console.log(slicedClashData, 'slised?')
   return (
     <div className="">
       {slicedClashData?.map((clash: ClashData, index: number) => (
         <>
-          {
-            day === 1 ? (
-              renderDayOneStyle(clash.channel_name_1, clash.channel_name_2)
-            ) : (
-              <div className="">
-                {renderOtherDaysStyle(
-                  clash.channel_name_1,
-                  clash.channel_name_2
-                )}
-              </div>
-            )
-            /*   <div className="flex-direction-row justify-between " key={index}>
-            <div className="" style={{ width: '30%', margin: 3 }}>
-              {clash.channel_name_1}
+          {day === 1 ? (
+            renderDayOneStyle(clash.channel_name_1, clash.channel_name_2)
+          ) : (
+            <div className="">
+              {renderOtherDaysStyle(clash.channel_name_1, clash.channel_name_2)}
             </div>
-            <div style={{ width: '30%', margin: 3 }}>
-              {clash.channel_name_2}
-            </div>
-          </div> */
-          }
-          {/*    <div
-            style={{ width: '100%', height: 1, backgroundColor: 'black' }}
-          ></div> */}
+          )}
         </>
       ))}
     </div>

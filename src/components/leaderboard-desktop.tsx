@@ -14,7 +14,7 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
       <>
         <div
           className="column-day justify-between-grid"
-          style={{ backgroundColor: color, margin: 10 }}
+          style={{ position: 'relative', backgroundColor: color, margin: 10 }}
         >
           <p className="day-title">Day {day}</p>
           {leaderboard && leaderboard[day] && (
@@ -28,6 +28,11 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
               day={day}
             />
           )}
+          <div style={{ height: 300 }}></div>
+
+          <div style={{ position: 'absolute', bottom: 0 }}>
+            <img width="100%" src={`whale_day_${day}.svg`}></img>
+          </div>
         </div>
       </>
     )
@@ -44,7 +49,7 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
         <PurpleArrowLeft />
       </div>
 
-      <div className="flex-direction-row justify-between">
+      <div className="flex-direction-row ">
         {renderDay(1, 0, 8, '#FFE2E2')}
         {renderDay(2, 0, 4, '#FCFCCB')}
         {renderDay(3, 0, 2, '#D1FFD2')}

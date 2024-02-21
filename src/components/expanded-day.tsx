@@ -1,7 +1,4 @@
-import { ClashData, ClashDataMap, TLeaderboard } from '@/types'
-import { IMAGES } from '@/utils/image-paths'
-import { useEffect, useState } from 'react'
-import ChevronDown from './icons'
+import { ClashData } from '@/types'
 import './leaderboard.css'
 
 type ExpandedDayProps = {
@@ -11,7 +8,6 @@ type ExpandedDayProps = {
 
 export default function ExpandedDay(props: ExpandedDayProps) {
   const { clashDataForDay } = props
-  const [leaderboard, setLeaderboard] = useState<null | TLeaderboard[]>(null)
 
   return (
     <div className="expanded-day">
