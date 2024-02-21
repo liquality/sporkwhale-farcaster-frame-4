@@ -33,11 +33,22 @@
     flex-direction: row;
 
 }
+.flex-direction-column{
+    display: flex;
+    flex-direction: column;
+
+}
 
 .justify-between{
     justify-content: space-between;
     border-top: 1px solid grey;
     border-bottom: 1px solid grey;
+}
+
+.justify-between-grid{
+    display: grid;
+    justify-content: space-between;
+
 }
 
 .expanded-day{
@@ -54,3 +65,23 @@
     font-size: 18px;
 }
 
+.column-day{
+    width: 15%;
+    background-color: aqua;
+    height: 100vh;
+}
+
+.pair{
+    justify-content: center;
+}
+
+.channel-name-box{
+    text-align: center;
+    background-color: #F8FAFF;
+    color: #979797;
+    padding: 3px;
+    width: 90%;
+    margin-top: 10px;
+    border: 1px solid #979797;
+
+}
