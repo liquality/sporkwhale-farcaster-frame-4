@@ -167,6 +167,8 @@ export async function calculateImageBasedOnChannelResponses(
 }
 
 export async function createChannel(
+  id: number,
+  question_id: number,
   name: string,
   followers: number,
   cAddress: string,
@@ -175,8 +177,8 @@ export async function createChannel(
   salt: number
 ) {
   try {
-    await sql`INSERT INTO channels (name, followers, c_address, c_wallet, c_pool, salt) 
-      VALUES (${name}, ${followers}, ${cAddress}, ${cWallet}, ${cPool}, ${salt})
+    await sql`INSERT INTO channels (id, question_id, name, followers, c_address, c_wallet, c_pool, salt) 
+      VALUES (${id},${question_id},${name}, ${followers}, ${cAddress}, ${cWallet}, ${cPool}, ${salt})
       ON CONFLICT (name)
       DO NOTHING;`
   } catch (error) {
