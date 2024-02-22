@@ -13,8 +13,6 @@ type ExpandedDayProps = {
 export default function Column(props: ExpandedDayProps) {
   const { clashDataForDay, day, from, to } = props
 
-  console.log(from, to, 'From and to', clashDataForDay.length)
-
   const renderDayOneStyle = (channelName1: string, channelName2: string) => {
     return (
       <div className="justify-between-grid">

@@ -21,7 +21,6 @@ export default function Home() {
         try {
           const response = await fetch('/api/getLeaderboardData')
           const data = await response.json()
-          console.log({ data })
           setLeaderboard(data)
         } catch (error) {
           console.error('Error fetching data:', error)

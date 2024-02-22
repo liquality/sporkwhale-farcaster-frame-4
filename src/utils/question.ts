@@ -26,11 +26,16 @@ export const HANDLE_QUESTION = async (ud: TUntrustedData) => {
     )
     return html
   } else  */
-  console.log('we should come here', question?.options)
-  if (question?.options[ud.buttonIndex]) {
-    console.log(question.options, 'wats q options?')
+  console.log('we should come here', question?.options, ud.buttonIndex)
+  let questionButtonIndex = question?.options[ud.buttonIndex - 1]
+  if (questionButtonIndex) {
+    console.log(
+      'wat is correct response?',
+      questionButtonIndex.toLocaleLowerCase(),
+      questionButtonIndex.toLocaleLowerCase()
+    )
     const correctResponse =
-      question?.options[ud.buttonIndex].toLocaleLowerCase() ===
+      questionButtonIndex.toLocaleLowerCase() ===
       question?.correct_response.toLocaleLowerCase()
 
     const html = await saveUserQuestionResponse(

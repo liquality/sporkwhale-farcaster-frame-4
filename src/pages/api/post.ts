@@ -4,6 +4,7 @@ import { validateMessage, validateMsgWithNeynar } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
+  calculateIfWinningOrNot,
   getImageFromQuestionId,
   getQuestionFromId,
 } from '@/utils/database-operations'
@@ -43,19 +44,11 @@ export default async function handler(
 
   //TODO: generate inital frame based on calculation of participation/correctness
   //let castHash = ud.castId.hash
-  let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
-  //let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
+  //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
+  let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
   let channel = await getChannelFromCastHash(castHash)
-  if (!channel) channel = 'cryptostocks'
+  if (!channel) channel = 'skininthegame'
 
-  //if network response takes more than 3 seconds, force generate reload btn
-  const timeout = setTimeout(() => {
-    console.log('Response took too long!')
-    //html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.reload}`, 'reload')
-    //return response.send(html)
-  }, 3000)
-
-  clearTimeout(timeout) // Clear the timeout if the function returns before 3 seconds
   switch (reqId) {
     case 'start':
       //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
@@ -80,7 +73,6 @@ export default async function handler(
       break
     case 'question':
       const question = await getQuestionFromId(QUESTION_ID)
-      console.log()
       if (channel && question) {
         html = await HANDLE_QUESTION(ud)
       } else {
@@ -99,17 +91,9 @@ export default async function handler(
       response.redirect(302, locationHeader)
       break
     case 'correct-or-incorrect':
-      console.log(ud.buttonIndex, 'wats btn index?')
-
       if (ud.buttonIndex === 1) {
-        console.log('in here?')
         //calculate if winning or not here
-        console
-        html = generateFarcasterFrame(
-          `${SERVER_URL}/${IMAGES.winning}`,
-          'leaderboard'
-        )
-        console.log()
+        html = await calculateIfWinningOrNot(channel)
       } else {
         locationHeader = `https://warpcast.com/~/channel/liquality`
         response.redirect(302, locationHeader)
