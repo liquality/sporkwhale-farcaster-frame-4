@@ -1,10 +1,8 @@
 import { LevelImages } from '@/types'
 
 export const IMAGES = {
-  question1: 'johannas_lastname_question1.png',
   welcome: 'welcome.png',
-
-  wrong_response: 'wrong_response.png',
+  wrong_response: 'incorrect_response.png',
   correct_response: 'correct_response.png',
   already_submitted: 'already_submitted.png',
   be_a_follower: 'be_a_follower.png',
@@ -13,13 +11,9 @@ export const IMAGES = {
 }
 
 export const levelImages: LevelImages = {
-  negative1: '-1_bathingSuit_chain_bracelet_whale.png',
-  negative2: '-2_chain_bracelet_whale.png',
-  negative3: '-3_bracelet_whale.png',
-  negative4: '-4_naked_whale.png',
-  1: '0_glasses_bracelet_chain_bathingSuit_whale.png',
-  2: '1_glasses_bracelet_chain_bathingSuit_laserEyes_whale.png',
-  3: '2_glasses_bracelet_chain_bathingSuit_laserEyes_headSet_whale.png',
-  4: '3_glasses_bracelet_chain_bathingSuit_laserEyes_headSet_diamondHands_whale.png',
-  5: '4_glasses_bracelet_chain_bathingSuit_laserEyes_headSet_diamondHands_crown_whale.png',
+  1: 'question_1.png',
+  2: 'question_2.png',
+  3: 'question_3.png',
+  4: 'question_4.png',
+  5: 'question_5.png',
 }

@@ -47,10 +47,15 @@ export async function saveUser(ud: TUntrustedData, channelName: string) {
   const channel = await getChannel(channelName)
   //If the user does not exist in db and this channel, create a new one
   const existingUser = await sql`SELECT * FROM users WHERE fid = ${ud.fid}`
+  console.log(existingUser, 'existing user', existingUser.rowCount)
   console.log(ud.fid, 'wats fid?')
   const walletAddress = await getAddrByFid(ud.fid)
   if (!existingUser.rowCount && walletAddress) {
+    console.log(ud.fid, 'walletaddr:', walletAddress)
+    const newIdQ = await sql`SELECT * FROM users ORDER BY id DESC LIMIT 1;`
+    console.log(newIdQ.rows[0].id, 'new id')
     await sql`INSERT INTO users (fid, wallet_address) VALUES (${ud.fid}, ${walletAddress});`
+    console.log('not inserted')
     const selectedNewUser = await sql`SELECT * FROM users WHERE fid = ${ud.fid}`
     return selectedNewUser.rows[0]
   } else return existingUser.rows[0]

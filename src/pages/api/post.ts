@@ -69,9 +69,9 @@ export default async function handler(
         const question = await getQuestionFromId(QUESTION_ID)
         console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
         html = generateFarcasterFrame(
-          traitStatusImage,
+          `${SERVER_URL}/${traitStatusImage}`,
           'question',
-          question?.question
+          question
         )
       } else {
         html = generateFarcasterFrame(

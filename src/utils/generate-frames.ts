@@ -1,27 +1,26 @@
 export const SERVER_URL = process.env.NGROK_OR_HOSTED_SERVER_URL
 import { TPostData, TUntrustedData } from '../types'
-import { IMAGES } from './image-paths'
-import { QUESTION_METATAGS } from './question'
-import querystring from 'querystring'
+
 // generate an html page with the relevant opengraph tags
 export function generateFarcasterFrame(
   image: string,
   postData: TPostData,
-  text?: string
+  question?: any
 ) {
   let metaTags = ''
-  console.log(
-    postData,
-    `${SERVER_URL}/question-image?question=${querystring.escape(
-      text || ''
-    )}&image=${image}`
-  )
+
   switch (postData) {
     case 'question':
+      let buttonMap = question.options.map(
+        (option: string, index: number) =>
+          `<meta property="fc:frame:button:${index + 1}" content=${option} />`
+      )
+      console.log(question, 'wats quuu?')
       metaTags += `
-			<meta property="fc:frame:image" content="${SERVER_URL}/question-image?question=${text}&image=${image}" />
-		  "${QUESTION_METATAGS}"
+			<meta property="fc:frame:image" content="${image}" />
+      "${buttonMap}"
 			`
+
       break
 
     case 'error-see-leaderboard':

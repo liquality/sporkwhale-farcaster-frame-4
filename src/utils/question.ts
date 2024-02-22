@@ -9,14 +9,6 @@ import { IMAGES } from './image-paths'
 
 export const QUESTION_ID = 1
 
-export const QUESTION_METATAGS = `<meta property="fc:frame:input:text" content="Type your answer" />
- <meta property="fc:frame:button:1" content="Submit ✉️" />`
-
-/* export const QUESTION_METATAGS = `
- <meta property="fc:frame:button:1" content="NYC" />
- <meta property="fc:frame:button:2" content="Berlin" />`
- */
-
 //to the bottom of the image here
 export const HANDLE_QUESTION = async (channel: string, ud: TUntrustedData) => {
   const question = await getQuestionFromId(QUESTION_ID)
@@ -33,9 +25,10 @@ export const HANDLE_QUESTION = async (channel: string, ud: TUntrustedData) => {
     )
     return html
   } else if (question?.options[ud.buttonIndex]) {
+    console.log(question.options, 'wats q options?')
     const correctResponse =
       question?.options[ud.buttonIndex].toLocaleLowerCase() ===
-      question?.corrent_response.toLocaleLowerCase()
+      question?.correct_response.toLocaleLowerCase()
 
     const html = await saveUserQuestionResponse(
       ud,
