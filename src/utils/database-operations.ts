@@ -20,8 +20,7 @@ export async function saveUserQuestionResponse(
     console.log('Feedback already submitted by fid:', ud.fid)
     return generateFarcasterFrame(
       `${SERVER_URL}/${IMAGES.already_submitted}`,
-      'error-see-leaderboard',
-      'Go to leaderboard'
+      'correct-or-incorrect'
     )
   } else {
     await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${response});`
@@ -30,30 +29,25 @@ export async function saveUserQuestionResponse(
 
       return generateFarcasterFrame(
         `${SERVER_URL}/${IMAGES.correct_response}`,
-        'error-see-leaderboard'
+        'correct-or-incorrect'
       )
     } else {
       console.log('Got into wrong response!')
 
       return generateFarcasterFrame(
         `${SERVER_URL}/${IMAGES.wrong_response}`,
-        'error-see-leaderboard'
+        'correct-or-incorrect'
       )
     }
   }
 }
 
-export async function saveUser(ud: TUntrustedData, channelName: string) {
-  const channel = await getChannel(channelName)
+export async function saveUser(ud: TUntrustedData) {
   //If the user does not exist in db and this channel, create a new one
   const existingUser = await sql`SELECT * FROM users WHERE fid = ${ud.fid}`
-  console.log(existingUser, 'existing user', existingUser.rowCount)
-  console.log(ud.fid, 'wats fid?')
+  console.log('existing user', existingUser.rowCount)
   const walletAddress = await getAddrByFid(ud.fid)
   if (!existingUser.rowCount && walletAddress) {
-    console.log(ud.fid, 'walletaddr:', walletAddress)
-    const newIdQ = await sql`SELECT * FROM users ORDER BY id DESC LIMIT 1;`
-    console.log(newIdQ.rows[0].id, 'new id')
     await sql`INSERT INTO users (fid, wallet_address) VALUES (${ud.fid}, ${walletAddress});`
     console.log('not inserted')
     const selectedNewUser = await sql`SELECT * FROM users WHERE fid = ${ud.fid}`

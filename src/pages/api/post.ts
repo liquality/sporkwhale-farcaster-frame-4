@@ -63,13 +63,11 @@ export default async function handler(
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
 
-        const traitStatusImage = getImageFromQuestionId(QUESTION_ID)
-
         //TODO send in question here
         const question = await getQuestionFromId(QUESTION_ID)
-        console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
+        console.log(`${SERVER_URL}/${IMAGES.question}`, 'wat is img ?')
         html = generateFarcasterFrame(
-          `${SERVER_URL}/${traitStatusImage}`,
+          `${SERVER_URL}/${IMAGES.question}`,
           'question',
           question
         )
@@ -82,12 +80,13 @@ export default async function handler(
       break
     case 'question':
       const question = await getQuestionFromId(QUESTION_ID)
+      console.log()
       if (channel && question) {
-        html = await HANDLE_QUESTION(channel, ud)
+        html = await HANDLE_QUESTION(ud)
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.expired}`,
-          'error-see-leaderboard'
+          'leaderboard'
         )
       }
       break
@@ -95,13 +94,31 @@ export default async function handler(
       locationHeader = `https://warpcast.com/~/channel/${channel}`
       response.redirect(302, locationHeader)
       break
-    case 'error-see-leaderboard':
+    case 'leaderboard':
       locationHeader = `${process.env.NGROK_OR_HOSTED_SERVER_URL}`
       response.redirect(302, locationHeader)
       break
+    case 'correct-or-incorrect':
+      console.log(ud.buttonIndex, 'wats btn index?')
+
+      if (ud.buttonIndex === 1) {
+        console.log('in here?')
+        //calculate if winning or not here
+        console
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${IMAGES.winning}`,
+          'leaderboard'
+        )
+        console.log()
+      } else {
+        locationHeader = `https://warpcast.com/~/channel/liquality`
+        response.redirect(302, locationHeader)
+      }
+
+      break
     default:
       html = generateFarcasterFrame(
-        `${SERVER_URL}/${IMAGES.question1}`,
+        `${SERVER_URL}/${IMAGES.question}`,
         'question'
       )
       break

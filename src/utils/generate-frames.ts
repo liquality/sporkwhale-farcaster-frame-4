@@ -15,20 +15,24 @@ export function generateFarcasterFrame(
         (option: string, index: number) =>
           `<meta property="fc:frame:button:${index + 1}" content=${option} />`
       )
-      console.log(question, 'wats quuu?')
       metaTags += `
 			<meta property="fc:frame:image" content="${image}" />
       "${buttonMap}"
 			`
 
       break
-
-    case 'error-see-leaderboard':
+    case 'leaderboard':
+      metaTags += `
+      <meta property="fc:frame:image" content="${image}" />
+      <meta property="fc:frame:button:1" content="🆚 See full bracket" />
+      <meta property="fc:frame:button:1:action" content="post_redirect" />`
+      break
+    case 'correct-or-incorrect':
       metaTags += `
 		<meta property="fc:frame:image" content="${image}" />
-		<meta property="fc:frame:button:1" content="Go to leaderboard" />
-    <meta property="fc:frame:button:2" content="Leaderboard in frame (NOT WORKING YET)" />
-		<meta property="fc:frame:button:1:action" content="post_redirect" />`
+		<meta property="fc:frame:button:1" content="🙌 Next" />
+    <meta property="fc:frame:button:2" content="🔔 Follow @liquality" />
+		<meta property="fc:frame:button:2:action" content="post_redirect" />`
       break
     case 'error-be-a-follower':
       metaTags += `

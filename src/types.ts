@@ -28,7 +28,8 @@ export type TUntrustedData = {
 export type TPostData =
   | 'start'
   | 'question'
-  | 'error-see-leaderboard'
+  | 'correct-or-incorrect'
+  | 'leaderboard'
   | 'error-be-a-follower'
 
 export type TUserProfileNeynar = {

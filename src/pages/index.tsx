@@ -41,7 +41,10 @@ export default function Home() {
           property="fc:frame:image"
           content={`${SERVER_URL}/${IMAGES.welcome}`}
         />
-        <meta property="fc:frame:button:1" content="GO TO QUIZ ✉️" />
+        <meta
+          property="fc:frame:button:1"
+          content="🔆 Play Clash of Channels!"
+        />
         <meta
           property="fc:frame:post_url"
           content={`${SERVER_URL}/api/post?data=start`}

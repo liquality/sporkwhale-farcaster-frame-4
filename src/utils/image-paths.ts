@@ -1,12 +1,18 @@
 import { LevelImages } from '@/types'
+import { QUESTION_ID } from './question'
 
 export const IMAGES = {
-  welcome: 'welcome.png',
-  wrong_response: 'incorrect_response.png',
-  correct_response: 'correct_response.png',
+  welcome: `${QUESTION_ID}_welcome.png`,
+  wrong_response: `${QUESTION_ID}_incorrect_response.png`,
+  correct_response: `${QUESTION_ID}_correct_response.png`,
+  question: `${QUESTION_ID}_question.png`,
+  winning: `${QUESTION_ID}_winning.png`,
+  losing: `${QUESTION_ID}_losing.png`,
+
+  //Generic, these images are the same regardless of day
+  error: 'error.png',
   already_submitted: 'already_submitted.png',
   be_a_follower: 'be_a_follower.png',
-  reload: 'reload.png',
   expired: 'expired.png',
 }
 
