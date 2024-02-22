@@ -3,6 +3,10 @@
     {
       "path": "/api/recordParticipation",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/jobs/update-clashes",
+      "schedule": "1 1 1 1 *"
     }
   ]
     
