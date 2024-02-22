@@ -14,6 +14,7 @@ export default async function handler(
         const cMetadata = await createCollective()
         const cPool = await createPool(cMetadata.address)
 
+        console.log(cMetadata, 'creating collective for:', channel)
         database.createChannel(
           channel.id,
           channel.question_id,

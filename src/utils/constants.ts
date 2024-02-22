@@ -6,8 +6,8 @@ export const SUPPORTED_CHANNELS: Array<{
   name: string
   followers: number
 }> = [
-  { id: 1, question_id: 1, name: 'nyc', followers: 5 },
-  { id: 2, question_id: 1, name: 'la', followers: 160 },
+  { id: 1, question_id: 1, name: 'new-york', followers: 23000 },
+  { id: 2, question_id: 1, name: 'los-angeles', followers: 1300 },
   { id: 3, question_id: 1, name: 'nouns', followers: 54500 },
   { id: 4, question_id: 1, name: 'mfers', followers: 4200 },
   { id: 5, question_id: 1, name: 'base', followers: 110000 },
