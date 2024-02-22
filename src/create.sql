@@ -34,7 +34,7 @@ CREATE TABLE user_question_responses (
 );
 
 CREATE TABLE clashes (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     question_id INT,
     channel1_id INT,
     channel2_id INT,
