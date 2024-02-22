@@ -10,6 +10,7 @@ import {
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
 import { HANDLE_QUESTION, QUESTION_ID } from '@/utils/question'
+import { sql } from '@vercel/postgres'
 
 export default async function handler(
   req: NextApiRequest,
@@ -58,7 +59,6 @@ export default async function handler(
 
         //TODO send in question here
         const question = await getQuestionFromId(QUESTION_ID)
-        console.log(`${SERVER_URL}/${IMAGES.question}`, 'wat is img ?')
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.question}`,
           'question',
@@ -74,7 +74,7 @@ export default async function handler(
     case 'question':
       const question = await getQuestionFromId(QUESTION_ID)
       if (channel && question) {
-        html = await HANDLE_QUESTION(ud)
+        html = await HANDLE_QUESTION(ud, channel)
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.expired}`,

@@ -9,7 +9,8 @@ export async function saveUserQuestionResponse(
   ud: TUntrustedData,
   userId: number,
   correctResponse: boolean,
-  response: string
+  response: string,
+  channelId: number
 ) {
   //-----  WHEN TESTING COMMENT OUT THE DB SAVE QUESTION RESPONSE FOR NOW ----------------
 
@@ -23,8 +24,7 @@ export async function saveUserQuestionResponse(
       'correct-or-incorrect'
     )
   } else {
-    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${response});`
-    console.log(correctResponse, 'correct response?')
+    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response, channel_id) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${response}, ${channelId});`
     if (correctResponse) {
       console.log('Got into correctresponse!')
 
@@ -58,6 +58,7 @@ export async function saveUser(ud: TUntrustedData) {
 export async function getChannel(channel: string) {
   const existingChannel =
     await sql`SELECT * FROM channels WHERE name = ${channel}`
+  console.log(existingChannel, 'channel:', channel)
   return existingChannel.rows[0]
 }
 
@@ -72,15 +73,6 @@ export async function getQuestionFromId(questionId: number) {
   AND expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';
   `
   return question.rows.length > 0 ? question.rows[0] : null
-}
-
-export async function getQuestions(excludeExpired: boolean = true) {
-  let query = 'SELECT * FROM questions'
-  if (excludeExpired) {
-    query = `${query} WHERE expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';`
-  }
-  const questions = await sql`${query}`
-  return questions.rows
 }
 
 export async function getChannelStats(channel: QueryResultRow) {
@@ -132,13 +124,6 @@ export async function calculateIfWinningOrNot(channelName: string) {
     currentPair.channel2_id
   )
 
-  console.log(channel.id, 'ChannelID')
-  console.log(
-    correctResponseChannel1,
-    'correct1 and 2:',
-    correctResponseChannel2
-  )
-  console.log(currentPair, 'current pair')
   if (
     channel.id === currentPair.channel1_id &&
     correctResponseChannel1 > correctResponseChannel2
@@ -156,7 +141,6 @@ export async function calculateIfWinningOrNot(channelName: string) {
       'leaderboard'
     )
   } else {
-    console.log('coming in here')
     return generateFarcasterFrame(
       `${SERVER_URL}/${IMAGES.winning}`,
       'leaderboard'
