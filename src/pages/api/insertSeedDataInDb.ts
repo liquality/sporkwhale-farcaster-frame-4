@@ -12,64 +12,26 @@ export default async function handler(
     select 1, 'What is Johanna''s last name?', '2024-02-29 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Fransson', '["Fransson", "Mehrain"]'::json union all
     select 2, 'What is Thessy''s favorite city?', '2024-03-01 10:00:00-00'::timestamp AT TIME ZONE 'MST', '', '["NYC", "Berlin"]'::json union all
     select 3, 'What is Denver called? CLUE: ''the ___ ___ city', '2024-03-02 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Mile-High City', '["Mile-High City", "Big Apple"]'::json union all
-    select 4, 'Question 4 ?', '2024-03-03 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Option 1', '["Option 1", "Option 2"]'::json;`
-
-    //Insert the channels and their follower count
-    //TODO when moving away from testing, get the follower count from Neynar API
-    await sql`INSERT INTO channels (id, question_id, name, followers, c_address, c_wallet, c_pool, salt) 
-    VALUES 
-        (1, 1, 'nyc', 0, '', '', '', ''),
-        (2, 1, 'la', 0, '', '', '', ''),
-        (3, 1, 'nouns', 0, '', '', '', ''),
-        (4, 1, 'mfers', 0, '', '', '', ''),
-        (5, 1, 'base', 0, '', '', '', ''),
-        (6, 1, 'zora', 0, '', '', '', ''),
-        (7, 1, 'op-stack', 0, '', '', '', ''),
-        (8, 1, 'solana', 0, '', '', '', ''),
-        (9, 1, 'perl', 0, '', '', '', ''),
-        (10, 1, 'farcats', 0, '', '', '', ''),
-        (11, 1, 'founders', 0, '', '', '', ''),
-        (12, 1, 'farcaster-devs', 0, '', '', '', ''),
-        (13, 1, 'seedclub', 0, '', '', '', ''),
-        (14, 1, 'skininthegame', 0, '', '', '', ''),
-        (15, 1, 'degen', 0, '', '', '', ''),
-        (16, 1, 'memes', 0, '', '', '', ''),
-        (17, 1, 'teddit', 0, '', '', '', ''),
-        (18, 1, 'cameron', 0, '', '', '', ''),
-        (19, 1, 'avc', 0, '', '', '', ''),
-        (20, 1, 'orange', 0, '', '', '', ''),
-        (21, 1, 'purple', 0, '', '', '', ''),
-        (22, 1, 'yellow', 0, '', '', '', ''),
-        (23, 1, 'layer3', 0, '', '', '', ''),
-        (24, 1, 'daylight', 0, '', '', '', ''),
-        (25, 1, 'fitness', 0, '', '', '', ''),
-        (26, 1, '10k', 0, '', '', '', ''),
-        (27, 1, 'base-god', 0, '', '', '', ''),
-        (28, 1, 'dog', 0, '', '', '', ''),
-        (29, 1, 'backend', 0, '', '', '', ''),
-        (30, 1, 'frontend', 0, '', '', '', ''),
-        (31, 1, 'farcasther', 0, '', '', '', ''),
-        (32, 1, 'farcasthim', 0, '', '', '', '');    
-    `
+    select 4, 'How many devs are working on Farcaster?', '2024-03-03 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Option 1', '["Option 1", "Option 2"]'::json;`
 
     await sql`INSERT INTO clashes (id, question_id, channel1_id, channel2_id, channel_winner_id) 
     VALUES 
-        (1, 0, 1, 2, NULL), -- Clash of the coasts: NYC vs LA
-        (2, 0, 3, 4, NULL), -- Clash of the PFPs: Nouns vs. mfers
-        (3, 0, 5, 6, NULL), -- Clash of the rollups: Base vs. Zora
-        (4, 0, 7, 8, NULL), -- Clash of chains: OP Stack vs. Solana
-        (5, 0, 9, 10, NULL), -- FC Meta Clash: Perl vs. Farcats
-        (6, 0, 11, 12, NULL), -- Clash of brains: Founders vs. Farcaster Devs
-        (7, 0, 13, 14, NULL), -- Consumer crypto clash: SeedClub vs. Skininthegame
-        (8, 0, 15, 16, NULL), -- Memetic clash: Degen vs. Memes
-        (9, 0, 17, 18, NULL), -- Clash of personalities: Teddit vs. Cameron
-        (10, 0, 19, 20, NULL), -- Clash of VCs: AVC vs. Orange
-        (11, 0, 21, 22, NULL), -- Nounish Colors Clash: Purple vs. Yellow Collective
-        (12, 0, 23, 24, NULL), -- Clash of Quests: layer3 vs. Daylight
-        (13, 0, 25, 26, NULL), -- Fit clash: fitness vs. 10k steps
-        (14, 0, 27, 28, NULL), -- Clash of believers: Base God vs. $DOG
-        (15, 0, 29, 30, NULL), -- Clash of the stack: backend vs. frontend
-        (16, 0, 31, 32, NULL); -- Gender clash: farcastHER vs. farcastHIM
+        (1, 1, 1, 2, NULL), -- Clash of the coasts: NYC vs LA
+        (2, 1, 3, 4, NULL), -- Clash of the PFPs: Nouns vs. mfers
+        (3, 1, 5, 6, NULL), -- Clash of the rollups: Base vs. Zora
+        (4, 1, 7, 8, NULL), -- Clash of chains: OP Stack vs. Solana
+        (5, 1, 9, 10, NULL), -- FC Meta Clash: Perl vs. Farcats
+        (6, 1, 11, 12, NULL), -- Clash of brains: Founders vs. Farcaster Devs
+        (7, 1, 13, 14, NULL), -- Consumer crypto clash: SeedClub vs. Skininthegame
+        (8, 1, 15, 16, NULL), -- Memetic clash: Degen vs. Memes
+        (9, 1, 17, 18, NULL), -- Clash of personalities: Teddit vs. Cameron
+        (10, 1, 19, 20, NULL), -- Clash of VCs: AVC vs. Orange
+        (11, 1, 21, 22, NULL), -- Nounish Colors Clash: Purple vs. Yellow Collective
+        (12, 1, 23, 24, NULL), -- Clash of Quests: layer3 vs. Daylight
+        (13, 1, 25, 26, NULL), -- Fit clash: fitness vs. 10k steps
+        (14, 1, 27, 28, NULL), -- Clash of believers: Base God vs. $DOG
+        (15, 1, 29, 30, NULL), -- Clash of the stack: backend vs. frontend
+        (16, 1, 31, 32, NULL); -- Gender clash: farcastHER vs. farcastHIM
     `
 
     //Insert some seeded users + question responses to simulate the db calculation
