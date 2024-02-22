@@ -12,7 +12,7 @@ export default async function handler(
     select 1, 'What is Johanna''s last name?', '2024-02-29 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Fransson', '["Fransson", "Mehrain"]'::json union all
     select 2, 'What is Thessy''s favorite city?', '2024-03-01 10:00:00-00'::timestamp AT TIME ZONE 'MST', '', '["NYC", "Berlin"]'::json union all
     select 3, 'What is Denver called? CLUE: ''the ___ ___ city', '2024-03-02 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Mile-High City', '["Mile-High City", "Big Apple"]'::json union all
-    select 4, 'How many devs are working on Farcaster?', '2024-03-03 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Option 1', '["Option 1", "Option 2"]'::json;`
+    select 4, 'How many devs are working on Farcaster?', '2024-03-03 10:00:00-00'::timestamp AT TIME ZONE 'MST', '15', '["15", "5"]'::json;`
 */
     await sql`INSERT INTO clashes (id, question_id, channel1_id, channel2_id, channel_winner_id) 
     VALUES 

@@ -4,11 +4,13 @@ import { validateMessage, validateMsgWithNeynar } from '@/validate'
 import { TSignedMessage, TUntrustedData, TUserProfileNeynar } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
+  calculateIfWinningOrNot,
   getImageFromQuestionId,
   getQuestionFromId,
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
 import { HANDLE_QUESTION, QUESTION_ID } from '@/utils/question'
+import { sql } from '@vercel/postgres'
 
 export default async function handler(
   req: NextApiRequest,
@@ -43,19 +45,11 @@ export default async function handler(
 
   //TODO: generate inital frame based on calculation of participation/correctness
   //let castHash = ud.castId.hash
-  let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
-  //let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
+  //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
+  let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
   let channel = await getChannelFromCastHash(castHash)
-  if (!channel) channel = 'cryptostocks'
+  if (!channel) channel = 'skininthegame'
 
-  //if network response takes more than 3 seconds, force generate reload btn
-  const timeout = setTimeout(() => {
-    console.log('Response took too long!')
-    //html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.reload}`, 'reload')
-    //return response.send(html)
-  }, 3000)
-
-  clearTimeout(timeout) // Clear the timeout if the function returns before 3 seconds
   switch (reqId) {
     case 'start':
       //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
@@ -63,15 +57,12 @@ export default async function handler(
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
 
-        const traitStatusImage = getImageFromQuestionId(QUESTION_ID)
-
         //TODO send in question here
         const question = await getQuestionFromId(QUESTION_ID)
-        console.log(`${SERVER_URL}/${traitStatusImage}`, 'traitstatusimg')
         html = generateFarcasterFrame(
-          traitStatusImage,
+          `${SERVER_URL}/${IMAGES.question}`,
           'question',
-          question?.question
+          question
         )
       } else {
         html = generateFarcasterFrame(
@@ -83,11 +74,11 @@ export default async function handler(
     case 'question':
       const question = await getQuestionFromId(QUESTION_ID)
       if (channel && question) {
-        html = await HANDLE_QUESTION(channel, ud)
+        html = await HANDLE_QUESTION(ud, channel)
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.expired}`,
-          'error-see-leaderboard'
+          'leaderboard'
         )
       }
       break
@@ -95,13 +86,23 @@ export default async function handler(
       locationHeader = `https://warpcast.com/~/channel/${channel}`
       response.redirect(302, locationHeader)
       break
-    case 'error-see-leaderboard':
+    case 'leaderboard':
       locationHeader = `${process.env.NGROK_OR_HOSTED_SERVER_URL}`
       response.redirect(302, locationHeader)
       break
+    case 'correct-or-incorrect':
+      if (ud.buttonIndex === 1) {
+        //calculate if winning or not here
+        html = await calculateIfWinningOrNot(channel)
+      } else {
+        locationHeader = `https://warpcast.com/~/channel/liquality`
+        response.redirect(302, locationHeader)
+      }
+
+      break
     default:
       html = generateFarcasterFrame(
-        `${SERVER_URL}/${IMAGES.question1}`,
+        `${SERVER_URL}/${IMAGES.question}`,
         'question'
       )
       break

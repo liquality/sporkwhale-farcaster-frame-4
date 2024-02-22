@@ -1,5 +1,6 @@
 import { TUntrustedData } from '@/types'
 import {
+  getChannel,
   getQuestionFromId,
   saveUser,
   saveUserQuestionResponse,
@@ -9,39 +10,28 @@ import { IMAGES } from './image-paths'
 
 export const QUESTION_ID = 1
 
-export const QUESTION_METATAGS = `<meta property="fc:frame:input:text" content="Type your answer" />
- <meta property="fc:frame:button:1" content="Submit ✉️" />`
-
-/* export const QUESTION_METATAGS = `
- <meta property="fc:frame:button:1" content="NYC" />
- <meta property="fc:frame:button:2" content="Berlin" />`
- */
-
 //to the bottom of the image here
-export const HANDLE_QUESTION = async (channel: string, ud: TUntrustedData) => {
+export const HANDLE_QUESTION = async (
+  ud: TUntrustedData,
+  channelName: string
+) => {
   const question = await getQuestionFromId(QUESTION_ID)
-  const user = await saveUser(ud, channel)
-  if (ud.inputText && ud.inputText.length) {
+  console.log(channelName, 'wats channelname?')
+  const channel = await getChannel(channelName)
+  console.log(channel, 'wats chanel')
+  const user = await saveUser(ud)
+  let questionButtonIndex = question?.options[ud.buttonIndex - 1]
+  if (questionButtonIndex) {
     const correctResponse =
-      ud.inputText &&
-      ud.inputText.toLowerCase() === question?.correct_response?.toLowerCase()
-    const html = await saveUserQuestionResponse(
-      ud,
-      user.id,
-      correctResponse as boolean,
-      ud.inputText
-    )
-    return html
-  } else if (question?.options[ud.buttonIndex]) {
-    const correctResponse =
-      question?.options[ud.buttonIndex].toLocaleLowerCase() ===
-      question?.corrent_response.toLocaleLowerCase()
+      questionButtonIndex.toLocaleLowerCase() ===
+      question?.correct_response.toLocaleLowerCase()
 
     const html = await saveUserQuestionResponse(
       ud,
       user.id,
       correctResponse as boolean,
-      question?.options[ud.buttonIndex]
+      questionButtonIndex,
+      channel.id
     )
     return html
   } else

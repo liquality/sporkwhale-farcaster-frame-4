@@ -9,7 +9,8 @@ export async function saveUserQuestionResponse(
   ud: TUntrustedData,
   userId: number,
   correctResponse: boolean,
-  response: string
+  response: string,
+  channelId: number
 ) {
   //-----  WHEN TESTING COMMENT OUT THE DB SAVE QUESTION RESPONSE FOR NOW ----------------
 
@@ -20,34 +21,32 @@ export async function saveUserQuestionResponse(
     console.log('Feedback already submitted by fid:', ud.fid)
     return generateFarcasterFrame(
       `${SERVER_URL}/${IMAGES.already_submitted}`,
-      'error-see-leaderboard',
-      'Go to leaderboard'
+      'correct-or-incorrect'
     )
   } else {
-    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${response});`
+    await sql`INSERT INTO "user_question_responses" (question_id, user_id, correct_response, response, channel_id) VALUES (${QUESTION_ID}, ${userId}, ${correctResponse}, ${response}, ${channelId});`
     if (correctResponse) {
       console.log('Got into correctresponse!')
 
       return generateFarcasterFrame(
         `${SERVER_URL}/${IMAGES.correct_response}`,
-        'error-see-leaderboard'
+        'correct-or-incorrect'
       )
     } else {
       console.log('Got into wrong response!')
 
       return generateFarcasterFrame(
         `${SERVER_URL}/${IMAGES.wrong_response}`,
-        'error-see-leaderboard'
+        'correct-or-incorrect'
       )
     }
   }
 }
 
-export async function saveUser(ud: TUntrustedData, channelName: string) {
-  const channel = await getChannel(channelName)
+export async function saveUser(ud: TUntrustedData) {
   //If the user does not exist in db and this channel, create a new one
   const existingUser = await sql`SELECT * FROM users WHERE fid = ${ud.fid}`
-  console.log(ud.fid, 'wats fid?')
+  console.log('existing user', existingUser.rowCount)
   const walletAddress = await getAddrByFid(ud.fid)
   if (!existingUser.rowCount && walletAddress) {
     await sql`INSERT INTO users (fid, wallet_address) VALUES (${ud.fid}, ${walletAddress});`
@@ -59,6 +58,7 @@ export async function saveUser(ud: TUntrustedData, channelName: string) {
 export async function getChannel(channel: string) {
   const existingChannel =
     await sql`SELECT * FROM channels WHERE name = ${channel}`
+  console.log(existingChannel, 'channel:', channel)
   return existingChannel.rows[0]
 }
 
@@ -73,15 +73,6 @@ export async function getQuestionFromId(questionId: number) {
   AND expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';
   `
   return question.rows.length > 0 ? question.rows[0] : null
-}
-
-export async function getQuestions(excludeExpired: boolean = true) {
-  let query = 'SELECT * FROM questions'
-  if (excludeExpired) {
-    query = `${query} WHERE expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';`
-  }
-  const questions = await sql`${query}`
-  return questions.rows
 }
 
 export async function getChannelStats(channel: QueryResultRow) {
@@ -115,6 +106,53 @@ export async function getChannelStats(channel: QueryResultRow) {
     console.error('Error getting channel stats:', error)
     throw error
   }
+}
+
+export async function calculateIfWinningOrNot(channelName: string) {
+  console.log(channelName, 'channelname')
+  const channel = await getChannel(channelName)
+  console.log(channel, 'wats channel')
+
+  const getCurrentPairQuery =
+    await sql`SELECT * FROM clashes WHERE (channel1_id = ${channel.id} OR channel2_id = ${channel.id}) AND question_id = ${QUESTION_ID};
+    `
+  const currentPair = getCurrentPairQuery.rows[0]
+  const correctResponseChannel1 = await getCorrectResponseFromChannelId(
+    currentPair.channel1_id
+  )
+  const correctResponseChannel2 = await getCorrectResponseFromChannelId(
+    currentPair.channel2_id
+  )
+
+  if (
+    channel.id === currentPair.channel1_id &&
+    correctResponseChannel1 > correctResponseChannel2
+  ) {
+    return generateFarcasterFrame(
+      `${SERVER_URL}/${IMAGES.winning}`,
+      'leaderboard'
+    )
+  } else if (
+    channel.id === currentPair.channel2_id &&
+    correctResponseChannel1 < correctResponseChannel2
+  ) {
+    return generateFarcasterFrame(
+      `${SERVER_URL}/${IMAGES.losing}`,
+      'leaderboard'
+    )
+  } else {
+    return generateFarcasterFrame(
+      `${SERVER_URL}/${IMAGES.winning}`,
+      'leaderboard'
+    )
+  }
+}
+
+export async function getCorrectResponseFromChannelId(channelId: number) {
+  const correctResponsesQuery =
+    await sql`SELECT COUNT(*) AS correct_responses FROM user_question_responses WHERE channel_id = ${channelId} AND question_id = ${QUESTION_ID} AND correct_response = TRUE`
+  const correctResponsesCount = correctResponsesQuery.rows[0].correct_responses
+  return correctResponsesCount
 }
 
 export async function calculateImageBasedOnChannelResponses(
