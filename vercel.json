@@ -6,7 +6,7 @@
     },
     {
       "path": "/jobs/update-clashes",
-      "schedule": "1 1 1 1 1"
+      "schedule": "1 1 1 1 *"
     }
   ]
     
