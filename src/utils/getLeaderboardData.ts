@@ -1,5 +1,6 @@
 import { sql } from '@vercel/postgres'
-
+const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
+console.log('QUESTION_ID', QUESTION_ID)
 export const getLeaderboardData = async () => {
   const clashesQuery = sql`
   select c.id as clash_id,
