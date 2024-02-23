@@ -7,7 +7,7 @@ import {
 } from './database-operations'
 import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { IMAGES } from './image-paths'
-import { QUESTION_ID } from './constants'
+const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 
 //to the bottom of the image here
 export const HANDLE_QUESTION = async (

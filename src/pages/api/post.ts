@@ -10,7 +10,8 @@ import {
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
 import { HANDLE_QUESTION } from '@/utils/question'
-import { QUESTION_ID } from '@/utils/constants'
+
+const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 
 export default async function handler(
   req: NextApiRequest,

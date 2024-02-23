@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sql } from '@vercel/postgres'
-import { QUESTION_ID } from '@/utils/constants'
 
+const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 export async function GET(request: NextRequest) {
+
   try {
     const authHeader = request.headers.get('authorization')
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {

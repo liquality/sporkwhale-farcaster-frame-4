@@ -1,5 +1,5 @@
 import { LevelImages } from '@/types'
-import { QUESTION_ID } from './constants'
+const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 
 export const IMAGES = {
   welcome: `${QUESTION_ID}_welcome.png`,
