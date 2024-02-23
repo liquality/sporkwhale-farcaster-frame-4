@@ -1,6 +1,6 @@
 // Configurations for the app
-export const QUESTION_ID = 1
-
+export const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
+console.log('QUESTION_ID:::::', QUESTION_ID)
 export const SUPPORTED_CHANNELS: Array<{
   id: number
   question_id: number
