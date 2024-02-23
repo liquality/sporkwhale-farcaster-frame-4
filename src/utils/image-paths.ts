@@ -1,5 +1,5 @@
 import { LevelImages } from '@/types'
-import { QUESTION_ID } from './question'
+import { QUESTION_ID } from './constants'
 
 export const IMAGES = {
   welcome: `${QUESTION_ID}_welcome.png`,

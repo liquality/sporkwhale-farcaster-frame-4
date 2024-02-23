@@ -7,8 +7,7 @@ import {
 } from './database-operations'
 import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { IMAGES } from './image-paths'
-
-export const QUESTION_ID = 1
+import { QUESTION_ID } from './constants'
 
 //to the bottom of the image here
 export const HANDLE_QUESTION = async (

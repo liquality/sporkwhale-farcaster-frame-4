@@ -3,7 +3,7 @@ import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { getAddrByFid } from './farcaster-api'
 import { IMAGES, levelImages } from './image-paths'
-import { QUESTION_ID } from './question'
+import { QUESTION_ID } from './constants'
 
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,

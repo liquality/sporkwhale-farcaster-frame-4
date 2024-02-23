@@ -9,8 +9,8 @@ import {
   getQuestionFromId,
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
-import { HANDLE_QUESTION, QUESTION_ID } from '@/utils/question'
-import { sql } from '@vercel/postgres'
+import { HANDLE_QUESTION } from '@/utils/question'
+import { QUESTION_ID } from '@/utils/constants'
 
 export default async function handler(
   req: NextApiRequest,
