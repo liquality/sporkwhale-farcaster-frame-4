@@ -8,7 +8,7 @@ import {
 import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { IMAGES } from './image-paths'
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
-
+console.log('QUESTION_ID', QUESTION_ID)
 //to the bottom of the image here
 export const HANDLE_QUESTION = async (
   ud: TUntrustedData,
