@@ -1,4 +1,5 @@
 import { TUserProfileNeynar } from '@/types'
+import { PARENT_URLS } from './parent-urls-mapping'
 
 export async function fetchFromNeynarApiHere(
   fid: number
@@ -25,12 +26,19 @@ export async function getChannelFromCastHash(
       throw new Error('Network response was not ok')
     }
     const data = await resp.json()
-
+    let channelName = ''
     if (data.cast.parent_url) {
       let parentUrl = data.cast.parent_url
-      let parts = parentUrl.split('/')
-      // Extract the last part (channel name)
-      let channelName = parts.pop()
+
+      if (parentUrl.startsWith('chain')) {
+        //TODO look up old parentUrl in the table and match
+        channelName = findChannelIdByParentUrl(parentUrl) || 'no channel'
+      } else {
+        let parts = parentUrl.split('/')
+        // Extract the last part (channel name)
+        channelName = parts.pop()
+      }
+
       return channelName
     } else return
   } catch (error) {
@@ -90,4 +98,9 @@ export async function getIfUserIsInChannel(
   } catch (error) {
     console.error('Error fetching profile data:', error)
   }
+}
+
+function findChannelIdByParentUrl(parentUrl: string) {
+  const foundParent = PARENT_URLS.find((item) => item.parent_url === parentUrl)
+  return foundParent ? foundParent.channel_id : null
 }

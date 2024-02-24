@@ -9,7 +9,13 @@ export type LeaderboardProps = {
 export default function LeaderboardDesktop(props: LeaderboardProps) {
   const { leaderboard } = props
 
-  const renderDay = (day: number, from: number, to: number, color: string) => {
+  const renderDay = (
+    day: number,
+    from: number,
+    to: number,
+    color: string,
+    dayFourIndex?: number
+  ) => {
     return (
       <>
         <div
@@ -19,6 +25,7 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
           <p className="day-title">Day {day}</p>
           {leaderboard && leaderboard[day] && (
             <Column
+              dayFourIndex={dayFourIndex}
               to={to}
               from={from}
               clashDataForDay={
@@ -50,15 +57,15 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
       </div>
 
       <div className="flex-direction-row ">
-        {renderDay(1, 0, 8, '#FFE2E2')}
-        {renderDay(2, 0, 4, '#FCFCCB')}
-        {renderDay(3, 0, 2, '#D1FFD2')}
-        {renderDay(4, 0, 1, '#CBE1FF')}
-        {renderDay(5, 0, 1, '#B8B2FF')}
-        {renderDay(4, 1, 2, '#CBE1FF')}
-        {renderDay(3, 2, 4, '#D1FFD2')}
-        {renderDay(2, 4, 8, '#FCFCCB')}
-        {renderDay(1, 8, 16, '#FFE2E2')}
+        {renderDay(1, 0, 4, '#FFE2E2')}
+        {renderDay(2, 0, 2, '#FCFCCB')}
+        {renderDay(3, 0, 1, '#D1FFD2')}
+        {renderDay(4, 1, 1, '#CBE1FF', 1)}
+        {renderDay(5, 0, 0, '#B8B2FF')}
+        {renderDay(4, 1, 1, '#CBE1FF', 2)}
+        {renderDay(3, 1, 2, '#D1FFD2')}
+        {renderDay(2, 2, 4, '#FCFCCB')}
+        {renderDay(1, 4, 8, '#FFE2E2')}
       </div>
     </div>
   )

@@ -8,7 +8,10 @@ import {
   getImageFromQuestionId,
   getQuestionFromId,
 } from '@/utils/database-operations'
-import { getChannelFromCastHash } from '@/utils/neynar-api'
+import {
+  getChannelFromCastHash,
+  getIfUserIsInChannel,
+} from '@/utils/neynar-api'
 import { HANDLE_QUESTION } from '@/utils/question'
 
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
@@ -44,16 +47,18 @@ export default async function handler(
 
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
-  //TODO: generate inital frame based on calculation of participation/correctness
   //let castHash = ud.castId.hash
-  //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
-  let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
+  let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
+  //let castHash = '0x06eb7e9a70fdae0fa81fcf13580860ab04167e9d' //skininthegame cast
+  //let castHash = '0x70ba5f9ceb1951de0aef3ffc6bcc60c1d8c10819' //Neynar channel cast
+
   let channel = await getChannelFromCastHash(castHash)
   if (!channel) channel = 'skininthegame'
+  console.log(channel, 'wats channel?')
 
   switch (reqId) {
     case 'start':
-      //userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
+      userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
 
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
