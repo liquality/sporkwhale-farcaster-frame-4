@@ -89,7 +89,7 @@ export default async function handler(
       response.redirect(302, locationHeader)
       break
     case 'leaderboard':
-      locationHeader = `${process.env.NGROK_OR_HOSTED_SERVER_URL}`
+      locationHeader = `${process.env.LEADERBOARD_URL}`
       response.redirect(302, locationHeader)
       break
     case 'correct-or-incorrect':
