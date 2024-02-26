@@ -8,12 +8,16 @@ export default async function handler(
   response: NextApiResponse
 ) {
  if(request.method == 'GET') {
+    if (request.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
+        return response.status(401).end('Unauthorized');
+    }
+    
     try {
     
-        const channels = await database.fetchChannels()
+        // const channels = await database.fetchChannels()
 
         // Decide the winning channel
-        const winningChannel = await getWinningChannel(channels)
+        const winningChannel = await getWinningChannel()
         if (!winningChannel) {
             return response.status(404).json({status: 'Ok', message: `No winning channel found! No channel met the criteria`})
         }
@@ -43,19 +47,23 @@ export default async function handler(
 }
 
 // get winning channel
-async function getWinningChannel(channels: QueryResultRow[]) : Promise<QueryResultRow | null> {
+async function getWinningChannel() : Promise<QueryResultRow | null> {
 
-    let winningChannel: QueryResultRow | null = null
-    let highestCorrectPercentage = 0
-    for (const channel of channels) {
-        const {respondingPercentage, correctPercentage} = await database.getChannelStats(channel)
-        console.log('respondingPercentage:', respondingPercentage, 'correctPercentage:', correctPercentage)
-        if (respondingPercentage >= 30 && correctPercentage >= 50) {
-            if (correctPercentage > highestCorrectPercentage) {
-                highestCorrectPercentage = correctPercentage
-                winningChannel = channel
-            }
-        }
-    }
+    // let winningChannel: QueryResultRow | null = null
+    // let highestCorrectPercentage = 0
+    // for (const channel of channels) {
+    //     const {respondingPercentage, correctPercentage} = await database.getChannelStats(channel)
+    //     console.log('respondingPercentage:', respondingPercentage, 'correctPercentage:', correctPercentage)
+    //     if (respondingPercentage >= 30 && correctPercentage >= 50) {
+    //         if (correctPercentage > highestCorrectPercentage) {
+    //             highestCorrectPercentage = correctPercentage
+    //             winningChannel = channel
+    //         }
+    //     }
+    // }
+
+    let channelName = (await database.getWinningChannel()).name
+    let winningChannel = database.getChannel(channelName)
+
     return winningChannel
 }

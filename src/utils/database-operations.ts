@@ -286,11 +286,19 @@ export async function getParticipantsByChannel(channelId: string) {
   try {
     const participants = await sql`
     SELECT 
-      users.wallet_address AS address
+      channels.c_address As cAddress, 
+      channels.c_wallet As cWallet, 
+      channels.c_pool As poolAddress, 
+      user_question_responses.question_id as questionId, 
+      users.wallet_address AS address,
+      users.id AS userId,
+      channels.id AS channelId
     FROM 
       user_question_responses
     LEFT JOIN 
       users ON user_question_responses.user_id = users.id
+    LEFT JOIN 
+      channels ON user_question_responses.channel_id = channels.id
     WHERE 
       user_question_responses.channel_id = ${channelId};
     `
@@ -298,4 +306,19 @@ export async function getParticipantsByChannel(channelId: string) {
   } catch (error) {
     throw error
   }
+}
+
+export async function getWinningChannel() {
+
+  // get winner from last clash inserted into the clashes table
+  const winner = await sql`
+  SELECT clashes.channel_winner_id as id, channels.name as name
+  FROM clashes
+  LEFT JOIN 
+    channels ON clashes.channel_winner_id = channels.id
+  ORDER BY id DESC
+  LIMIT 1;
+  `
+  return winner.rows[0]
+
 }

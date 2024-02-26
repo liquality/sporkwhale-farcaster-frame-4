@@ -1,37 +1,45 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import * as database from '@/utils/database-operations'
-import {PoolParticipationMap } from '@/types'
+import {PoolParticipation, PoolParticipationMap } from '@/types'
 import { recordParticipation } from '@/utils/contract-operations';
+import { channel } from 'diagnostics_channel';
 
 export default async function handler(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
  if(request.method == 'GET') {
-    if (request.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
-        return response.status(401).end('Unauthorized');
-    }
 
     try {
     
-    // Get all participations from DB
-    const participations = (await database.getParticipations()).rows
-
-    // group participations by user, count the number of responses per user per question as engagement and return only one user record with the total engagement
-    const participationsByUser = groupedParticipationsByUser(participations)
-
-    const participationsByCollectives: PoolParticipationMap = groupedParticipationsByCollectives(participationsByUser) 
+        let channelID = (await database.getWinningChannel()).id
+        if (!channelID) {
+            return response.status(404).json({status: 'Ok', message: `No winning channel found! challenge not over yet!`})
+        }
     
-    // batch record participation by collectives onchain
-    for (const [key, participations] of Object.entries(participationsByCollectives)) {
-        const [cAddress, cWalletAddress, poolAddress] = key.split('-')
-        await recordParticipation(cAddress, cWalletAddress, poolAddress, participations)
-    }
+        // Get all participations from DB
+        const channelParticipations = (await database.getParticipantsByChannel(channelID))
 
-    // Update the user_question_responses table to mark the participations as onchain
-    await updateParticipations(participations)
+        // group participations by user, count the number of responses per user per question as engagement and return only one user record with the total engagement
+        const participationsByUser = groupedParticipationsByUser(channelParticipations)
+        // const participationsByCollectives: PoolParticipationMap = groupedParticipationsByCollectives(participationsByUser) 
+        // // batch record participation by collectives onchain
+        // for (const [key, participations] of Object.entries(participationsByCollectives)) {
+        //     const [cAddress, cWalletAddress, poolAddress] = key.split('-')
+        //     await recordParticipation(cAddress, cWalletAddress, poolAddress, participations)
+        // }
 
-    return response.status(200).json({status: 'Ok', message: `${participations.length} Participation recorded onchain successfully!`})
+        // batch record participation by collectives onchain
+        let participations: PoolParticipation[] = []
+        for (const participation of Object.values(participationsByUser)) {
+            participations.push(participation)
+        }
+        await recordParticipation(participations[0].cAddress, participations[0].cWallet, participations[0].poolAddress, participations)
+
+        // Update the user_question_responses table to mark the participations as onchain
+        await updateParticipations(channelParticipations)
+
+        return response.status(200).json({status: 'Ok', message: `${participations.length} Participation recorded onchain successfully!`})
 
   } catch (error) {
     console.error('Error creating collectives:', error)
@@ -52,16 +60,16 @@ async function updateParticipations(participations: any) {
   }
 }
 
-function groupedParticipationsByUser(participations: any) {
+function groupedParticipationsByUser(participations: any) : PoolParticipationMap {
     const result = participations.reduce((acc: any, participation: any) => {
-        const key = participation.user
+        const key = participation.address
         if (!acc[key]) {
         acc[key] = {
             cAddress: participation.caddress,
             cWallet: participation.cwallet,
             poolAddress: participation.pooladdress,
             questionId: participation.questionid,
-            user: participation.user,
+            user: participation.address,
             engagement: 1
         }
         } else {
