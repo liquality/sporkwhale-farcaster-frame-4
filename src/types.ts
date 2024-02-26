@@ -75,12 +75,24 @@ export type CMetadata = {
   salt: number
 }
 
+// export type PoolParticipation = {
+//   user: string
+//   questionId: number
+//   engagement: number
+// }
+// export interface PoolParticipationMap {
+//   [key: string]: PoolParticipation[]
+// }
+
 export type PoolParticipation = {
+  cAddress: string
+  cWallet: string
+  poolAddress: string
   user: string
   questionId: number
   engagement: number
 }
 
 export interface PoolParticipationMap {
-  [key: string]: PoolParticipation[]
+  [key: string]: PoolParticipation
 }
