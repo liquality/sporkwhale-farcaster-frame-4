@@ -1,4 +1,3 @@
-import * as collectiveSDK from '@liquality/my-collectives-sdk'
 import * as ethers5 from 'ethers5'
 import { CMetadata, PoolParticipation } from '../types'
 import {
@@ -14,18 +13,13 @@ import { QueryResultRow } from '@vercel/postgres'
 
 export async function createCollective(): Promise<CMetadata> {
   try {
-    collectiveSDK.setConfig({
-      RPC_URL: process.env.RPC_URL,
-      PIMLICO_API_KEY: process.env.PIMLICO_API_KEY,
-      AA_PROVIDER: collectiveSDK.AAProviders.PIMLICO,
-    } as collectiveSDK.Config)
 
     console.log('In here createcollective')
 
     const provider = getProvider()
     const signer = getSigner(provider)
 
-    const cFactory = await getCFactory(signer)
+    const cFactory = getCFactory(signer)
     const salt = generateSalt()
     console.log(salt, 'wats salt?')
 
@@ -34,7 +28,9 @@ export async function createCollective(): Promise<CMetadata> {
       signer.address,
       salt
     )
+    console.log(cAddress, 'cAddress')
     const cWallet = await cFactory.getCWallet(cAddress, signer.address, salt)
+    console.log(cWallet, 'cWallet')
 
     const tx1 = await cFactory.createCollective(
       signer.address,
