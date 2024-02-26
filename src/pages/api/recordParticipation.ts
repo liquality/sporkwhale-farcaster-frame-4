@@ -81,26 +81,26 @@ function groupedParticipationsByUser(participations: any) : PoolParticipationMap
 return result
 }
 
-function groupedParticipationsByCollectives(participations: any) {
-    const result = Object.values(participations).reduce((acc: PoolParticipationMap, participation: any) => {
-    const key: string = `${participation.cAddress}-${participation.cWallet}-${participation.poolAddress}`
-    if (!acc[key]) {
-        acc[key]  = [
-            {
-                user: participation.user,
-                questionId: participation.questionId,
-                engagement: participation.engagement
-            }
-        ]
-    } else {
-        acc[key].push(
-            {
-                user: participation.user,
-                questionId: participation.questionId,
-                engagement: participation.engagement
-            })
-    }
-    return acc
-    }, {})
-    return result
-}
+// function groupedParticipationsByCollectives(participations: any) {
+//     const result = Object.values(participations).reduce((acc: PoolParticipationMap, participation: any) => {
+//     const key: string = `${participation.cAddress}-${participation.cWallet}-${participation.poolAddress}`
+//     if (!acc[key]) {
+//         acc[key]  = [
+//             {
+//                 user: participation.user,
+//                 questionId: participation.questionId,
+//                 engagement: participation.engagement
+//             }
+//         ]
+//     } else {
+//         acc[key].push(
+//             {
+//                 user: participation.user,
+//                 questionId: participation.questionId,
+//                 engagement: participation.engagement
+//             })
+//     }
+//     return acc
+//     }, {})
+//     return result
+// }
