@@ -8,13 +8,13 @@ import {
   COLLECTIVE_FACTORY_ABI,
   POOL_ABI,
   C_WALLET_ABI,
+  SPORK_NFT_ABI,
+  SPORK_NFT,
 } from './constants'
 import { QueryResultRow } from '@vercel/postgres'
 
 export async function createCollective(): Promise<CMetadata> {
   try {
-
-    console.log('In here createcollective')
 
     const provider = getProvider()
     const signer = getSigner(provider)
@@ -219,6 +219,25 @@ export async function withdrawRewards(
   }
 }
 
+export async function mintSporkNFT(
+  participant: string,
+    questionId: number,
+): Promise<string> {
+  try {
+    const provider = getProvider()
+    const signer = getSigner(provider)
+    const sporkNFT = getSporkNFT(signer)
+
+    const tx = await sporkNFT.mint(participant, questionId, 1, '0x')
+    await provider.waitForTransaction(tx.hash)
+    console.log('Spork NFT minted successfully! ', tx.hash)
+
+    return tx.hash
+  } catch (error) {
+    throw new Error('Error minting Spork NFT: ' + error)
+  }
+}
+
 async function getPool(signer: ethers5.ethers.Wallet, poolAddress: string) {
   const pool = new ethers5.Contract(poolAddress, POOL_ABI, signer)
   return pool
@@ -246,6 +265,15 @@ function getCWallet(signer: ethers5.ethers.Wallet, cWalletAddress: string) {
 function getHonneyPot(signer: ethers5.ethers.Wallet) {
   const honeyPot = new ethers5.Contract(HONEYPOT, HONEYPOT_ABI, signer)
   return honeyPot
+}
+
+function getSporkNFT(signer: ethers5.ethers.Wallet) {
+    const sporkNFT = new ethers5.Contract(
+        SPORK_NFT,
+        SPORK_NFT_ABI,
+        signer
+    )
+    return sporkNFT
 }
 
 function getSigner(provider: ethers5.providers.JsonRpcProvider) {
