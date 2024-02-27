@@ -46,15 +46,15 @@ export default async function handler(
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
   //TODO: generate inital frame based on calculation of participation/correctness
-  //let castHash = ud.castId.hash
+  let castHash = ud.castId.hash
   //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
-  let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
+  //let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
   let channel = await getChannelFromCastHash(castHash)
-  if (!channel) channel = 'skininthegame'
+  //if (!channel) channel = 'skininthegame'
 
   switch (reqId) {
     case 'start':
-      userIsInChannel = await getIfUserIsInChannel(channel, ud.fid)
+      userIsInChannel = await getIfUserIsInChannel(channel || '', ud.fid)
 
       if (1 === 1) {
         //if (userIsInChannel?.fid) {
@@ -89,13 +89,13 @@ export default async function handler(
       response.redirect(302, locationHeader)
       break
     case 'leaderboard':
-      locationHeader = `${process.env.LEADERBOARD_URL}`
+      locationHeader = `${process.env.NGROK_OR_HOSTED_SERVER_URL}`
       response.redirect(302, locationHeader)
       break
     case 'correct-or-incorrect':
       if (ud.buttonIndex === 1) {
         //calculate if winning or not here
-        html = await calculateIfWinningOrNot(channel)
+        html = await calculateIfWinningOrNot(channel || '')
       } else {
         locationHeader = `https://warpcast.com/~/channel/liquality`
         response.redirect(302, locationHeader)

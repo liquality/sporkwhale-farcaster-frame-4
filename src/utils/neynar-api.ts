@@ -7,7 +7,7 @@ export async function fetchFromNeynarApiHere(
 
 export async function getChannelFromCastHash(
   castHash: string
-): Promise<string | void> {
+): Promise<string | null> {
   const options = {
     method: 'GET',
     headers: {
@@ -40,9 +40,11 @@ export async function getChannelFromCastHash(
       }
 
       return channelName
-    } else return
+    } 
+    return null
   } catch (error) {
-    return console.error('Error fetching profile data:', error)
+    console.error('Error fetching profile data:', error)
+    return null
   }
 }
 
