@@ -4,12 +4,12 @@ import { sql } from '@vercel/postgres'
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 export async function GET(request: NextRequest) {
   try {
-    // const authHeader = request.headers.get('authorization')
-    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    //   return new Response('Unauthorized', {
-    //     status: 401,
-    //   })
-    // }
+    const authHeader = request.headers.get('authorization')
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return new Response('Unauthorized', {
+        status: 401,
+      })
+    }
 
     const setWinners = await sql`
       update public.clashes
