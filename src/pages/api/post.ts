@@ -56,7 +56,7 @@ export default async function handler(
     case 'start':
       userIsInChannel = await getIfUserIsInChannel(channel || '', ud.fid)
 
-      if (1 === 1) {
+      if (userIsInChannel) {
         //if (userIsInChannel?.fid) {
 
         //TODO send in question here
