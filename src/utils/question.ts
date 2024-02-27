@@ -19,8 +19,9 @@ export const HANDLE_QUESTION = async (
   const channel = await getChannel(channelName)
   console.log(channel, 'wats chanel')
   const user = await saveUser(ud)
+  console.log({ user })
   let questionButtonIndex = question?.options[ud.buttonIndex - 1]
-  if (questionButtonIndex) {
+  if (questionButtonIndex && user) {
     const correctResponse =
       questionButtonIndex.toLocaleLowerCase() ===
       question?.correct_response.toLocaleLowerCase()

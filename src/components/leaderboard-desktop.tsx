@@ -38,7 +38,7 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
           <div style={{ height: 300 }}></div>
 
           <div style={{ position: 'absolute', bottom: 0 }}>
-            <img width="100%" src={`whale_day_${day}.svg`}></img>
+            <img width="100%" src={`whale_day_${day}.jpg`}></img>
           </div>
         </div>
       </>
