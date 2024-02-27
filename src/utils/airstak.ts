@@ -37,8 +37,12 @@ export async function getIfUserIsInChannel(
     variables
   )
 
-  const actions =
-    data?.FarcasterChannelParticipants?.FarcasterChannelParticipant
-      ?.channelActions
-  return !!(actions && (actions.includes('reply') || actions.includes('cast')))
+  
+    if(data?.FarcasterChannelParticipants?.FarcasterChannelParticipant) {
+        const actions = (data?.FarcasterChannelParticipants?.FarcasterChannelParticipant?.map((a: any) => a.channelActions))?.flat(1) || []
+        console.log('actions', actions)
+  
+        return (actions && (actions.includes('reply') || actions.includes('cast')))
+    }
+  return false
 }
