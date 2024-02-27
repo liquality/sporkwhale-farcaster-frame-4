@@ -24,7 +24,7 @@ export const getLeaderboardData = async () => {
   on ch1.id = c.channel1_id
   join channels ch2 
   on ch2.id = c.channel2_id
-  order by c.id;`
+  order by c.channel1_id, c.channel2_id;`
 
   const responsesQuery = sql`
   select question_id, 
