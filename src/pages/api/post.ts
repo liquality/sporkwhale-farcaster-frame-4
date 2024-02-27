@@ -86,19 +86,19 @@ export default async function handler(
       break
     case 'error-be-a-follower':
       locationHeader = `https://warpcast.com/~/channel/${channel}`
-      response.redirect(302, locationHeader)
-      break
+      return response.redirect(302, locationHeader)
+      
     case 'leaderboard':
-      locationHeader = `${process.env.NGROK_OR_HOSTED_SERVER_URL}`
-      response.redirect(302, locationHeader)
-      break
+      locationHeader = `${process.env.LEADERBOARD_URL}`
+      return response.redirect(302, locationHeader)
+      
     case 'correct-or-incorrect':
       if (ud.buttonIndex === 1) {
         //calculate if winning or not here
         html = await calculateIfWinningOrNot(channel || '')
       } else {
-        locationHeader = `https://warpcast.com/~/channel/liquality`
-        response.redirect(302, locationHeader)
+        locationHeader = `https://warpcast.com/liquality`
+        return response.redirect(302, locationHeader)
       }
 
       break

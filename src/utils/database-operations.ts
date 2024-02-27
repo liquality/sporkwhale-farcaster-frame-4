@@ -15,7 +15,9 @@ export async function saveUserQuestionResponse(
   //-----  WHEN TESTING COMMENT OUT THE DB SAVE QUESTION RESPONSE FOR NOW ----------------
 
   const existingQuestionResponse =
-    await sql`SELECT * FROM "user_question_responses" WHERE user_id = ${userId}`
+    await sql`SELECT * FROM "user_question_responses" 
+          WHERE user_id = ${userId}
+          AND question_id = ${QUESTION_ID}`
 
   if (existingQuestionResponse.rowCount > 0) {
     console.log('Feedback already submitted by fid:', ud.fid)
@@ -125,26 +127,41 @@ export async function calculateIfWinningOrNot(channelName: string) {
   const correctResponseChannel2 = await getCorrectResponseFromChannelId(
     currentPair.channel2_id
   )
-
-  if (
-    channel.id === currentPair.channel1_id &&
+  console.log({
+    channel,
+    currentPair,
+    correctResponseChannel1,
+    correctResponseChannel2,
+  })
+  let winnerId = null
+  console.log(
+    'correctResponseChannel1 > correctResponseChannel2',
     correctResponseChannel1 > correctResponseChannel2
-  ) {
+  )
+  console.log(
+    'correctResponseChannel1 < correctResponseChannel2',
+    correctResponseChannel1 < correctResponseChannel2
+  )
+  if (correctResponseChannel1 > correctResponseChannel2) {
+    winnerId = currentPair.channel1_id
+  } else if (correctResponseChannel1 < correctResponseChannel2) {
+    winnerId = currentPair.channel2_id
+  } else {
+    // pick random channel
+    console.log('pick random channel')
+    const rand = Math.floor(Math.random() * (3 - 1) + 1)
+    winnerId = rand === 1 ? currentPair.channel1_id : currentPair.channel2_id
+  }
+  console.log({ winnerId })
+
+  if (channel.id == winnerId) {
     return generateFarcasterFrame(
       `${SERVER_URL}/${IMAGES.winning}`,
-      'leaderboard'
-    )
-  } else if (
-    channel.id === currentPair.channel2_id &&
-    correctResponseChannel1 < correctResponseChannel2
-  ) {
-    return generateFarcasterFrame(
-      `${SERVER_URL}/${IMAGES.losing}`,
       'leaderboard'
     )
   } else {
     return generateFarcasterFrame(
-      `${SERVER_URL}/${IMAGES.winning}`,
+      `${SERVER_URL}/${IMAGES.losing}`,
       'leaderboard'
     )
   }
@@ -153,7 +170,9 @@ export async function calculateIfWinningOrNot(channelName: string) {
 export async function getCorrectResponseFromChannelId(channelId: number) {
   const correctResponsesQuery =
     await sql`SELECT COUNT(*) AS correct_responses FROM user_question_responses WHERE channel_id = ${channelId} AND question_id = ${QUESTION_ID} AND correct_response = TRUE`
-  const correctResponsesCount = correctResponsesQuery.rows[0].correct_responses
+  const correctResponsesCount = parseInt(
+    correctResponsesQuery.rows[0].correct_responses || '0'
+  )
   return correctResponsesCount
 }
 
@@ -311,7 +330,6 @@ export async function getParticipantsByChannel(channelId: string) {
 }
 
 export async function getWinningChannel() {
-
   // get winner from last clash inserted into the clashes table
   const winner = await sql`
   SELECT clashes.channel_winner_id as id, channels.name as name
@@ -322,5 +340,4 @@ export async function getWinningChannel() {
   LIMIT 1;
   `
   return winner.rows[0]
-
 }
