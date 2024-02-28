@@ -10,7 +10,7 @@ import {
 } from '@/utils/database-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
 import { HANDLE_QUESTION } from '@/utils/question'
-import { getIfUserIsInChannel } from '@/utils/airstak'
+import { getIfUserIsInChannel } from '@/utils/airstack'
 
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 
@@ -87,11 +87,11 @@ export default async function handler(
     case 'error-be-a-follower':
       locationHeader = `https://warpcast.com/~/channel/${channel}`
       return response.redirect(302, locationHeader)
-      
+
     case 'leaderboard':
       locationHeader = `${process.env.LEADERBOARD_URL}`
       return response.redirect(302, locationHeader)
-      
+
     case 'correct-or-incorrect':
       if (ud.buttonIndex === 1) {
         //calculate if winning or not here

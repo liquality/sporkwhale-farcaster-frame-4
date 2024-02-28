@@ -3,7 +3,7 @@ import Column from './column'
 import { PurpleArrowLeft, PurpleArrowRight } from './icons'
 
 export type LeaderboardProps = {
-  leaderboard: ClashDataMap
+  leaderboard: ClashDataMap[]
 }
 
 export default function LeaderboardDesktop(props: LeaderboardProps) {
