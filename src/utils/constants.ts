@@ -5,22 +5,22 @@ export const SUPPORTED_CHANNELS: Array<{
   name: string
   followers: number
 }> = [
-  { id: 1, question_id: 1, name: 'Base', followers: 23000 },
-  { id: 2, question_id: 1, name: 'Zora', followers: 1300 },
-  { id: 3, question_id: 1, name: 'OP Stack', followers: 54500 },
-  { id: 4, question_id: 1, name: 'Solana', followers: 4200 },
-  { id: 8, question_id: 1, name: 'Farcaster Devs', followers: 4200 },
+  { id: 1, question_id: 1, name: 'base', followers: 23000 },
+  { id: 2, question_id: 1, name: 'zora', followers: 1300 },
+  { id: 3, question_id: 1, name: 'op-stack', followers: 54500 },
+  { id: 4, question_id: 1, name: 'solana', followers: 4200 },
+  { id: 8, question_id: 1, name: 'fc-devs', followers: 4200 },
   { id: 9, question_id: 1, name: 'perl', followers: 13100 },
-  { id: 10, question_id: 1, name: 'Farcats', followers: 1600 },
-  { id: 11, question_id: 1, name: 'Founders', followers: 62400 },
-  { id: 12, question_id: 1, name: 'Memes', followers: 2800 },
-  { id: 13, question_id: 1, name: '$DOG', followers: 2800 },
-  { id: 14, question_id: 1, name: 'God', followers: 6400 },
-  { id: 15, question_id: 1, name: 'Degen', followers: 32300 },
-  { id: 16, question_id: 1, name: 'FarcastHER', followers: 100000 },
-  { id: 17, question_id: 1, name: 'FarcastHIM', followers: 6600 },
-  { id: 18, question_id: 1, name: 'Nouns', followers: 3400 },
-  { id: 19, question_id: 1, name: 'Mfers', followers: 1400 }
+  { id: 10, question_id: 1, name: 'farcats', followers: 1600 },
+  { id: 11, question_id: 1, name: 'founders', followers: 62400 },
+  { id: 12, question_id: 1, name: 'memes', followers: 2800 },
+  { id: 13, question_id: 1, name: 'dog', followers: 2800 },
+  { id: 14, question_id: 1, name: 'base-god', followers: 6400 },
+  { id: 15, question_id: 1, name: 'degen', followers: 32300 },
+  { id: 16, question_id: 1, name: 'farcasther', followers: 100000 },
+  { id: 17, question_id: 1, name: 'farcasthim', followers: 6600 },
+  { id: 18, question_id: 1, name: 'nouns', followers: 3400 },
+  { id: 19, question_id: 1, name: 'mfers', followers: 1400 },
 ]
 
 export const COLLECTIVE_ABI = [
