@@ -30,6 +30,7 @@ export async function getChannelFromCastHash(
     let channelName = ''
     if (data.cast.parent_url) {
       let parentUrl = data.cast.parent_url
+      console.log(data, 'channel data')
 
       if (parentUrl.startsWith('chain')) {
         //TODO look up old parentUrl in the table and match

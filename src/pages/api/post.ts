@@ -50,7 +50,8 @@ export default async function handler(
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
   //TODO: generate inital frame based on calculation of participation/correctness
-  let castHash = ud.castId.hash
+  //let castHash = ud.castId.hash
+  let castHash = '0x4c9595bba3cc8f6490d7cc67265aa6a3938c1afb'
   //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
   let channel = await getChannelFromCastHash(castHash)
   if (channel === 'onchainsummer.xyz') channel = 'base'
