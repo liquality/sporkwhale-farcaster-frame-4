@@ -17,7 +17,7 @@ export async function saveUserQuestionResponse(
   const existingQuestionResponse =
     await sql`SELECT * FROM "user_question_responses" 
           WHERE user_id = ${userId}
-          AND question_id = ${QUESTION_ID}`
+          AND question_id = ${QUESTION_ID} AND channel_id = ${channelId}`
 
   if (existingQuestionResponse.rowCount > 0) {
     console.log('Feedback already submitted by fid:', ud.fid)
