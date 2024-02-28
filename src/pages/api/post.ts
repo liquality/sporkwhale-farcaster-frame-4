@@ -52,7 +52,7 @@ export default async function handler(
   //let castHash = '0x2c0ed59c7c6be83b68bd6158f6391ad809085329' //mfers
   //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
   let channel = await getChannelFromCastHash(castHash)
-  if (channel === 'onchainsummer.xyz') channel = 'base'
+
   const question = await getQuestionFromId(QUESTION_ID)
 
   switch (reqId) {
