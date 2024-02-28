@@ -50,10 +50,10 @@ export async function getChannelFromCastHash(
 }
 
 //TODO if this response takes more than > 5 seconds, we need to return a frame with 'refresh' btn
-export async function getIfUserIsInChannel(
+export async function getIfUserIsInChannelNeynar(
   channel: string,
   fid: number
-): Promise<TUserProfileNeynar | null | undefined> {
+): Promise<boolean> {
   const options = {
     method: 'GET',
     headers: {
@@ -63,43 +63,33 @@ export async function getIfUserIsInChannel(
   }
 
   try {
-    let cursor = '' // Initial cursor value
-    let hasNextPage = true
+    // Fetch data with pagination cursor
+    const resp = await fetch(
+      `https://api.neynar.com/v2/farcaster/channel/user?fid=${fid}`,
+      options
+    )
 
-    while (hasNextPage) {
-      // Fetch data with pagination cursor
-      const resp = await fetch(
-        `https://api.neynar.com/v2/farcaster/channel/followers?id=${channel}&limit=1000&cursor=${cursor}`,
-        options
-      )
-
-      if (!resp.ok) {
-        throw new Error('Network response was not ok')
-      }
-
-      const data = await resp.json()
-
-      if (data.users) {
-        // Find the user in the fetched page
-        const userInChannel = data.users.find((user: any) => user.fid === fid)
-        if (userInChannel) {
-          console.log(userInChannel?.fid, 'user in channel')
-          return userInChannel // Return the user if found
-        }
-      }
-
-      // Check if there is another page
-      if (data.next && data.next.cursor) {
-        cursor = data.next.cursor
-      } else {
-        hasNextPage = false
-      }
+    if (!resp.ok) {
+      throw new Error('Network response was not ok')
     }
 
-    console.log('User not found in the channel.')
-    return null // User not found
+    const data = await resp.json()
+
+    const channelExists = data.channels.some(
+      (channelArrayEntry: any) => channelArrayEntry.id === channel
+    )
+
+    if (channelExists) {
+      console.log(`Channel ${channel} exists.`)
+      return true
+    } else {
+      console.log(`Channel ${channel} does not exist.`)
+      return false
+    }
   } catch (error) {
-    console.error('Error fetching profile data:', error)
+    console.error('Error fetching isuserinchannel neynar data:', error)
+
+    return false
   }
 }
 

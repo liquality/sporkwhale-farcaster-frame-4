@@ -8,7 +8,10 @@ import {
   getImageFromQuestionId,
   getQuestionFromId,
 } from '@/utils/database-operations'
-import { getChannelFromCastHash } from '@/utils/neynar-api'
+import {
+  getChannelFromCastHash,
+  getIfUserIsInChannelNeynar,
+} from '@/utils/neynar-api'
 import { HANDLE_QUESTION } from '@/utils/question'
 import { getIfUserIsInChannel } from '@/utils/airstack'
 
@@ -41,7 +44,8 @@ export default async function handler(
   let html: string = ''
   let statusCode: number = 200
   let locationHeader: string = ''
-  let userIsInChannel: TUserProfileNeynar | null | undefined = null
+  //let userIsInChannel: TUserProfileNeynar | null | undefined = null
+  let userIsInChannel: boolean
 
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
@@ -53,8 +57,8 @@ export default async function handler(
 
   switch (reqId) {
     case 'start':
-      userIsInChannel = await getIfUserIsInChannel(channel || '', ud.fid)
-
+      //userIsInChannel = await getIfUserIsInChannel(channel || '', ud.fid)
+      userIsInChannel = await getIfUserIsInChannelNeynar(channel || '', ud.fid)
       if (userIsInChannel) {
         //if (userIsInChannel?.fid) {
 
