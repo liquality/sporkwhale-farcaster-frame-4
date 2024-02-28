@@ -2,10 +2,8 @@ import { ClashData, ClashDataMap, ResponsesData } from '@/types'
 import { useMemo } from 'react'
 
 import './leaderboard.css'
+import Percentage from './percentage'
 
-const percentageStyle = {
-  fontSize: '10px'
-}
 type ExpandedDayProps = {
   day: number
   clashDataForDay: ClashData[]
@@ -29,10 +27,10 @@ export default function Column(props: ExpandedDayProps) {
           <br></br>
           <br></br>
           <div className="channel-name-box">
-            {channelName1} {percentage1 && <div style={percentageStyle}>({percentage1}%)</div>}
+            {channelName1} <Percentage percentage={percentage1}/>
           </div>
           <div className="channel-name-box">
-            {channelName2} {percentage2 && <div style={percentageStyle}>({percentage2}%)</div>}
+            {channelName2} <Percentage percentage={percentage2}/>
           </div>
         </div>
       </div>
@@ -47,7 +45,7 @@ export default function Column(props: ExpandedDayProps) {
           <br></br>
           <br></br>
           <div className="channel-name-box">
-            {channelName} {percentage && <div style={percentageStyle}>({percentage}%)</div>}
+            {channelName} <Percentage percentage={percentage}/>
           </div>
         </div>
       </div>
@@ -66,13 +64,13 @@ export default function Column(props: ExpandedDayProps) {
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName1} {percentage1 && <div style={percentageStyle}>({percentage1}%)</div>}
+          {channelName1} <Percentage percentage={percentage1}/>
         </div>
         <div
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName2} {percentage2 && <div style={percentageStyle}>({percentage2}%)</div>}
+          {channelName2} <Percentage percentage={percentage2}/>
         </div>
       </div>
     )

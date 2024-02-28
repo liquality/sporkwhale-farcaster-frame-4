@@ -1,5 +1,6 @@
 import { ClashData } from '@/types'
 import './leaderboard.css'
+import Percentage from './percentage'
 
 type ExpandedDayProps = {
   day: number
@@ -17,10 +18,10 @@ export default function ExpandedDay(props: ExpandedDayProps) {
         <>
           <div className="flex-direction-row justify-between " key={index}>
             <div className="" style={{ width: '30%', margin: 3 }}>
-              {clash.channel_name_1}
+              {clash.channel_name_1} <Percentage percentage={clash.responses[clash.channel1_id]?.correct_percentage}/>
             </div>
             <div style={{ width: '30%', margin: 3 }}>
-              {clash.channel_name_2}
+              {clash.channel_name_2} <Percentage percentage={clash.responses[clash.channel2_id]?.correct_percentage}/>
             </div>
           </div>
           {/*    <div
