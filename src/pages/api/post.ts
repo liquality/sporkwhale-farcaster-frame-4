@@ -89,7 +89,7 @@ export default async function handler(
       return response.redirect(302, locationHeader)
 
     case 'leaderboard':
-      locationHeader = `${process.env.LEADERBOARD_URL}`
+      locationHeader = 'https://leaderboard.liquality.io'
       return response.redirect(302, locationHeader)
 
     case 'correct-or-incorrect':
