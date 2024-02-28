@@ -1,4 +1,3 @@
-import { TUserProfileNeynar } from '@/types'
 import { getConnectedAddrByFid } from './farcaster-api'
 import { PARENT_URLS } from './parent-urls-mapping'
 
@@ -30,7 +29,6 @@ export async function getChannelFromCastHash(
     let channelName = ''
     if (data.cast.parent_url) {
       let parentUrl = data.cast.parent_url
-      console.log(data, 'channel data')
 
       if (parentUrl.startsWith('chain')) {
         //TODO look up old parentUrl in the table and match
@@ -40,7 +38,6 @@ export async function getChannelFromCastHash(
         // Extract the last part (channel name)
         channelName = parts.pop()
       }
-      console.log(channelName, 'channelname')
 
       return channelName
     }

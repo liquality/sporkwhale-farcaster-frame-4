@@ -124,12 +124,13 @@ export async function calculateIfWinningOrNot(channelName: string) {
   const correctPercentageChannel1 = await getCorrectResponseFromChannelId(
     currentPair.channel1_id
   )
+  console.log('channel1 id:', currentPair.channel1_id)
   const correctPercentageChannel2 = await getCorrectResponseFromChannelId(
     currentPair.channel2_id
   )
+  console.log('channel2 id:', currentPair.channel2_id)
   console.log({
     channel,
-    currentPair,
     correctResponseChannel1: correctPercentageChannel1,
     correctResponseChannel2: correctPercentageChannel2,
   })
@@ -185,7 +186,9 @@ export async function getCorrectResponseFromChannelId(channelId: number) {
   )
 
   const percentage = (correctResponsesCount / totalResponsesCount) * 100
-  return percentage
+  if (isNaN(percentage)) {
+    return 0
+  } else return percentage
 }
 
 export async function calculateImageBasedOnChannelResponses(
@@ -216,9 +219,6 @@ export async function calculateImageBasedOnChannelResponses(
     // Calculate response percentages
     const respondingPercentage = (totalUsersCount / channelFollowerCount) * 100
     const correctPercentage = (correctResponsesCount / totalUsersCount) * 100
-
-    console.log(respondingPercentage, 'responding percentage!!!!!!!!!!')
-    console.log(correctPercentage, 'correct percentage!!!!!!!!!!!!')
 
     // Determine SporkWhale's status based on the conditions and update the trait displayed
     if (respondingPercentage > 10 && correctPercentage > 50) {

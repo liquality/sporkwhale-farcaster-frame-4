@@ -47,7 +47,9 @@ export default async function handler(
 
   //TODO: generate inital frame based on calculation of participation/correctness
   //let castHash = ud.castId.hash
-  let castHash = '0x4c9595bba3cc8f6490d7cc67265aa6a3938c1afb'
+  //let castHash = '0x4c9595bba3cc8f6490d7cc67265aa6a3938c1afb' //BASE
+  //let castHash = '0x222d2e841b4edadeaa4de273dee5add20ee18f41' //zora
+  let castHash = '0x2c0ed59c7c6be83b68bd6158f6391ad809085329' //mfers
   //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
   let channel = await getChannelFromCastHash(castHash)
   if (channel === 'onchainsummer.xyz') channel = 'base'
