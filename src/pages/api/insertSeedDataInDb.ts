@@ -15,25 +15,18 @@ export default async function handler(
     select 5, 'You are the winner!', '2024-03-03 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'xx', '["xx", "xxx"]'::json;`
 
     */
-    await sql`INSERT INTO clashes (question_id, channel1_id, channel2_id, channel_winner_id) 
-    VALUES 
-        (1, 1, 2, NULL), -- Clash of the coasts: NYC vs LA
-        (1, 3, 4, NULL), -- Clash of the PFPs: Nouns vs. mfers
-        (1, 5, 6, NULL), -- Clash of the rollups: Base vs. Zora
-        (1, 7, 8, NULL), -- Clash of chains: OP Stack vs. Solana
-        (1, 9, 10, NULL), -- FC Meta Clash: Perl vs. Farcats
-        (1, 11, 12, NULL), -- Clash of brains: Founders vs. Farcaster Devs
-        (1, 13, 14, NULL), -- Consumer crypto clash: SeedClub vs. Skininthegame
-        (1, 15, 16, NULL), -- Memetic clash: Degen vs. Memes
-        (1, 17, 18, NULL), -- Clash of personalities: Teddit vs. Cameron
-        (1, 19, 20, NULL), -- Clash of VCs: AVC vs. Orange
-        (1, 21, 22, NULL), -- Nounish Colors Clash: Purple vs. Yellow Collective
-        (1, 23, 24, NULL), -- Clash of Quests: layer3 vs. Daylight
-        (1, 25, 26, NULL), -- Fit clash: fitness vs. 10k steps
-        (1, 27, 28, NULL), -- Clash of believers: Base God vs. $DOG
-        (1, 29, 30, NULL), -- Clash of the stack: backend vs. frontend
-        (1, 31, 32, NULL); -- Gender clash: farcastHER vs. farcastHIM
-        (1, 33, 34, NULL); -- Liquality-test-1 vs Liquality-test-2
+    await sql`INSERT INTO public.clashes
+    (question_id, channel1_id, channel2_id, channel_winner_id)
+    values
+    (1, 1, 2, NULL), -- Base vs. Zora
+    (1, 3, 4, NULL), -- OP Stack vs. Solana
+    (1, 9, 10, NULL), -- Perl vs. Farcats
+    (1, 11, 8, NULL), -- Founders vs. Farcaster Devs
+    (1, 15, 12, NULL), -- Degen vs. Memes
+    (1, 14, 13, NULL), -- Base God vs. $DOG
+    (1, 16, 17, NULL), -- farcastHER vs. farcastHIM
+    (1, 18, 19, NULL), -- nouns vs. mfers
+    (1, 33, 34, NULL); -- Liquality-test-1 vs Liquality-test-2
 
     `
 
