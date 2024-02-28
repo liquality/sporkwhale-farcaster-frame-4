@@ -8,6 +8,8 @@ import {
   COLLECTIVE_FACTORY_ABI,
   POOL_ABI,
   C_WALLET_ABI,
+  SPORK_NFT_ABI,
+  SPORK_NFT,
 } from './constants'
 import { QueryResultRow } from '@vercel/postgres'
 
@@ -224,11 +226,11 @@ export async function mintSporkNFT(
     const provider = getProvider()
     const signer = getSigner(provider)
     const sporkNFT = getSporkNFT(signer)
-    /* 
+
     const tx = await sporkNFT.mint(participant, questionId, 1, '0x')
     await provider.waitForTransaction(tx.hash)
     console.log('Spork NFT minted successfully! ', tx.hash)
- */
+
     return 'tx.hash'
   } catch (error) {
     throw new Error('Error minting Spork NFT: ' + error)
@@ -265,8 +267,7 @@ function getHonneyPot(signer: ethers5.ethers.Wallet) {
 }
 
 function getSporkNFT(signer: ethers5.ethers.Wallet) {
-  //const sporkNFT = new ethers5.Contract(SPORK_NF, SPORK_NFT_ABI, signer)
-  let sporkNFT = ''
+  const sporkNFT = new ethers5.Contract(SPORK_NFT, SPORK_NFT_ABI, signer)
   return sporkNFT
 }
 
