@@ -53,7 +53,7 @@ export default async function handler(
   let castHash = ud.castId.hash
   //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
   let channel = await getChannelFromCastHash(castHash)
-  //if (!channel) channel = 'skininthegame'
+  if (channel === 'onchainsummer.xyz') channel = 'base'
 
   switch (reqId) {
     case 'start':
