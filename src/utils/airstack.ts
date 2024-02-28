@@ -2,15 +2,15 @@ import { fetchGraphql } from './graphsql'
 
 export const AIRSTACK_ENDPOINT = 'https://api.airstack.xyz/gql'
 
-export async function getIfUserIsInChannel(
+export async function getIfUserIsInChannelAirstack(
   channel: string,
   fid: number
 ): Promise<any> {
-  const query = `query Query($participant: Identity, $channelName: String) {
+  const query = `query Query($participant: Identity, $channelId: String) {
         FarcasterChannelParticipants(
           input: {
                 filter: { participant: { _eq: $participant }, 
-                channelName: { _regex: $channelName } }, 
+                channelId: { _eq: $channelId } }, 
                 blockchain: ALL 
             }
         ) {
@@ -23,7 +23,7 @@ export async function getIfUserIsInChannel(
       }`
   const variables = {
     participant: `fc_fid:${fid}`,
-    channelName: channel,
+    channelId: channel,
   }
   const data = await fetchGraphql(
     AIRSTACK_ENDPOINT,
@@ -37,12 +37,14 @@ export async function getIfUserIsInChannel(
     variables
   )
 
-  
-    if(data?.FarcasterChannelParticipants?.FarcasterChannelParticipant) {
-        const actions = (data?.FarcasterChannelParticipants?.FarcasterChannelParticipant?.map((a: any) => a.channelActions))?.flat(1) || []
-        console.log('actions', actions)
-  
-        return (actions && (actions.includes('reply') || actions.includes('cast')))
-    }
+  if (data?.FarcasterChannelParticipants?.FarcasterChannelParticipant) {
+    const actions =
+      data?.FarcasterChannelParticipants?.FarcasterChannelParticipant?.map(
+        (a: any) => a.channelActions
+      )?.flat(1) || []
+    console.log('actions', actions)
+
+    return actions && (actions.includes('reply') || actions.includes('cast'))
+  }
   return false
 }

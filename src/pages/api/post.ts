@@ -13,7 +13,7 @@ import {
   getIfUserIsInChannelNeynar,
 } from '@/utils/neynar-api'
 import { HANDLE_QUESTION } from '@/utils/question'
-import { getIfUserIsInChannel } from '@/utils/airstack'
+import { getIfUserIsInChannelAirstack } from '@/utils/airstack'
 
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 
@@ -58,8 +58,13 @@ export default async function handler(
 
   switch (reqId) {
     case 'start':
-      //userIsInChannel = await getIfUserIsInChannel(channel || '', ud.fid)
-      userIsInChannel = await getIfUserIsInChannelNeynar(channel || '', ud.fid)
+      userIsInChannel = await getIfUserIsInChannelAirstack(
+        channel || '',
+        ud.fid
+      )
+      console.log('is in channel', userIsInChannel, channel, ud.fid)
+
+      //userIsInChannel = await getIfUserIsInChannelNeynar(channel || '', ud.fid)
       if (userIsInChannel) {
         //TODO send in question here
         const question = await getQuestionFromId(QUESTION_ID)
