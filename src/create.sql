@@ -50,8 +50,6 @@ create index idx_clashes_question_channels ON clashes (question_id, channel1_id,
 -- IF YOU WANT TO DROP:
 DROP TABLE IF EXISTS user_question_responses CASCADE;
 
-DROP TABLE IF EXISTS trait_displayed CASCADE;
-
 DROP TABLE IF EXISTS questions CASCADE;
 
 DROP TABLE IF EXISTS users CASCADE;

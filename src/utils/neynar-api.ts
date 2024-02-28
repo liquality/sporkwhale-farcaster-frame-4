@@ -113,6 +113,7 @@ export async function getAddrByFid(fid: number): Promise<string | void> {
     method: 'GET',
     headers: {
       accept: 'application/json',
+      api_key: 'NEYNAR_API_DOCS',
     },
   }
 
@@ -122,6 +123,7 @@ export async function getAddrByFid(fid: number): Promise<string | void> {
       `https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`,
       options
     )
+
     if (!resp.ok) {
       throw new Error('Network response was not ok')
     }

@@ -12,8 +12,9 @@ export default async function handler(
     select 1, 'What is Johanna''s last name?', '2024-02-29 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Fransson', '["Fransson", "Mehrain"]'::json union all
     select 2, 'What is Thessy''s favorite city?', '2024-03-01 10:00:00-00'::timestamp AT TIME ZONE 'MST', '', '["NYC", "Berlin"]'::json union all
     select 3, 'What is Denver called? CLUE: ''the ___ ___ city', '2024-03-02 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'Mile-High City', '["Mile-High City", "Big Apple"]'::json union all
-    select 4, 'How many devs are working on Farcaster?', '2024-03-03 10:00:00-00'::timestamp AT TIME ZONE 'MST', '15', '["15", "5"]'::json;`
-*/
+    select 5, 'You are the winner!', '2024-03-03 10:00:00-00'::timestamp AT TIME ZONE 'MST', 'xx', '["xx", "xxx"]'::json;`
+
+    */
     await sql`INSERT INTO clashes (question_id, channel1_id, channel2_id, channel_winner_id) 
     VALUES 
         (1, 1, 2, NULL), -- Clash of the coasts: NYC vs LA
@@ -32,6 +33,8 @@ export default async function handler(
         (1, 27, 28, NULL), -- Clash of believers: Base God vs. $DOG
         (1, 29, 30, NULL), -- Clash of the stack: backend vs. frontend
         (1, 31, 32, NULL); -- Gender clash: farcastHER vs. farcastHIM
+        (1, 33, 34, NULL); -- Liquality-test-1 vs Liquality-test-2
+
     `
 
     //Insert some seeded users + question responses to simulate the db calculation
