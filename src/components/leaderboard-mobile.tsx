@@ -45,7 +45,7 @@ export default function LeaderboardMobile(props: LeaderboardProps) {
           </>
         )}
         <div className="winner-box">
-          <br></br>SporkWhale Mania Winner: <br></br>NOT ANNOUNCED YET
+          <br></br>Clash-of-Channels Winner: <br></br>NOT ANNOUNCED YET
         </div>
       </div>
     </div>
