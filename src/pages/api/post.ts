@@ -61,8 +61,6 @@ export default async function handler(
       //userIsInChannel = await getIfUserIsInChannel(channel || '', ud.fid)
       userIsInChannel = await getIfUserIsInChannelNeynar(channel || '', ud.fid)
       if (userIsInChannel) {
-        //if (userIsInChannel?.fid) {
-
         //TODO send in question here
         const question = await getQuestionFromId(QUESTION_ID)
         html = generateFarcasterFrame(
