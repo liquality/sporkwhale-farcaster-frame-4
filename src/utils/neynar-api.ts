@@ -1,4 +1,5 @@
 import { TUserProfileNeynar } from '@/types'
+import { getConnectedAddrByFid } from './farcaster-api'
 import { PARENT_URLS } from './parent-urls-mapping'
 
 export async function fetchFromNeynarApiHere(
@@ -40,7 +41,7 @@ export async function getChannelFromCastHash(
       }
 
       return channelName
-    } 
+    }
     return null
   } catch (error) {
     console.error('Error fetching profile data:', error)
@@ -105,4 +106,37 @@ export async function getIfUserIsInChannel(
 function findChannelIdByParentUrl(parentUrl: string) {
   const foundParent = PARENT_URLS.find((item) => item.parent_url === parentUrl)
   return foundParent ? foundParent.channel_id : null
+}
+
+export async function getAddrByFid(fid: number): Promise<string | void> {
+  const options = {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+    },
+  }
+
+  try {
+    // Searchcaster API
+    const resp = await fetch(
+      `https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`,
+      options
+    )
+    if (!resp.ok) {
+      throw new Error('Network response was not ok')
+    }
+    const data = await resp.json()
+
+    // Extract connected address if available, otherwise use address from body
+    const verifiedEthAddress = data.users[0].verified_addresses.eth_addresses[0]
+    console.log(verifiedEthAddress, 'verified eth addr')
+    if (verifiedEthAddress) {
+      return verifiedEthAddress
+    } else {
+      const connectedAddress = await getConnectedAddrByFid(fid)
+      return connectedAddress
+    }
+  } catch (error) {
+    return console.error('Error fetching profile data:', error)
+  }
 }

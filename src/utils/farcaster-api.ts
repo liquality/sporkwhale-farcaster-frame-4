@@ -1,4 +1,6 @@
-export async function getAddrByFid(fid: number): Promise<string | void> {
+export async function getConnectedAddrByFid(
+  fid: number
+): Promise<string | void> {
   const options = {
     method: 'GET',
     headers: {
