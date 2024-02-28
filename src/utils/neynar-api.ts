@@ -40,6 +40,7 @@ export async function getChannelFromCastHash(
         // Extract the last part (channel name)
         channelName = parts.pop()
       }
+      console.log(channelName, 'channelname')
 
       return channelName
     }
