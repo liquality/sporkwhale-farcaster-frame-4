@@ -3,7 +3,8 @@ const percentageStyle = {
 }
 
 const Percentage = ({ percentage }: { percentage?: number }) => {
-  return percentage ? <div style={percentageStyle}>({percentage.toFixed()}%)</div> : null
+  console.log({ percentage })
+  return percentage ? <div style={percentageStyle}>({parseInt(`${percentage}`)}%)</div> : null
 }
 
 export default Percentage
