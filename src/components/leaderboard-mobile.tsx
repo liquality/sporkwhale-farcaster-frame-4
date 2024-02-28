@@ -23,7 +23,8 @@ export default function LeaderboardMobile(props: LeaderboardProps) {
         >
           {title} <ChevronDown />
         </div>
-        {expandedDay === day && leaderboard && (
+
+        {leaderboard[day]?.length && expandedDay === day && leaderboard && (
           <ExpandedDay clashDataForDay={leaderboard[day] as any} day={day} />
         )}
       </>
