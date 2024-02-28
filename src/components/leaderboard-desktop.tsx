@@ -45,8 +45,6 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
     )
   }
 
-  console.log(leaderboard, 'ledarbord')
-
   return (
     <div className="body-desktop">
       <div className="flex-direction-row">

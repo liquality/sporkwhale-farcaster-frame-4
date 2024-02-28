@@ -14,7 +14,6 @@ type ExpandedDayProps = {
 
 export default function Column(props: ExpandedDayProps) {
   const { clashDataForDay, day, from, to, dayFourIndex } = props
-
   const renderDayOneStyle = (
     channelName1: string,
     channelName2: string,
@@ -27,10 +26,10 @@ export default function Column(props: ExpandedDayProps) {
           <br></br>
           <br></br>
           <div className="channel-name-box">
-            {channelName1} <Percentage percentage={percentage1}/>
+            {channelName1} <Percentage percentage={percentage1} />
           </div>
           <div className="channel-name-box">
-            {channelName2} <Percentage percentage={percentage2}/>
+            {channelName2} <Percentage percentage={percentage2} />
           </div>
         </div>
       </div>
@@ -38,14 +37,13 @@ export default function Column(props: ExpandedDayProps) {
   }
 
   const renderDayFourStyle = (channelName: string, percentage?: number) => {
-    console.log('RENDER DAY FORU chsnnel:', channelName)
     return (
       <div className="justify-between-grid">
         <div className="pair">
           <br></br>
           <br></br>
           <div className="channel-name-box">
-            {channelName} <Percentage percentage={percentage}/>
+            {channelName} <Percentage percentage={percentage} />
           </div>
         </div>
       </div>
@@ -64,21 +62,24 @@ export default function Column(props: ExpandedDayProps) {
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName1} <Percentage percentage={percentage1}/>
+          {channelName1} <Percentage percentage={percentage1} />
         </div>
         <div
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName2} <Percentage percentage={percentage2}/>
+          {channelName2} <Percentage percentage={percentage2} />
         </div>
       </div>
     )
   }
 
-  console.log(dayFourIndex, 'dayfourindex')
   const slicedClashData = useMemo(() => {
-    return clashDataForDay.slice(from, to)
+    if (day === 4) {
+      return clashDataForDay
+    } else {
+      return clashDataForDay.slice(from, to)
+    }
   }, [clashDataForDay, from, to])
 
   const determineWhatToRender = (
@@ -87,8 +88,6 @@ export default function Column(props: ExpandedDayProps) {
     percentage1?: number,
     percentage2?: number
   ) => {
-    console.log('all days:', day)
-
     if (day === 1) {
       return renderDayOneStyle(
         channelName1,
@@ -96,12 +95,11 @@ export default function Column(props: ExpandedDayProps) {
         percentage1,
         percentage2
       )
-    } else if (day === 4 && dayFourIndex) {
-      console.log('do i even come here', dayFourIndex, day)
+    } else if (day === 4) {
       if (dayFourIndex === 2) {
-        renderDayFourStyle(channelName2, percentage2)
+        return renderDayFourStyle(channelName2, percentage2)
       } else {
-        renderDayFourStyle(channelName1, percentage1)
+        return renderDayFourStyle(channelName1, percentage1)
       }
     } else {
       return (
