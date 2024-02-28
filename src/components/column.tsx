@@ -1,8 +1,11 @@
-import { ClashData, ClashDataMap } from '@/types'
+import { ClashData, ClashDataMap, ResponsesData } from '@/types'
 import { useMemo } from 'react'
 
 import './leaderboard.css'
 
+const percentageStyle = {
+  fontSize: '10px'
+}
 type ExpandedDayProps = {
   day: number
   clashDataForDay: ClashData[]
@@ -14,46 +17,62 @@ type ExpandedDayProps = {
 export default function Column(props: ExpandedDayProps) {
   const { clashDataForDay, day, from, to, dayFourIndex } = props
 
-  const renderDayOneStyle = (channelName1: string, channelName2: string) => {
+  const renderDayOneStyle = (
+    channelName1: string,
+    channelName2: string,
+    percentage1?: number,
+    percentage2?: number
+  ) => {
     return (
       <div className="justify-between-grid">
         <div className="pair">
           <br></br>
           <br></br>
-          <div className="channel-name-box">{channelName1}</div>
-          <div className="channel-name-box">{channelName2}</div>
+          <div className="channel-name-box">
+            {channelName1} {percentage1 && <div style={percentageStyle}>({percentage1}%)</div>}
+          </div>
+          <div className="channel-name-box">
+            {channelName2} {percentage2 && <div style={percentageStyle}>({percentage2}%)</div>}
+          </div>
         </div>
       </div>
     )
   }
 
-  const renderDayFourStyle = (channelName: string) => {
+  const renderDayFourStyle = (channelName: string, percentage?: number) => {
     console.log('RENDER DAY FORU chsnnel:', channelName)
     return (
       <div className="justify-between-grid">
         <div className="pair">
           <br></br>
           <br></br>
-          <div className="channel-name-box">{channelName}</div>
+          <div className="channel-name-box">
+            {channelName} {percentage && <div style={percentageStyle}>({percentage}%)</div>}
+          </div>
         </div>
       </div>
     )
   }
 
-  const renderOtherDaysStyle = (channelName1: string, channelName2: string) => {
+  const renderOtherDaysStyle = (
+    channelName1: string,
+    channelName2: string,
+    percentage1?: number,
+    percentage2?: number
+  ) => {
     return (
       <div className="">
         <div
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName1}
+          {channelName1} {percentage1 && <div style={percentageStyle}>({percentage1}%)</div>}
         </div>
         <div
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName2}
+          {channelName2} {percentage2 && <div style={percentageStyle}>({percentage2}%)</div>}
         </div>
       </div>
     )
@@ -66,23 +85,35 @@ export default function Column(props: ExpandedDayProps) {
 
   const determineWhatToRender = (
     channelName1: string,
-    channelName2: string
+    channelName2: string,
+    percentage1?: number,
+    percentage2?: number
   ) => {
     console.log('all days:', day)
 
     if (day === 1) {
-      return renderDayOneStyle(channelName1, channelName2)
+      return renderDayOneStyle(
+        channelName1,
+        channelName2,
+        percentage1,
+        percentage2
+      )
     } else if (day === 4 && dayFourIndex) {
       console.log('do i even come here', dayFourIndex, day)
       if (dayFourIndex === 2) {
-        renderDayFourStyle(channelName2)
+        renderDayFourStyle(channelName2, percentage2)
       } else {
-        renderDayFourStyle(channelName1)
+        renderDayFourStyle(channelName1, percentage1)
       }
     } else {
       return (
         <div className="">
-          {renderOtherDaysStyle(channelName1, channelName2)}
+          {renderOtherDaysStyle(
+            channelName1,
+            channelName2,
+            percentage1,
+            percentage2
+          )}
         </div>
       )
     }
@@ -91,7 +122,14 @@ export default function Column(props: ExpandedDayProps) {
   return (
     <div className="">
       {slicedClashData?.map((clash: ClashData, index: number) => (
-        <>{determineWhatToRender(clash.channel_name_1, clash.channel_name_2)}</>
+        <>
+          {determineWhatToRender(
+            clash.channel_name_1,
+            clash.channel_name_2,
+            clash.responses[clash.channel1_id]?.correct_percentage,
+            clash.responses[clash.channel2_id]?.correct_percentage
+          )}
+        </>
       ))}
     </div>
   )

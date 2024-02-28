@@ -41,7 +41,7 @@ export default function LeaderboardMobile(props: LeaderboardProps) {
             {renderDay(1, 'Day 1: February 28th', '#FFE2E2')}
             {renderDay(2, 'Day 2: February 29th', '#FCFCCB')}
             {renderDay(3, 'Day 3: March 1st', '#D1FFD2')}
-            {renderDay(4, 'Day 4: March 2nd', '#B8B2FF')}
+            {renderDay(4, 'Day 4: March 2nd', '#CBE1FF')}
           </>
         )}
         <div className="winner-box">
