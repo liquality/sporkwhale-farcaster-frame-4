@@ -57,12 +57,12 @@ export default async function handler(
 
   switch (reqId) {
     case 'start':
-      userIsInChannel = await getIfUserIsInChannelAirstack(
+      /*   userIsInChannel = await getIfUserIsInChannelAirstack(
         channel || '',
         ud.fid
       )
       console.log('is in channel', userIsInChannel, channel, ud.fid)
-
+ */
       //userIsInChannel = await getIfUserIsInChannelNeynar(channel || '', ud.fid)
       //if (userIsInChannel) {
       //TODO send in question here
