@@ -48,7 +48,6 @@ export default async function handler(
   //TODO: generate inital frame based on calculation of participation/correctness
   let castHash = ud.castId.hash
   //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
-  //let castHash = '0x6de1af7af197e8555d036f07274ca47af706ef25' //skininthegame cast
   let channel = await getChannelFromCastHash(castHash)
   //if (!channel) channel = 'skininthegame'
 

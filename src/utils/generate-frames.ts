@@ -26,6 +26,7 @@ export function generateFarcasterFrame(
       <meta property="fc:frame:image" content="${image}" />
       <meta property="fc:frame:button:1" content="🆚 See full bracket" />
       <meta property="fc:frame:button:1:action" content="post_redirect" />`
+
       break
     case 'correct-or-incorrect':
       metaTags += `
@@ -37,7 +38,7 @@ export function generateFarcasterFrame(
     case 'error-be-a-follower':
       metaTags += `
       <meta property="fc:frame:image" content="${image}" />
-      <meta property="fc:frame:button:1" content="Go follow channel!" />
+      <meta property="fc:frame:button:1" content="Go interact with channel!" />
       <meta property="fc:frame:button:1:action" content="post_redirect" />`
       break
   }
