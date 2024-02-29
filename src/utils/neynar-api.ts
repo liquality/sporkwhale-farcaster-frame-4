@@ -32,7 +32,11 @@ export async function getChannelFromCastHash(
       let parentUrl = data.cast.parent_url
 
       console.log(parentUrl, 'PARENTURL')
-      if (parentUrl.startsWith('chain') || parentUrl.startsWith('https')) {
+      if (
+        parentUrl.startsWith('chain') ||
+        (parentUrl.startsWith('https') &&
+          !parentUrl.startsWith('https://warpcast.com/~/channel'))
+      ) {
         //TODO look up old parentUrl in the table and match
 
         const channelName = findChannelIdByParentUrl(parentUrl)
