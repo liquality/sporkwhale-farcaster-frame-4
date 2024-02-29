@@ -121,31 +121,19 @@ export async function calculateIfWinningOrNot(channelName: string) {
     await sql`SELECT * FROM clashes WHERE (channel1_id = ${channel.id} OR channel2_id = ${channel.id}) AND question_id = ${QUESTION_ID};
     `
   const currentPair = getCurrentPairQuery.rows[0]
-  const correctPercentageChannel1 = await getCorrectResponseFromChannelId(
+  const correctResponsesCountChannel1 = await getCorrectResponseFromChannelId(
     currentPair.channel1_id
   )
   console.log('channel1 id:', currentPair.channel1_id)
-  const correctPercentageChannel2 = await getCorrectResponseFromChannelId(
+  const correctResponsesCountChannel2 = await getCorrectResponseFromChannelId(
     currentPair.channel2_id
   )
-  console.log('channel2 id:', currentPair.channel2_id)
-  console.log({
-    channel,
-    correctResponseChannel1: correctPercentageChannel1,
-    correctResponseChannel2: correctPercentageChannel2,
-  })
+
   let winnerId = null
-  console.log(
-    'correctResponseChannel1 > correctResponseChannel2',
-    correctPercentageChannel1 > correctPercentageChannel2
-  )
-  console.log(
-    'correctResponseChannel1 < correctResponseChannel2',
-    correctPercentageChannel1 < correctPercentageChannel2
-  )
-  if (correctPercentageChannel1 > correctPercentageChannel2) {
+
+  if (correctResponsesCountChannel1 > correctResponsesCountChannel2) {
     winnerId = currentPair.channel1_id
-  } else if (correctPercentageChannel1 < correctPercentageChannel2) {
+  } else if (correctResponsesCountChannel1 < correctResponsesCountChannel2) {
     winnerId = currentPair.channel2_id
   } else {
     // pick random channel
@@ -174,21 +162,11 @@ export async function getCorrectResponseFromChannelId(channelId: number) {
   const totalResponsesQuery =
     await sql`SELECT COUNT(*) AS total_responses FROM user_question_responses WHERE channel_id = ${channelId} AND question_id = ${QUESTION_ID}`
 
-  //Take all correct responses given channel_id, question_id
-  //Take all responses
-  //Divide correct_responses/total responses
-
   const correctResponsesCount = parseInt(
     correctResponsesQuery.rows[0].correct_responses || '0'
   )
-  const totalResponsesCount = parseInt(
-    totalResponsesQuery.rows[0].total_responses || '0'
-  )
 
-  const percentage = (correctResponsesCount / totalResponsesCount) * 100
-  if (isNaN(percentage)) {
-    return 0
-  } else return percentage
+  return correctResponsesCount
 }
 
 export async function calculateImageBasedOnChannelResponses(
