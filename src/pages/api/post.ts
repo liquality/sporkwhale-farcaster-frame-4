@@ -81,6 +81,7 @@ export default async function handler(
       break
     case 'question':
       if (channel && question) {
+        console.log(channel, 'wats channel IN QQQ')
         html = await HANDLE_QUESTION(ud, channel)
       } else {
         html = generateFarcasterFrame(

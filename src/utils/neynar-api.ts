@@ -51,8 +51,6 @@ export async function getChannelFromCastHash(
       } else {
         channelName = 'no channel'
       }
-
-      return channelName
     }
     return null
   } catch (error) {
