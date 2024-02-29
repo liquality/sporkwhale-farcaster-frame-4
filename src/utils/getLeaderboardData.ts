@@ -30,9 +30,9 @@ export const getLeaderboardData = async () => {
   select question_id, 
 	   channel_id, 
 	   cast(count(question_id) as integer) as total, 
-	   (sum(case when correct_response is not true then 0 else 1 end)::decimal / count(coalesce(question_id, 0))::decimal) as correct,
-       (sum(case when correct_response is not true then 1 else 0 end)::decimal / count(coalesce(question_id, 0))::decimal) as incorrect,
-       (sum(case when correct_response is not true then 0 else 1 end)::decimal / count(coalesce(question_id, 0))::decimal) * 100 as correct_percentage
+	   sum(case when correct_response is not true then 0 else 1 end) as correct,
+     sum(case when correct_response is not true then 1 else 0 end) as incorrect,
+    (sum(case when correct_response is not true then 0 else 1 end)::decimal / count(coalesce(question_id, 0))::decimal) * 100 as correct_percentage
 from user_question_responses
 group by question_id, channel_id;`
 
