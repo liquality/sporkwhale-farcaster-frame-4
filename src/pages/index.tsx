@@ -9,7 +9,7 @@ import LeaderboardMobile from '../components/leaderboard-mobile'
 export default function Home() {
 
   const [isMobileState, setIsMobileState] = useState(false)
-  const [questionId, setQuestionId] = useState(0)
+  const [questionId, setQuestionId] = useState(2)
   const [leaderboard, setLeaderboard] = useState<null | ClashDataMap[]>(null)
   const [loading, setLoading] = useState(false)
   const [expandedDay, setExpandedDay] = useState<number | null>(null)
@@ -23,7 +23,6 @@ export default function Home() {
           const response = await fetch('/api/getLeaderboardData')
           const data = await response.json()
           setLeaderboard(data.leaderboard)
-          setQuestionId(data.questionId)
         } catch (error) {
           console.error('Error fetching data:', error)
         }
