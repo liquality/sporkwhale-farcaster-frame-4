@@ -54,15 +54,16 @@ export interface LevelImages {
   [key: string]: string
 }
 
+export interface ResponseItem {
+  channel_id: number
+  correct: number
+  correct_percentage: number
+  incorrect: number
+  question_id: number
+  total: number
+}
 export interface ResponsesData {
-  [key: number]: {
-    channel_id: number
-    correct: number
-    correct_percentage: number
-    incorrect: number
-    question_id: number
-    total: number
-  }
+  [key: number]: ResponseItem
 }
 
 export type ClashData = {
