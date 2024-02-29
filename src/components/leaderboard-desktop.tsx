@@ -4,17 +4,18 @@ import { PurpleArrowLeft, PurpleArrowRight } from './icons'
 
 export type LeaderboardProps = {
   leaderboard: ClashDataMap[]
+  currentDay: number
 }
 
 export default function LeaderboardDesktop(props: LeaderboardProps) {
-  const { leaderboard } = props
+  const { leaderboard, currentDay} = props
 
   const renderDay = (
     day: number,
     from: number,
     to: number,
     color: string,
-    dayFourIndex?: number
+    dayFourIndex?: number,
   ) => {
     return (
       <>
@@ -25,6 +26,7 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
           <p className="day-title">Day {day}</p>
           {leaderboard && leaderboard[day] && (
             <Column
+              currentDay={currentDay}
               dayFourIndex={dayFourIndex}
               to={to}
               from={from}

@@ -7,10 +7,11 @@ import { ChevronDown } from './icons'
 
 export type LeaderboardProps = {
   leaderboard: ClashDataMap[]
+  currentDay: number
 }
 
 export default function LeaderboardMobile(props: LeaderboardProps) {
-  const { leaderboard } = props
+  const { leaderboard, currentDay } = props
   const [expandedDay, setExpandedDay] = useState<number | null>(null)
 
   const renderDay = (day: number, title: string, color: string) => {
@@ -25,7 +26,7 @@ export default function LeaderboardMobile(props: LeaderboardProps) {
         </div>
 
         {leaderboard[day]?.length && expandedDay === day && leaderboard && (
-          <ExpandedDay clashDataForDay={leaderboard[day] as any} day={day} />
+          <ExpandedDay clashDataForDay={leaderboard[day] as any} day={day} currentDay={currentDay}/>
         )}
       </>
     )
