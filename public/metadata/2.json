@@ -1,0 +1,37 @@
+{
+  "name": "SporkWhale: Day 2 Winner ",
+  "description": "This is a unique and limited edition artwork created for Day 2 winner of the clash of channels competition to keep SporkWhale alive!",
+  "image": "ipfs://QmPAYx5tuJyAKqaUTrNtjR9N5F5rQMSm7pNGyv5Cdybz9c/2.jpeg",
+  "external_url": "https://leaderboard.liquality.io/",
+  "attributes": [
+    {
+      "trait_type": "Day",
+      "value": "Day 2"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Edition",
+      "value": "1 of 1"
+    },
+    {
+      "trait_type": "Year Created",
+      "value": "2024"
+    },
+    {
+      "trait_type": "Personality",
+      "value": "Slightly Sad"
+    },
+    {
+      "trait_type": "Collection",
+      "value": "Keep SporkWhale Alive"
+    }
+  ],
+  "collection": {
+    "name": "Keep SporkWhale Alive",
+    "creator": "MyCollectives by Liquality",
+    "total_supply": 5
+  }
+}
