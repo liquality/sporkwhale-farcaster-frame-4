@@ -7,7 +7,7 @@ export async function fetchFromNeynarApiHere(
 
 export async function getChannelFromCastHash(
   castHash: string
-): Promise<string | null> {
+): Promise<string | null | undefined> {
   const options = {
     method: 'GET',
     headers: {
