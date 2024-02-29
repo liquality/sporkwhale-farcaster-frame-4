@@ -1,5 +1,5 @@
-import { ClashData, ClashDataMap } from '@/types'
-import { useEffect, useState } from 'react'
+import { ClashDataMap } from '@/types'
+import { useState } from 'react'
 import ExpandedDay from './expanded-day'
 import './leaderboard.css'
 
