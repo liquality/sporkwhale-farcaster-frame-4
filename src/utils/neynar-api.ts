@@ -26,17 +26,19 @@ export async function getChannelFromCastHash(
       throw new Error('Network response was not ok')
     }
     const data = await resp.json()
-    let channelName = ''
+    let channelName = null
     if (data.cast.parent_url) {
       let parentUrl = data.cast.parent_url
 
       if (parentUrl.startsWith('chain') || parentUrl.startsWith('https')) {
         //TODO look up old parentUrl in the table and match
-        channelName = findChannelIdByParentUrl(parentUrl) || 'no channel'
+        channelName = findChannelIdByParentUrl(parentUrl)
+      }
+
+      if (!channelName) {
+        channelName = parentUrl.split('/').pop()
       } else {
-        let parts = parentUrl.split('/')
-        // Extract the last part (channel name)
-        channelName = parts.pop()
+        channelName = 'no channel'
       }
 
       return channelName
