@@ -26,17 +26,28 @@ export async function getChannelFromCastHash(
       throw new Error('Network response was not ok')
     }
     const data = await resp.json()
+    console.log(data.cast, 'wats data cast? BÄÄÄÄÄÄÄÄÄÄÄ')
+    console.log
     let channelName = null
     if (data.cast.parent_url) {
       let parentUrl = data.cast.parent_url
 
+      console.log(parentUrl, 'parentuuurl')
+      console.log(
+        parentUrl.startsWith('chain'),
+        parentUrl.startsWith('https'),
+        'true or false?'
+      )
       if (parentUrl.startsWith('chain') || parentUrl.startsWith('https')) {
         //TODO look up old parentUrl in the table and match
+
         channelName = findChannelIdByParentUrl(parentUrl)
+        console.log(channelName, 'STARTS WITH HTTP')
       }
 
       if (!channelName) {
         channelName = parentUrl.split('/').pop()
+        console.log('CHANNELNAME SPLIT:', channelName)
       } else {
         channelName = 'no channel'
       }
@@ -96,6 +107,7 @@ export async function getIfUserIsInChannelNeynar(
 
 function findChannelIdByParentUrl(parentUrl: string) {
   const foundParent = PARENT_URLS.find((item) => item.parent_url === parentUrl)
+  console.log(foundParent ? foundParent.channel_id : null, 'FOUNDPARENT')
   return foundParent ? foundParent.channel_id : null
 }
 
