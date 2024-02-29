@@ -2,7 +2,7 @@
     "crons": [
     {
       "path": "/api/sendRewards",
-      "schedule": "0 10 2 3 *"
+      "schedule": "0 10 3 3 *"
     },
     {
       "path": "/jobs/update-clashes",
