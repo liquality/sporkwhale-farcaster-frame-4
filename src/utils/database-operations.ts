@@ -4,7 +4,6 @@ import { TUntrustedData } from '../types'
 import { IMAGES, levelImages } from './image-paths'
 import { getAddrByFid } from './neynar-api'
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
-console.log('QUESTION_ID', QUESTION_ID)
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,
   userId: number,

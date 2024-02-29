@@ -26,33 +26,24 @@ export async function getChannelFromCastHash(
       throw new Error('Network response was not ok')
     }
     const data = await resp.json()
-    console.log(data.cast, 'wats data cast? BÄÄÄÄÄÄÄÄÄÄÄ')
-    console.log
-    let channelName = null
+    console.log(data.cast, 'data cast')
+
     if (data.cast.parent_url) {
       let parentUrl = data.cast.parent_url
 
-      console.log(parentUrl, 'parentuuurl')
-      console.log(
-        parentUrl.startsWith('chain'),
-        parentUrl.startsWith('https'),
-        'true or false?'
-      )
+      console.log(parentUrl, 'PARENTURL')
       if (parentUrl.startsWith('chain') || parentUrl.startsWith('https')) {
         //TODO look up old parentUrl in the table and match
 
-        channelName = findChannelIdByParentUrl(parentUrl)
+        const channelName = findChannelIdByParentUrl(parentUrl)
         console.log(channelName, 'STARTS WITH HTTP')
-      }
-
-      if (!channelName) {
-        channelName = parentUrl.split('/').pop()
-        console.log('CHANNELNAME SPLIT:', channelName)
+        return channelName
       } else {
-        channelName = 'no channel'
+        const channelName = parentUrl.split('/').pop()
+        console.log('CHANNELNAME SPLIT:', channelName)
+        return channelName
       }
     }
-    return null
   } catch (error) {
     console.error('Error fetching profile data:', error)
     return null

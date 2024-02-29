@@ -6,11 +6,9 @@ export default async function handler(
   response: NextApiResponse
 ) {
   try {
-    const users =
-      await sql`SELECT c.id AS channel_id, c.name, COUNT(uqr.*) AS response_count
-      FROM channels c
-      LEFT JOIN user_question_responses uqr ON c.id = uqr.channel_id
-      GROUP BY c.id, c.name;      
+    const users = await sql`  SELECT * FROM questions
+    WHERE id =2
+    AND expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';
     `
 
     return response.status(200).json({ users: users.rows })
