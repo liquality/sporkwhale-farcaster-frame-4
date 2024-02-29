@@ -1,4 +1,4 @@
-import { ClashData, ClashDataMap, ResponsesData } from '@/types'
+import { ClashData, ClashDataMap, ResponseItem, ResponsesData } from '@/types'
 import { useMemo } from 'react'
 
 import './leaderboard.css'
@@ -17,8 +17,8 @@ export default function Column(props: ExpandedDayProps) {
   const renderDayOneStyle = (
     channelName1: string,
     channelName2: string,
-    percentage1?: number,
-    percentage2?: number
+    response1?: ResponseItem,
+    response2?: ResponseItem
   ) => {
     return (
       <div className="justify-between-grid">
@@ -26,24 +26,24 @@ export default function Column(props: ExpandedDayProps) {
           <br></br>
           <br></br>
           <div className="channel-name-box">
-            {channelName1} <Percentage percentage={percentage1} />
+            {channelName1} <Percentage total={response1?.total} correct={response1?.correct}/>
           </div>
           <div className="channel-name-box">
-            {channelName2} <Percentage percentage={percentage2} />
+            {channelName2} <Percentage total={response2?.total} correct={response2?.correct} />
           </div>
         </div>
       </div>
     )
   }
 
-  const renderDayFourStyle = (channelName: string, percentage?: number) => {
+  const renderDayFourStyle = (channelName: string, response?: ResponseItem) => {
     return (
       <div className="justify-between-grid">
         <div className="pair">
           <br></br>
           <br></br>
           <div className="channel-name-box">
-            {channelName} <Percentage percentage={percentage} />
+            {channelName} <Percentage  total={response?.total} correct={response?.correct} />
           </div>
         </div>
       </div>
@@ -53,8 +53,8 @@ export default function Column(props: ExpandedDayProps) {
   const renderOtherDaysStyle = (
     channelName1: string,
     channelName2: string,
-    percentage1?: number,
-    percentage2?: number
+    response1?: ResponseItem,
+    response2?: ResponseItem,
   ) => {
     return (
       <div className="">
@@ -62,13 +62,13 @@ export default function Column(props: ExpandedDayProps) {
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName1} <Percentage percentage={percentage1} />
+          {channelName1} <Percentage  total={response1?.total} correct={response1?.correct} />
         </div>
         <div
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName2} <Percentage percentage={percentage2} />
+          {channelName2} <Percentage  total={response2?.total} correct={response2?.correct} />
         </div>
       </div>
     )
@@ -85,21 +85,21 @@ export default function Column(props: ExpandedDayProps) {
   const determineWhatToRender = (
     channelName1: string,
     channelName2: string,
-    percentage1?: number,
-    percentage2?: number
+    response1?: ResponseItem,
+    response2?: ResponseItem
   ) => {
     if (day === 1) {
       return renderDayOneStyle(
         channelName1,
         channelName2,
-        percentage1,
-        percentage2
+        response1,
+        response2
       )
     } else if (day === 4) {
       if (dayFourIndex === 2) {
-        return renderDayFourStyle(channelName2, percentage2)
+        return renderDayFourStyle(channelName2, response2)
       } else {
-        return renderDayFourStyle(channelName1, percentage1)
+        return renderDayFourStyle(channelName1, response1)
       }
     } else {
       return (
@@ -107,8 +107,8 @@ export default function Column(props: ExpandedDayProps) {
           {renderOtherDaysStyle(
             channelName1,
             channelName2,
-            percentage1,
-            percentage2
+            response1,
+            response2
           )}
         </div>
       )
@@ -122,8 +122,8 @@ export default function Column(props: ExpandedDayProps) {
           {determineWhatToRender(
             clash.channel_name_1,
             clash.channel_name_2,
-            clash.responses[clash.channel1_id]?.correct_percentage,
-            clash.responses[clash.channel2_id]?.correct_percentage
+            clash.responses[clash.channel1_id],
+            clash.responses[clash.channel2_id]
           )}
         </>
       ))}

@@ -2,9 +2,9 @@ const percentageStyle = {
   fontSize: '10px',
 }
 
-const Percentage = ({ percentage }: { percentage?: number }) => {
-  console.log({ percentage })
-  return percentage ? <div style={percentageStyle}>({parseInt(`${percentage}`)}%)</div> : null
+const Percentage = ({ correct, total }: { correct?: number, total?: number }) => {
+  console.log({ correct, total })
+  return (correct && total) ? <div style={percentageStyle}>({correct}/{total})</div> : null
 }
 
 export default Percentage
