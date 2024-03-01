@@ -46,9 +46,9 @@ export default async function handler(
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
   //TODO: generate inital frame based on calculation of participation/correctness
-  //let castHash = ud.castId.hash
+  let castHash = ud.castId.hash
   //let castHash = '0x75fb5866c3105e82500406c94d0f295af4a74d32'
-  let castHash = '0x4c9595bba3cc8f6490d7cc67265aa6a3938c1afb' //BASE
+  //let castHash = '0x4c9595bba3cc8f6490d7cc67265aa6a3938c1afb' //BASE
   //let castHash = '0x222d2e841b4edadeaa4de273dee5add20ee18f41' //zora
   //let castHash = '0x03475d45887f13c592c44829de3de18a7d95619d' //farcasther
   //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
