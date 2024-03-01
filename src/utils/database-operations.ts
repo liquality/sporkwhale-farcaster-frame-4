@@ -73,7 +73,7 @@ export async function getQuestionFromId(questionId: number) {
   const question = await sql`
   SELECT * FROM questions
   WHERE id = ${questionId}
-  AND expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';
+  AND expires_at::timestamp  > current_timestamp;
   `
   return question.rows.length > 0 ? question.rows[0] : null
 }
