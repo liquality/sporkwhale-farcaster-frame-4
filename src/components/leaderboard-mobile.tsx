@@ -12,7 +12,7 @@ export type LeaderboardProps = {
 
 export default function LeaderboardMobile(props: LeaderboardProps) {
   const { leaderboard, currentDay } = props
-  const [expandedDay, setExpandedDay] = useState<number | null>(null)
+  const [expandedDay, setExpandedDay] = useState<number | null>(currentDay)
 
   const renderDay = (day: number, title: string, color: string) => {
     return (
