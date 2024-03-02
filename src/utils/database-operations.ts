@@ -121,13 +121,18 @@ export async function checkIfAvailableForMintAndMint(
 
       // Return a response immediately
       console.log('wat is html?', html)
-      html =
-        generateFarcasterFrame(`${SERVER_URL}/${IMAGES.successfull_mint}`, 'leaderboard') || ''
+      html = generateFarcasterFrame(
+        `${SERVER_URL}/${channel.question_id + '_successfull_mint.png'}`,
+        'leaderboard'
+      )
     }
   } else {
     console.log('user has not participated in channel:', channelName)
 
-    html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.not_eligable}`, 'leaderboard') || ''
+    html = generateFarcasterFrame(
+      `${SERVER_URL}/${IMAGES.not_eligable}`,
+      'leaderboard'
+    )
   }
   return html
 }

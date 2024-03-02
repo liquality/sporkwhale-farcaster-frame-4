@@ -6,11 +6,13 @@ import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
   calculateIfWinningOrNot,
   checkIfAvailableForMintAndMint,
+  getChannel,
   getQuestionFromId,
 } from '@/utils/database-operations'
 import { HANDLE_QUESTION } from '@/utils/question'
 import { mintSporkNFT } from '@/utils/contract-operations'
 import { getChannelFromCastHash } from '@/utils/neynar-api'
+import { channel } from 'diagnostics_channel'
 
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 
@@ -53,8 +55,14 @@ export default async function handler(
   console.log(`${SERVER_URL}/${IMAGES.mint}`, 'beeee')
   switch (reqId) {
     case 'start-mint':
-      console.log('BÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ', `${SERVER_URL}/${IMAGES.mint}`)
-      html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.mint}`, 'mint')
+      if (channel) {
+        const channelDb = await getChannel(channel)
+
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${channelDb.question_id + '_mint.png'}`,
+          'mint'
+        )
+      }
 
       break
     case 'mint':
@@ -77,7 +85,7 @@ export default async function handler(
 
     default:
       html = generateFarcasterFrame(
-        `${SERVER_URL}/${IMAGES.welcome}`,
+        `${SERVER_URL}/${IMAGES.start_mint}`,
         'start-mint'
       )
       break
