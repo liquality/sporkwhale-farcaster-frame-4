@@ -41,6 +41,19 @@ export function generateFarcasterFrame(
       <meta property="fc:frame:button:1" content="Go interact with channel!" />
       <meta property="fc:frame:button:1:action" content="post_redirect" />`
       break
+
+    case 'start-mint':
+      metaTags += `
+        <meta property="fc:frame:image" content="${image}" />
+        <meta property="fc:frame:button:1" content="Go mint" />
+       `
+      break
+    case 'mint':
+      metaTags += `
+          <meta property="fc:frame:image" content="${image}" />
+          <meta property="fc:frame:button:1" content="Mint Your SporkWhale!" />
+          `
+      break
   }
 
   const postUrl = `${SERVER_URL}/api/post?data=${postData}`
