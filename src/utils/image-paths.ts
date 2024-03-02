@@ -17,7 +17,7 @@ export const IMAGES = {
   be_a_follower: 'be_a_follower.png',
   expired: 'expired.png',
   not_eligable: 'not_eligable.png',
-  already_minted: 'already_minted.png',
+  already_minted: 'already_claimed.png',
   start_mint: 'start-mint.png',
 }
 
