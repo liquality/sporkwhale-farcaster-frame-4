@@ -59,6 +59,14 @@ export async function saveUser(ud: TUntrustedData) {
   } else return existingUser.rows[0]
 }
 
+export async function setUserHasMinted(id: number): Promise<void> {
+  const update = await sql`
+  UPDATE users 
+  set has_minted = true 
+  where id = ${id}`
+  console.log('setUserHasMinted => ', update )
+}
+
 export async function getChannel(channel: string) {
   const existingChannel =
     await sql`SELECT * FROM channels WHERE name = ${channel}`
@@ -112,8 +120,8 @@ export async function checkIfAvailableForMintAndMint(
       if (!user.has_minted) {
         mintSporkNFT(user.wallet_address, channel.question_id)
           .then((tx) => {
-            console.log(tx, 'wat is tx')
-            //TODO @bradley update the user table to has_minted = true
+            console.log(tx, 'calling setUserHasMinted: ', user.id)
+            setUserHasMinted(user.id)
           })
           .catch((error) => {
             console.error('Error:', error)
