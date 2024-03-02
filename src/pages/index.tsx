@@ -11,6 +11,7 @@ export default function Home() {
   const [leaderboard, setLeaderboard] = useState<null | ClashDataMap[]>(null)
   const [loading, setLoading] = useState(false)
   const [expandedDay, setExpandedDay] = useState<number | null>(null)
+  const questionId = 5
   useEffect(() => {
     setIsMobileState(isMobile)
   }, [isMobile])
@@ -30,6 +31,7 @@ export default function Home() {
     }
   }, [leaderboard])
 
+  console.log('AAAAAAAAAAA', questionId)
   return (
     <>
       <Head>
@@ -46,7 +48,11 @@ export default function Home() {
         />
         <meta
           property="fc:frame:post_url"
-          content={`${SERVER_URL}/api/post?data=start`}
+          content={
+            questionId === 5
+              ? `${SERVER_URL}/api/mint?data=start-mint`
+              : `${SERVER_URL}/api/post?data=start`
+          }
         />
       </Head>
       {leaderboard ? (

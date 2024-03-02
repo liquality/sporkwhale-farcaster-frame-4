@@ -3,6 +3,7 @@ import { generateFarcasterFrame, SERVER_URL } from './generate-frames'
 import { TUntrustedData } from '../types'
 import { IMAGES, levelImages } from './image-paths'
 import { getAddrByFid } from './neynar-api'
+import { mintSporkNFT } from './contract-operations'
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 export async function saveUserQuestionResponse(
   ud: TUntrustedData,
@@ -61,7 +62,6 @@ export async function saveUser(ud: TUntrustedData) {
 export async function getChannel(channel: string) {
   const existingChannel =
     await sql`SELECT * FROM channels WHERE name = ${channel}`
-  console.log(existingChannel, 'channel:', channel)
   return existingChannel.rows[0]
 }
 
@@ -76,6 +76,60 @@ export async function getQuestionFromId(questionId: number) {
   AND expires_at::timestamp AT TIME ZONE 'MST' > current_timestamp AT TIME ZONE 'MST';
   `
   return question.rows.length > 0 ? question.rows[0] : null
+}
+
+export async function getUserFromFid(fid: number) {
+  const user = await sql`
+  SELECT * FROM users
+  WHERE fid = ${fid}
+ ;
+  `
+  return user.rows.length > 0 ? user.rows[0] : null
+}
+
+export async function checkIfAvailableForMintAndMint(
+  fid: number,
+  channelName: string
+): Promise<string> {
+  let html = ''
+  const checkIfUserHasParticipatedInChannelQuizQuery = await sql`SELECT EXISTS (
+    SELECT 1
+    FROM user_question_responses AS uqr
+    JOIN channels AS c ON uqr.channel_id = c.id
+    JOIN users AS u ON uqr.user_id = u.id
+    WHERE u.fid = ${fid}              -- Use user's fid instead of user_id
+    AND c.name = ${channelName}       -- Filter by channel name
+);
+`
+  const userHasParticipatedInQuiz =
+    checkIfUserHasParticipatedInChannelQuizQuery.rows[0]
+
+  if (userHasParticipatedInQuiz.exists) {
+    const channel = await getChannel(channelName)
+    console.log(channel, 'got here because I have participated')
+    const user = await getUserFromFid(fid)
+    if (user) {
+      // Mint the NFT in the background
+      mintSporkNFT(user.wallet_address, channel.question_id)
+        .then((tx) => {
+          console.log(tx, 'wat is tx')
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+          // Handle errors if necessary
+        })
+
+      // Return a response immediately
+      console.log('wat is html?', html)
+      html =
+        generateFarcasterFrame(IMAGES.successfull_mint, 'leaderboard') || ''
+    }
+  } else {
+    console.log('user has not participated in channel:', channelName)
+
+    html = generateFarcasterFrame(IMAGES.not_eligable, 'leaderboard') || ''
+  }
+  return html
 }
 
 export async function getChannelStats(channel: QueryResultRow) {

@@ -14,6 +14,10 @@ export const IMAGES = {
   already_submitted: 'already_submitted.png',
   be_a_follower: 'be_a_follower.png',
   expired: 'expired.png',
+  mint: 'mint.png',
+  not_eligable: 'not_eligable.png',
+  already_minted: 'already_minted.png',
+  successfull_mint: 'successfull_mint.png',
 }
 
 export const levelImages: LevelImages = {

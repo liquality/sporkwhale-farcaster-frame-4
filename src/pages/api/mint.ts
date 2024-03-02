@@ -5,9 +5,12 @@ import { TSignedMessage, TUntrustedData } from '@/types'
 import { generateFarcasterFrame, SERVER_URL } from '@/utils/generate-frames'
 import {
   calculateIfWinningOrNot,
+  checkIfAvailableForMintAndMint,
   getQuestionFromId,
 } from '@/utils/database-operations'
 import { HANDLE_QUESTION } from '@/utils/question'
+import { mintSporkNFT } from '@/utils/contract-operations'
+import { getChannelFromCastHash } from '@/utils/neynar-api'
 
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 
@@ -23,7 +26,7 @@ export default async function handler(
   const signedMessage = req.body as TSignedMessage
 
   const reqId = req.query.data
-  console.log('request query: ', reqId)
+  console.log('request query IN MINT: ', reqId)
 
   const isMessageValid = await validateMsgWithNeynar(
     signedMessage.trustedData?.messageBytes
@@ -39,23 +42,27 @@ export default async function handler(
   let statusCode: number = 200
   let locationHeader: string = ''
   //let userIsInChannel: TUserProfileNeynar | null | undefined = null
-
+  //let castHash = '0x75fb5866c3105e82500406c94d0f295af4a74d32'
+  let castHash = '0x4c9595bba3cc8f6490d7cc67265aa6a3938c1afb' //BASE
+  //let castHash = '0x222d2e841b4edadeaa4de273dee5add20ee18f41' //zora
+  //let castHash = '0x03475d45887f13c592c44829de3de18a7d95619d' //farcasther
+  //let castHash = '0x7aadf31bcdd0adfe41e593c5bc6c32bb81118471' //cryptostocks cast
+  let channel = await getChannelFromCastHash(castHash)
   const response = res.status(statusCode).setHeader('Content-Type', 'text/html')
 
-  const question = await getQuestionFromId(QUESTION_ID)
+  console.log(`${SERVER_URL}/${IMAGES.mint}`, 'beeee')
   switch (reqId) {
-    case 'mint-start':
-      html = generateFarcasterFrame(
-        `${SERVER_URL}/${IMAGES.question}`,
-        'question',
-        question
-      )
+    case 'start-mint':
+      console.log('BÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ', `${SERVER_URL}/${IMAGES.mint}`)
+      html = generateFarcasterFrame(`${SERVER_URL}/${IMAGES.mint}`, 'mint')
 
       break
     case 'mint':
-      if (question?.id) {
+      if (QUESTION_ID && channel) {
+        console.log('Not in mint start question')
+
         console.log('MINTING THE MINT')
-        //html = await HANDLE_QUESTION(ud, channel)
+        html = await checkIfAvailableForMintAndMint(ud.fid, channel)
       } else {
         html = generateFarcasterFrame(
           `${SERVER_URL}/${IMAGES.expired}`,
@@ -63,30 +70,19 @@ export default async function handler(
         )
       }
       break
-    case 'error-be-a-follower':
-      locationHeader = `https://warpcast.com/~/channel/${channel}`
-      return response.redirect(302, locationHeader)
 
     case 'leaderboard':
       locationHeader = 'https://leaderboard.liquality.io'
       return response.redirect(302, locationHeader)
 
-    case 'correct-or-incorrect':
-      if (ud.buttonIndex === 1) {
-        //calculate if winning or not here
-        html = await calculateIfWinningOrNot(channel || '')
-      } else {
-        locationHeader = `https://warpcast.com/liquality`
-        return response.redirect(302, locationHeader)
-      }
-
-      break
     default:
       html = generateFarcasterFrame(
-        `${SERVER_URL}/${IMAGES.question}`,
-        'question'
+        `${SERVER_URL}/${IMAGES.welcome}`,
+        'start-mint'
       )
       break
   }
+
+  console.log(html, 'wat is html? XXXX')
   return response.send(html)
 }

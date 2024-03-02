@@ -31,7 +31,7 @@ export type TPostData =
   | 'correct-or-incorrect'
   | 'leaderboard'
   | 'error-be-a-follower'
-  | 'mint-start'
+  | 'start-mint'
   | 'mint'
 
 export type TUserProfileNeynar = {

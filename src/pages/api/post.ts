@@ -21,6 +21,7 @@ export default async function handler(
     res.status(405).json({ error: 'Method Not Allowed' })
     return
   }
+  console.log(req, 'wats re?')
 
   const signedMessage = req.body as TSignedMessage
 

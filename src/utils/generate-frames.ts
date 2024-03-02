@@ -9,6 +9,7 @@ export function generateFarcasterFrame(
 ) {
   let metaTags = ''
 
+  console.log(postData, 'what is postdata?')
   switch (postData) {
     case 'question':
       let buttonMap = question.options.map(
@@ -56,8 +57,18 @@ export function generateFarcasterFrame(
       break
   }
 
-  const postUrl = `${SERVER_URL}/api/post?data=${postData}`
+  console.log(
+    process.env.QUESTION_ID,
+    typeof process.env.QUESTION_ID,
+    process.env.QUESTION_ID === '5',
+    'QÄÄÄÄÄÄ'
+  )
+  const postUrl =
+    process.env.QUESTION_ID === '5'
+      ? `${SERVER_URL}/api/mint?data=${postData}`
+      : `${SERVER_URL}/api/post?data=${postData}`
 
+  console.log(postUrl, 'post url')
   return `
 	  <!DOCTYPE html>
 	  <html lang="en">
