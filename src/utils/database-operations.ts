@@ -109,22 +109,26 @@ export async function checkIfAvailableForMintAndMint(
     console.log(channel, 'got here because I have participated')
     const user = await getUserFromFid(fid)
     if (user) {
-      // Mint the NFT in the background
-      mintSporkNFT(user.wallet_address, channel.question_id)
-        .then((tx) => {
-          console.log(tx, 'wat is tx')
-        })
-        .catch((error) => {
-          console.error('Error:', error)
-          // Handle errors if necessary
-        })
-
-      // Return a response immediately
-      console.log('wat is html?', html)
-      html = generateFarcasterFrame(
-        `${SERVER_URL}/${channel.question_id + '_successfull_mint.png'}`,
-        'leaderboard'
-      )
+      if (!user.has_minted) {
+        mintSporkNFT(user.wallet_address, channel.question_id)
+          .then((tx) => {
+            console.log(tx, 'wat is tx')
+            //TODO @bradley update the user table to has_minted = true
+          })
+          .catch((error) => {
+            console.error('Error:', error)
+            // Handle errors if necessary
+          })
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${channel.question_id + '_successfull_mint.png'}`,
+          'leaderboard'
+        )
+      } else {
+        html = generateFarcasterFrame(
+          `${SERVER_URL}/${IMAGES.already_minted}`,
+          'leaderboard'
+        )
+      }
     }
   } else {
     console.log('user has not participated in channel:', channelName)
