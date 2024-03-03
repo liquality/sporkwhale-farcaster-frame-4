@@ -37,6 +37,14 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
               day={day}
             />
           )}
+          {(day === 5) ?
+            <div className="justify-between-grid">
+            <div className="pair">
+              <div className="channel-name-box">
+                mfres
+              </div>
+            </div>
+          </div> : null }
           <div style={{ height: 300 }}></div>
 
           <div style={{ position: 'absolute', bottom: 0 }}>
@@ -47,6 +55,7 @@ export default function LeaderboardDesktop(props: LeaderboardProps) {
     )
   }
 
+  console.log(leaderboard, 'leaderboard')
   return (
     <div className="body-desktop">
       <div className="flex-direction-row">
