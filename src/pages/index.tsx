@@ -9,11 +9,11 @@ import LeaderboardMobile from '../components/leaderboard-mobile'
 export default function Home() {
 
   const [isMobileState, setIsMobileState] = useState(false)
-  const [questionId, setQuestionId] = useState(4)
+  const [questionId, setQuestionId] = useState(5)
   const [leaderboard, setLeaderboard] = useState<null | ClashDataMap[]>(null)
   const [loading, setLoading] = useState(false)
   const [expandedDay, setExpandedDay] = useState<number | null>(null)
-  const questionId = 5
+  
   useEffect(() => {
     setIsMobileState(isMobile)
   }, [isMobile])
