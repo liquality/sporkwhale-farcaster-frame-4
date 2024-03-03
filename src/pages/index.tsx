@@ -7,7 +7,9 @@ import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import LeaderboardMobile from '../components/leaderboard-mobile'
 export default function Home() {
+
   const [isMobileState, setIsMobileState] = useState(false)
+  const [questionId, setQuestionId] = useState(4)
   const [leaderboard, setLeaderboard] = useState<null | ClashDataMap[]>(null)
   const [loading, setLoading] = useState(false)
   const [expandedDay, setExpandedDay] = useState<number | null>(null)
@@ -15,14 +17,13 @@ export default function Home() {
   useEffect(() => {
     setIsMobileState(isMobile)
   }, [isMobile])
-
   useEffect(() => {
     if (!leaderboard) {
       const fetchData = async () => {
         try {
           const response = await fetch('/api/getLeaderboardData')
           const data = await response.json()
-          setLeaderboard(data)
+          setLeaderboard(data.leaderboard)
         } catch (error) {
           console.error('Error fetching data:', error)
         }
@@ -60,9 +61,9 @@ export default function Home() {
         <>
           {' '}
           {isMobileState ? (
-            <LeaderboardMobile leaderboard={leaderboard} />
+            <LeaderboardMobile leaderboard={leaderboard} currentDay={questionId}/>
           ) : (
-            <LeaderboardDesktop leaderboard={leaderboard} />
+            <LeaderboardDesktop leaderboard={leaderboard} currentDay={questionId}/>
           )}
         </>
       ) : null}

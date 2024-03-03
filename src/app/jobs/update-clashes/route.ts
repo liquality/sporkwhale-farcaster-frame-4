@@ -4,12 +4,12 @@ import { sql } from '@vercel/postgres'
 const QUESTION_ID = parseInt(process.env.QUESTION_ID || '')
 export async function GET(request: NextRequest) {
   try {
-    // const authHeader = request.headers.get('authorization')
-    // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    //   return new Response('Unauthorized', {
-    //     status: 401,
-    //   })
-    // }
+    const authHeader = request.headers.get('authorization')
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+      return new Response('Unauthorized', {
+        status: 401,
+      })
+    }
     const responsesChannel1 = await sql`select c.id,
     c.channel1_id as channel_id, 
     count(qr.id) as correct_amount
@@ -79,22 +79,22 @@ group by c.id, c.channel2_id;`
 
     if (nextQuestionId < 5) {
       console.log('winnersResult', winners.length)
-      if (winners && winners.length > 0) {
-        const winnerIds: number[] = winners.map((r) => r.winner_id)
-        const len = winners.length
-        for (let index = 0; index < len; index += 2) {
-          const ch1 = winnerIds[index]
-          const ch2 = winnerIds[index + 1]
-          sql`
-        INSERT INTO clashes
-        (question_id, channel1_id, channel2_id, channel_winner_id)
-        values
-        (${nextQuestionId}, ${ch1}, ${ch2}, null)
-          `
-        }
+      // if (winners && winners.length > 0) {
+      //   const winnerIds: number[] = winners.map((r) => r.winner_id)
+      //   const len = winners.length
+      //   for (let index = 0; index < len; index += 2) {
+      //     const ch1 = winnerIds[index]
+      //     const ch2 = winnerIds[index + 1]
+      //     sql`
+      //   INSERT INTO clashes
+      //   (question_id, channel1_id, channel2_id, channel_winner_id)
+      //   values
+      //   (${nextQuestionId}, ${ch1}, ${ch2}, null)
+      //     `
+      //   }
 
-        console.log('insert next clashes', winnerIds)
-      }
+      //   console.log('insert next clashes', winnerIds)
+      // }
     }
     return NextResponse.json({
       updateWinnersCount: updateResults.map((q) => q.map((s) => s.rowCount)),

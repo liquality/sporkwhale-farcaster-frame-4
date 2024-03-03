@@ -10,10 +10,14 @@ type ExpandedDayProps = {
   to: number
   from: number
   dayFourIndex?: number
+  currentDay: number
 }
 
 export default function Column(props: ExpandedDayProps) {
-  const { clashDataForDay, day, from, to, dayFourIndex } = props
+  const { clashDataForDay, day, from, to, dayFourIndex, currentDay } = props
+
+  const showAmount = currentDay === day
+  console.log( {day, currentDay})
   const renderDayOneStyle = (
     channelName1: string,
     channelName2: string,
@@ -26,10 +30,22 @@ export default function Column(props: ExpandedDayProps) {
           <br></br>
           <br></br>
           <div className="channel-name-box">
-            {channelName1} <Percentage total={response1?.total} correct={response1?.correct}/>
+            {channelName1}{' '}
+            {showAmount ? (
+              <Percentage
+                total={response1?.total}
+                correct={response1?.correct}
+              />
+            ) : null}
           </div>
           <div className="channel-name-box">
-            {channelName2} <Percentage total={response2?.total} correct={response2?.correct} />
+            {channelName2}{' '}
+            {showAmount ? (
+              <Percentage
+                total={response2?.total}
+                correct={response2?.correct}
+              />
+            ) : null}
           </div>
         </div>
       </div>
@@ -43,7 +59,10 @@ export default function Column(props: ExpandedDayProps) {
           <br></br>
           <br></br>
           <div className="channel-name-box">
-            {channelName} <Percentage  total={response?.total} correct={response?.correct} />
+            {channelName}{' '}
+            {showAmount ? (
+              <Percentage total={response?.total} correct={response?.correct} />
+            ) : null}
           </div>
         </div>
       </div>
@@ -54,7 +73,7 @@ export default function Column(props: ExpandedDayProps) {
     channelName1: string,
     channelName2: string,
     response1?: ResponseItem,
-    response2?: ResponseItem,
+    response2?: ResponseItem
   ) => {
     return (
       <div className="">
@@ -62,13 +81,19 @@ export default function Column(props: ExpandedDayProps) {
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName1} <Percentage  total={response1?.total} correct={response1?.correct} />
+          {channelName1}{' '}
+          {showAmount ? (
+            <Percentage total={response1?.total} correct={response1?.correct} />
+          ) : null}
         </div>
         <div
           style={{ marginTop: '80px', marginBottom: '80px' }}
           className="channel-name-box"
         >
-          {channelName2} <Percentage  total={response2?.total} correct={response2?.correct} />
+          {channelName2}{' '}
+          {showAmount ? (
+            <Percentage total={response2?.total} correct={response2?.correct} />
+          ) : null}
         </div>
       </div>
     )
@@ -89,12 +114,7 @@ export default function Column(props: ExpandedDayProps) {
     response2?: ResponseItem
   ) => {
     if (day === 1) {
-      return renderDayOneStyle(
-        channelName1,
-        channelName2,
-        response1,
-        response2
-      )
+      return renderDayOneStyle(channelName1, channelName2, response1, response2)
     } else if (day === 4) {
       if (dayFourIndex === 2) {
         return renderDayFourStyle(channelName2, response2)

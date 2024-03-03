@@ -7,7 +7,10 @@ export default async function handler(
 ) {
   try {
    const data = await getLeaderboardData();
-    return response.status(200).json(data)
+    return response.status(200).json({
+      leaderboard: data,
+      questionId: parseInt(process.env.QUESTION_ID || '')
+    })
   } catch (error) {
     return response.status(500).json({ error })
   }
